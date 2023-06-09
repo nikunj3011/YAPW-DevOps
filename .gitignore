@@ -3,3 +3,7 @@ YAPW/obj
 YAPW.Domain/obj
 YAPW.MainDb/obj
 YAPW.Models/obj
+YAPW/bin/Debug
+YAPW.Domain/bin
+YAPW.MainDb/bin
+YAPW.Models/bin

@@ -58,7 +58,7 @@ namespace YAPW.MainDb.DbModels
         /// <summary>
         /// Time
         /// </summary>
-        public TimeOnly VideoLength { get; set; }
+        public double VideoLength { get; set; }
 
     }
 }

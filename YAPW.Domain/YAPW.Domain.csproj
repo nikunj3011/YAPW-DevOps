@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\YAPW.MainDb\YAPW.MainDb.csproj" />
+  </ItemGroup>
+
 </Project>
