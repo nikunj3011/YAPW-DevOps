@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using YAPW.MainDb.DbModels;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace Ditech.MainDB.DAL
+namespace YAPW.MainDb
 {
     public class DataContext : DbContext
     {
@@ -13,16 +13,18 @@ namespace Ditech.MainDB.DAL
         {
 
         }
-        
+
+        /// <summary>
+        /// main
+        /// </summary>
         public virtual DbSet<Brand> Brands { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Link> Links { get; set; }
         public virtual DbSet<Photo> Photos { get; set; }
-        public virtual DbSet<Pornstar> Pornstars { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
-        public virtual DbSet<YAPW.MainDb.DbModels.Type> Types { get; set; }
+        public virtual DbSet<DbModels.Type> Types { get; set; }
         public virtual DbSet<Video> Videos { get; set; }
-
+        public virtual DbSet<Pornstar> Pornstars { get; set; }
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    //base.OnModelCreating(modelBuilder);

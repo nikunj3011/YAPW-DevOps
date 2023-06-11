@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using YAPW.MainDb.Interfaces;
 
 namespace YAPW.MainDb.DbModels
 {
-    public class NamedEntity : EntityBase
+    public class NamedEntity : EntityBase, INamedEntity
     {
         /// <summary>
         /// 

@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+using YAPW.MainDb.Interfaces;
 
 namespace YAPW.MainDb.DbModels
 {
-    public class EntityBase
+    public class EntityBase : IEntityBase
     {
         protected EntityBase()
         {
@@ -38,5 +32,6 @@ namespace YAPW.MainDb.DbModels
         [Display(Name = "Created date")]
         [DataType(DataType.DateTime)]
         public DateTime CreatedDate { get; set; }
+        //public required DateTime CreatedDate { get; set; }
     }
 }
