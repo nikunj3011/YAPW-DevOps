@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>List Person Web</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="description" content="Aplicacion Web" />
+	<meta name="keywords" content="Aplicacion Web, Sitio Web, Spring Boot" />
+	<meta name="author" content="Alex Daniel Cabello Leon" />
+	<meta name="copyright" content="adanyc" />
+	<meta name="robots" content="all, index, follow" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="pragma" content="no-cache" />
+	<meta name="title" content="Aplicaion Web" />
+	<meta name="distribution" content="Global" />
+	<link rel="stylesheet" th:href="@{/js/libs/bootstrap/css/bootstrap.min.css}" />
+</head>
+<body>
+	<div class="container" style="margin-top: 50px;max-width: 800px;">
+		<h4>List Person</h4>
+		<hr/>
+		<form id="frm_generico" action="#" method="post" th:action="@{/search}">
+			<div class="card">		
+				<div class="card-body">
+					<div class="form-group form-row mb-0">
+						<label class="col-form-label col-md-2">Search</label>
+						<div class="col-md-6">
+							<input type="text" name="name" id="name" class="form-control" th:value="${name}" placeholder="text name"/>
+						</div>
+						<div class="col-md-4">
+							<button type="submit" class="btn btn-primary">Search</button>
+							<a th:href="@{/}" class="btn btn-danger">Cancel</a>
+						</div>						
+					</div>
+				</div>
+			</div>
+		</form>
+		<table class="table">
+            <thead>
+                <th>Name</th>
+                <th>Job</th>
+                <th>Gender</th>
+                <th>BirthDay</th>
+                <th>Action</th>
+            </thead>
+            <tbody>
+                <tr th:each="person,iter:${list}">
+                    <td th:text="${person.name}"></td>
+                    <td th:text="${person.job}"></td>
+                    <td th:if="${person.gender}">Male</td>
+                    <td th:unless="${person.gender}">Fermale</td>
+                    <td th:text="${person.birthDay}"></td>
+                    <td>
+                        <span>
+                            <a th:href="@{/iniEdit/{name}(name=${person.name})}">Edit</a>
+                        </span>&nbsp; &nbsp;
+                        <span>
+                            <a th:href="@{/delete/{id}(id=${person.id})}">Delete</a>
+                        </span>
+                    </td>    
+                </tr>
+            </tbody>
+        </table>
+		
+		<!-- Eliminar -->
+		<div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title">Delete</h5>
+			      </div>
+			      <div class="modal-body">
+			        <p>Are you sure?</p>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			        <a href="#" class="btn btn-danger" id="btnEliminar">Confirm</a>
+			      </div>
+			    </div>
+			  </div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-3 offset-md-9">
+				<a th:href="@{/inAdd}" class="btn btn-primary btn-block">Create new person</a>
+			</div>
+		</div>		
+	</div>	
+	
+
+	<!-- JavaScript -->
+	<script type="text/javascript" th:src="@{/js/libs/jquery/jquery-3.3.1.slim.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/libs/popper/popper.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/libs/bootstrap/js/bootstrap.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/funciones/jsSolicitud.js}"></script>
+</body>
+</html>

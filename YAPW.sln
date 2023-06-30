@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAPW", "YAPW\YAPW.csproj", "{519E950C-81A7-4FD7-91BE-B999788902D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAPW", "YAPW\YAPW.csproj", "{519E950C-81A7-4FD7-91BE-B999788902D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAPW.Domain", "YAPW.Domain\YAPW.Domain.csproj", "{F41AA69C-A138-4F1C-BD58-09F42AB89CCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAPW.Domain", "YAPW.Domain\YAPW.Domain.csproj", "{F41AA69C-A138-4F1C-BD58-09F42AB89CCB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAPW.Models", "YAPW.Models\YAPW.Models.csproj", "{6B2D4A6E-2A83-4D21-96B8-FF5CD1C742A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAPW.Models", "YAPW.Models\YAPW.Models.csproj", "{6B2D4A6E-2A83-4D21-96B8-FF5CD1C742A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAPW.MainDb", "YAPW.MainDb\YAPW.MainDb.csproj", "{B59930AC-5A3A-4D3F-B0B7-B7329C8C3D18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAPW.MainDb", "YAPW.MainDb\YAPW.MainDb.csproj", "{B59930AC-5A3A-4D3F-B0B7-B7329C8C3D18}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAPWEntities.API", "YAPWEntities.API\YAPWEntities.API.csproj", "{618814C6-A287-45C7-897A-C45CAF06A8A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{B59930AC-5A3A-4D3F-B0B7-B7329C8C3D18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B59930AC-5A3A-4D3F-B0B7-B7329C8C3D18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B59930AC-5A3A-4D3F-B0B7-B7329C8C3D18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{618814C6-A287-45C7-897A-C45CAF06A8A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{618814C6-A287-45C7-897A-C45CAF06A8A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{618814C6-A287-45C7-897A-C45CAF06A8A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{618814C6-A287-45C7-897A-C45CAF06A8A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

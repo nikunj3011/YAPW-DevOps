@@ -25,7 +25,6 @@ namespace YAPW.Controllers
             httpContextAccessor,
             hostingEnvironment)
         {
-            //_entityServiceWorker.EntityReposito
         }
 
         [HttpGet]
