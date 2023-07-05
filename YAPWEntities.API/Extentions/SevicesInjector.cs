@@ -1,10 +1,8 @@
-﻿using Azure;
-using Microsoft.EntityFrameworkCore;
-using System.Drawing;
-using System.Reflection.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
+using YAPW.Domain.Interfaces.External;
 using YAPW.Domain.Services.Generic;
+using YAPW.Domain.Services.Internal;
 using YAPW.MainDb;
-using YAPW.MainDb.DbModels;
 
 namespace YAPW.Extentions;
 
@@ -14,25 +12,27 @@ public static class SevicesInjector
 
     public static void AddGenericNamedEntityServices(this IServiceCollection services)
     {
-        services.AddTransient<NamedEntityServiceWorker<MainDb.DbModels.Type, DataContext>>();
-        //services.AddTransient<EntityRepositoryServiceWorker<EntityRepository<EntityBase, DitechDalDbContext>, EntityBase, DitechDalDbContext>>();
-        //services.AddTransient<EntityRepositoryServiceWorker<NamedEntityRepository<NamedEntity, DitechDalDbContext>, NamedEntity, DitechDalDbContext>>();
+        services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Brand, DataContext>>();
+        services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Category, DataContext>>();
+        services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Photo, DataContext>>();
+        services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Pornstar, DataContext>>();
+        services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Tag, DataContext>>();
+        services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Type, DataContext>>();
+        services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Video, DataContext>>();
+        services.AddTransient<INameService, NameService>();
     }
 
     public static void AddGenericEntityServices(this IServiceCollection services)
     {
         //Operations
         //
-        //services.AddTransient<EntityServiceWorker<Tank, DitechDalDbContext>>();
+        services.AddTransient<EntityServiceWorker<YAPW.MainDb.DbModels.Link, DataContext>>();
     }
 
     public static void AddServiceWorkers(this IServiceCollection services)
     {
-        services.AddScoped<ServiceWorker<DataContext>>();
-        services.AddGenericEntityServices();
         services.AddGenericNamedEntityServices();
-        //services.AddTransient<IIdentityServiceWorker<ConfigurationDbContext>, IdentityServiceWorker<ConfigurationDbContext>>();
-        //services.AddSamsaraServiceWorkers();
+        services.AddGenericEntityServices();
     }
 
     #endregion Service workers

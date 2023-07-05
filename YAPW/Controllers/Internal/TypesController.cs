@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using YAPW.Controllers.Base;
-using YAPW.Domain.Interfaces;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
-using YAPW.MainDb.DbModels;
-using YAPW.Models;
 using YAPW.Models.DataModels;
+using YAPW.Models.Models.Settings;
 
-namespace YAPW.Controllers
+namespace YAPW.Controllers.Internal
 {
     //quartz.net
     [ApiController]
@@ -20,19 +18,20 @@ namespace YAPW.Controllers
 
         public TypesController(NamedEntityServiceWorker<MainDb.DbModels.Type, DataContext> entityServiceWorker,
         IHttpContextAccessor httpContextAccessor,
-        IWebHostEnvironment hostingEnvironment) : base(
+        IWebHostEnvironment hostingEnvironment,
+        IOptions<AppSetting> settings
+        ) : base(
             entityServiceWorker,
             httpContextAccessor,
             hostingEnvironment)
         {
-            //_entityServiceWorker.EntityReposito
         }
 
         [HttpGet]
         public override async Task<ActionResult<IEnumerable<MainDb.DbModels.Type>>> Get() => await base.Get();
 
         /// <summary>
-        /// Get Manufacturer by Id
+        /// Get Types by Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -40,7 +39,7 @@ namespace YAPW.Controllers
         public override async Task<ActionResult<MainDb.DbModels.Type>> GetById(Guid id) => await base.GetById(id);
 
         /// <summary>
-        /// Get Manufacturer by Name
+        /// Get Types by Name
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -48,7 +47,7 @@ namespace YAPW.Controllers
         public override async Task<ActionResult<MainDb.DbModels.Type>> GetByName(string name) => await base.GetByName(name);
 
         /// <summary>
-        /// Post Manufacturer
+        /// Post Type
         /// </summary>
         /// <param name="namedEntityDataModel"></param>
         /// <returns></returns>
@@ -57,9 +56,9 @@ namespace YAPW.Controllers
             => await base.Post(namedEntityDataModel);
 
         /// <summary>
-        /// Delete Manufacturer
+        /// Delete Type
         /// </summary>
-        /// <param name="id">Manufacturer Id</param>
+        /// <param name="id">Type Id</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
         public override async Task<IActionResult> Delete(Guid id) => await base.Delete(id);

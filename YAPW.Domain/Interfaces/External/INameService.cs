@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using YAPW.Models;
 
-namespace YAPW.Domain.Interfaces
+namespace YAPW.Domain.Interfaces.External
 {
     public interface INameService
     {
-        Task<IEnumerable<NameDataModel>> GetAll();
+        Task<IEnumerable<NameDataModel>> GetAll(IHttpClientFactory httpClientFactory);
     }
 }

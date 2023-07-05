@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Linq.Expressions;
 using YAPW.MainDb.DbModels;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace YAPW.MainDb
 {

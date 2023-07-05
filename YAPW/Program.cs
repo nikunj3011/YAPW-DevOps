@@ -1,18 +1,7 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using YAPW.Domain.Interfaces;
-using YAPW.Domain.Repositories.Main;
-using YAPW.Domain.Services;
-using YAPW.Domain.Services.Generic;
 using YAPW.Extentions;
-using YAPW.MainDb;
-using YAPW.MainDb.DbModels;
-using static System.Collections.Specialized.BitVector32;
+using YAPW.Models.Models.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -24,14 +13,25 @@ builder.Services.AddHttpClient("javaApi", c =>
     c.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
-builder.Services.AddDbContext<DataContext>(options=>options.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=YAPWDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False", c => c.MigrationsAssembly("YAPW.MainDb")));
+var appSettings = builder.Configuration.GetSection("GlobalConfig").Get<AppSetting>(); 
+var currentEnvironmentSettings = appSettings.Environments.SingleOrDefault(e => e.Name.ToLower() == builder.Environment.EnvironmentName.ToLower());
+var connectionString = currentEnvironmentSettings.SettingsData.ConnectionString;
+
+//builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=YAPWDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False", c => c.MigrationsAssembly("YAPW.MainDb")));
 //builder.Services.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=YAPWDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False", c => c.MigrationsAssembly("YAPW.MainDb"));
 //builder.Services.adda(connectionString);
 //void ConfigureServices(IServiceCollection services)
 //{
-//}
-builder.Services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Type, DataContext>>();
-builder.Services.AddTransient<INameService, NameRepository>();
+////}
+///
+builder.Services.AddServiceWorkers();
+builder.Services.AddDatabases(connectionString);
+
+//builder.Services.AddAuthentication(OAuthValidationDefaults.AuthenticationScheme)
+//    .AddOAuthValidation();
+//SevicesInjector.AddGenericNamedEntityServices(builder);
+//builder.Services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Type, DataContext>>();
+//builder.Services.AddTransient<INameService, NameService>();
 //builder.Services.Add(SevicesInjector);
 builder.Services.AddHttpContextAccessor();
 
@@ -48,6 +48,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 
