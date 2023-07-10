@@ -6,14 +6,14 @@ using YAPW.MainDb;
 
 namespace YAPW.Domain.Repositories.Main;
 
-public class TypeRepository<TEntity, TContext> : NamedEntityRepository<TEntity, TContext>, ITypeService
-    where TEntity : MainDb.DbModels.Type
+public class PhotoRepository<TEntity, TContext> : NamedEntityRepository<TEntity, TContext>, IPhotoService
+    where TEntity : MainDb.DbModels.Photo
     where TContext : DbContext
 {
     private readonly TContext _context;
     private readonly ServiceWorker<TContext> _serviceWorker;
 
-    public TypeRepository(TContext context) : base(context)
+    public PhotoRepository(TContext context) : base(context)
     {
         _context = context;
         _serviceWorker = new ServiceWorker<TContext>(_context);

@@ -15,7 +15,7 @@ public static class SevicesInjector
         services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Brand, DataContext>>();
         services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Category, DataContext>>();
         services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Photo, DataContext>>();
-        services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Pornstar, DataContext>>();
+        services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Actor, DataContext>>();
         services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Tag, DataContext>>();
         services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Type, DataContext>>();
         services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Video, DataContext>>();
@@ -31,6 +31,7 @@ public static class SevicesInjector
 
     public static void AddServiceWorkers(this IServiceCollection services)
     {
+        services.AddScoped<ServiceWorker<DataContext>>();
         services.AddGenericNamedEntityServices();
         services.AddGenericEntityServices();
     }

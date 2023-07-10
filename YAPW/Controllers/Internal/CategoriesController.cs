@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using YAPW.Controllers.Base;
+using YAPW.Domain.Repositories.Main;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
+using YAPW.MainDb.DbModels;
 using YAPW.Models.DataModels;
 using YAPW.Models.Models.Settings;
 
@@ -13,18 +15,24 @@ namespace YAPW.Controllers.Internal
     [Route("[controller]")]
     public class CategoriesController : GenericNamedEntitiesControllerBase<MainDb.DbModels.Category, DataContext, NamedEntityServiceWorker<MainDb.DbModels.Category, DataContext>, NamedEntityDataModel>
     {
-        private readonly EntityServiceWorker<MainDb.DbModels.Category, DataContext> _entityServiceWorker;
+        private readonly NamedEntityServiceWorker<MainDb.DbModels.Category, DataContext> _namedEntityServiceWorker;
         private readonly ServiceWorker<DataContext> _serviceWorker;
+        private readonly CategoryRepository<Category, DataContext> _repository;
 
-        public CategoriesController(NamedEntityServiceWorker<MainDb.DbModels.Category, DataContext> entityServiceWorker,
+        public CategoriesController(ServiceWorker<DataContext> serviceWorker,
+        NamedEntityServiceWorker<MainDb.DbModels.Category, DataContext> namedEntityServiceWorker,
         IHttpContextAccessor httpContextAccessor,
         IWebHostEnvironment hostingEnvironment,
         IOptions<AppSetting> settings
         ) : base(
-            entityServiceWorker,
+            namedEntityServiceWorker,
             httpContextAccessor,
-            hostingEnvironment)
+            hostingEnvironment,
+            settings)
         {
+            _serviceWorker = serviceWorker;
+            _namedEntityServiceWorker = namedEntityServiceWorker;
+            _repository = namedEntityServiceWorker.CategoryRepository;
         }
 
         [HttpGet]

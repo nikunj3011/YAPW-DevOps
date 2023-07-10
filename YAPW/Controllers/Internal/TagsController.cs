@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using YAPW.Controllers.Base;
+using YAPW.Domain.Repositories.Main;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
+using YAPW.MainDb.DbModels;
 using YAPW.Models.DataModels;
 using YAPW.Models.Models.Settings;
 
@@ -11,20 +13,26 @@ namespace YAPW.Controllers.Internal
     //quartz.net
     [ApiController]
     [Route("[controller]")]
+    [Obsolete]
     public class TagsController : GenericNamedEntitiesControllerBase<MainDb.DbModels.Tag, DataContext, NamedEntityServiceWorker<MainDb.DbModels.Tag, DataContext>, NamedEntityDataModel>
     {
-        private readonly EntityServiceWorker<MainDb.DbModels.Tag, DataContext> _entityServiceWorker;
+        private readonly NamedEntityServiceWorker<MainDb.DbModels.Tag, DataContext> _namedEntityServiceWorker;
         private readonly ServiceWorker<DataContext> _serviceWorker;
+        private readonly TagRepository<Tag, DataContext> _repository;
 
-        public TagsController(NamedEntityServiceWorker<MainDb.DbModels.Tag, DataContext> entityServiceWorker,
+        public TagsController(ServiceWorker<DataContext> serviceWorker,
+        NamedEntityServiceWorker<MainDb.DbModels.Tag, DataContext> namedEntityServiceWorker,
         IHttpContextAccessor httpContextAccessor,
         IWebHostEnvironment hostingEnvironment,
         IOptions<AppSetting> settings
         ) : base(
-            entityServiceWorker,
+            namedEntityServiceWorker,
             httpContextAccessor,
-            hostingEnvironment)
+            hostingEnvironment, settings)
         {
+            _serviceWorker = serviceWorker;
+            _namedEntityServiceWorker = namedEntityServiceWorker;
+            _repository = namedEntityServiceWorker.TagRepository;
         }
 
         [HttpGet]

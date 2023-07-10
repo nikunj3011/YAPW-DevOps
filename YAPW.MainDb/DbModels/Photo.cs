@@ -9,41 +9,28 @@ namespace YAPW.MainDb.DbModels
     public class Photo : NamedEntity
     {
         /// <summary>
-        /// Total likes
+        /// all actors
         /// </summary>
-        public int Likes { get; set; }
+        public virtual ICollection<ActorPhoto> Actors { get; set; }
 
         /// <summary>
-        /// Total Dislikes
+        /// Brand ~ ZZs, Fidelity etc
         /// </summary>
-        public int Dislikes { get; set; }
+        public Guid BrandId { get; set; }
+        public virtual Brand Brand { get; set; }
 
         /// <summary>
-        /// Total views
+        /// Categories ~ HD, 4K, Hotel
         /// </summary>
-        public int Views { get; set; }
-
-        public DateTime ReleaseDate { get; set; }
-
-        /// <summary>
-        /// all pornstars
-        /// </summary>
-        public List<Pornstar> Pornstars { get; set; }
-
-        /// <summary>
-        /// Brand ~ Brazzers, Fidelity etc
-        /// </summary>
-        public Brand Brand { get; set; }
-
-        /// <summary>
-        /// Categories ~ Teen, HD, 4K, Hotel
-        /// </summary>
-        public List<Category> Categories { get; set; }
+        public virtual ICollection<PhotoCategory> PhotoCategories { get; set; }
 
         /// <summary>
         /// AWS, azure or gcp link?
         /// </summary>
-        public Link Link { get; set; }
+        public Guid LinkId { get; set; }
+        public virtual Link Link { get; set; }
+
+        public virtual PhotoInfo PhotoInfo { get; set; }
 
     }
 }

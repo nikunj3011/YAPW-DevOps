@@ -6,14 +6,14 @@ using YAPW.MainDb;
 
 namespace YAPW.Domain.Repositories.Main;
 
-public class TypeRepository<TEntity, TContext> : NamedEntityRepository<TEntity, TContext>, ITypeService
-    where TEntity : MainDb.DbModels.Type
+public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity, TContext>, IVideoService
+    where TEntity : MainDb.DbModels.Video
     where TContext : DbContext
 {
     private readonly TContext _context;
     private readonly ServiceWorker<TContext> _serviceWorker;
 
-    public TypeRepository(TContext context) : base(context)
+    public VideoRepository(TContext context) : base(context)
     {
         _context = context;
         _serviceWorker = new ServiceWorker<TContext>(_context);

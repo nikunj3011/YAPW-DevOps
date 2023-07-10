@@ -7,6 +7,7 @@ using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
 using YAPW.MainDb.DbModels;
 using YAPW.Models.DataModels;
+using YAPW.Models.Models.Settings;
 
 namespace YAPW.Controllers.Base;
 
@@ -23,10 +24,12 @@ public abstract class GenericNamedEntitiesControllerBase<TEntity, TContext, TSer
     protected GenericNamedEntitiesControllerBase(
         TServiceWorker entityServiceWorker,
         IHttpContextAccessor httpContextAccessor,
-        IWebHostEnvironment hostingEnvironment) : base(
+        IWebHostEnvironment hostingEnvironment,
+        IOptions<AppSetting> settings) : base(
             entityServiceWorker,
             httpContextAccessor,
-            hostingEnvironment)
+            hostingEnvironment, 
+            settings)
     {
         _entityServiceWorker = entityServiceWorker;
     }

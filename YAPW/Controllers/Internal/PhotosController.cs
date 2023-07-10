@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using YAPW.Controllers.Base;
+using YAPW.Domain.Repositories.Main;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
+using YAPW.MainDb.DbModels;
 using YAPW.Models.DataModels;
 using YAPW.Models.Models.Settings;
 
@@ -13,18 +15,23 @@ namespace YAPW.Controllers.Internal
     [Route("[controller]")]
     public class PhotosController : GenericNamedEntitiesControllerBase<MainDb.DbModels.Photo, DataContext, NamedEntityServiceWorker<MainDb.DbModels.Photo, DataContext>, NamedEntityDataModel>
     {
-        private readonly EntityServiceWorker<MainDb.DbModels.Photo, DataContext> _entityServiceWorker;
+        private readonly NamedEntityServiceWorker<MainDb.DbModels.Photo, DataContext> _namedEntityServiceWorker;
         private readonly ServiceWorker<DataContext> _serviceWorker;
+        private readonly PhotoRepository<Photo, DataContext> _repository;
 
-        public PhotosController(NamedEntityServiceWorker<MainDb.DbModels.Photo, DataContext> entityServiceWorker,
+        public PhotosController(ServiceWorker<DataContext> serviceWorker,
+        NamedEntityServiceWorker<MainDb.DbModels.Photo, DataContext> namedEntityServiceWorker,
         IHttpContextAccessor httpContextAccessor,
         IWebHostEnvironment hostingEnvironment,
         IOptions<AppSetting> settings
         ) : base(
-            entityServiceWorker,
+            namedEntityServiceWorker,
             httpContextAccessor,
-            hostingEnvironment)
+            hostingEnvironment, settings)
         {
+            _serviceWorker = serviceWorker;
+            _namedEntityServiceWorker = namedEntityServiceWorker;
+            _repository = namedEntityServiceWorker.PhotoRepository;
         }
 
         [HttpGet]

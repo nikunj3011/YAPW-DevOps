@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using YAPW.MainDb.DbModels;
 
 namespace YAPW.Domain.Interfaces
 {
-    public interface ITypeService
+    public interface ILinkService
     {
-        Task<IEnumerable<dynamic>> SearchTypes(string name, int take);
+        Task<Link> GetByLink(string link);
     }
 }

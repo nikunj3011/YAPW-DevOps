@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using YAPW.Controllers.Base;
-using YAPW.Domain.Interfaces.Services.Generic;
 using YAPW.Domain.Repositories.Main;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
@@ -14,29 +13,29 @@ namespace YAPW.Controllers.Internal
     //quartz.net
     [ApiController]
     [Route("[controller]")]
-    public class BrandsController : GenericNamedEntitiesControllerBase<MainDb.DbModels.Brand, DataContext, NamedEntityServiceWorker<MainDb.DbModels.Brand, DataContext>, NamedEntityDataModel>
+    public class ActorsController : GenericNamedEntitiesControllerBase<MainDb.DbModels.Actor, DataContext, NamedEntityServiceWorker<MainDb.DbModels.Actor, DataContext>, NamedEntityDataModel>
     {
-
-        private readonly NamedEntityServiceWorker<MainDb.DbModels.Brand, DataContext> _namedEntityServiceWorker;
+        private readonly NamedEntityServiceWorker<MainDb.DbModels.Actor, DataContext> _namedEntityServiceWorker;
         private readonly ServiceWorker<DataContext> _serviceWorker;
+        private readonly ActorRepository<Actor, DataContext> _repository;
 
-        public BrandsController(ServiceWorker<DataContext> serviceWorker,
-        NamedEntityServiceWorker<MainDb.DbModels.Brand, DataContext> namedEntityServiceWorker,
+        public ActorsController(ServiceWorker<DataContext> serviceWorker,
+        NamedEntityServiceWorker<MainDb.DbModels.Actor, DataContext> namedEntityServiceWorker,
         IHttpContextAccessor httpContextAccessor,
         IWebHostEnvironment hostingEnvironment,
         IOptions<AppSetting> settings
         ) : base(
             namedEntityServiceWorker,
             httpContextAccessor,
-            hostingEnvironment,
-            settings)
+            hostingEnvironment, settings)
         {
             _serviceWorker = serviceWorker;
             _namedEntityServiceWorker = namedEntityServiceWorker;
+            _repository = namedEntityServiceWorker.ActorRepository;
         }
 
         [HttpGet]
-        public override async Task<ActionResult<IEnumerable<MainDb.DbModels.Brand>>> Get() => await base.Get();
+        public override async Task<ActionResult<IEnumerable<MainDb.DbModels.Actor>>> Get() => await base.Get();
 
         /// <summary>
         /// Get Types by Id
@@ -44,7 +43,7 @@ namespace YAPW.Controllers.Internal
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public override async Task<ActionResult<MainDb.DbModels.Brand>> GetById(Guid id) => await base.GetById(id);
+        public override async Task<ActionResult<MainDb.DbModels.Actor>> GetById(Guid id) => await base.GetById(id);
 
         /// <summary>
         /// Get Types by Name
@@ -52,16 +51,20 @@ namespace YAPW.Controllers.Internal
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("ByName/{name}")]
-        public override async Task<ActionResult<MainDb.DbModels.Brand>> GetByName(string name) => await base.GetByName(name);
+        public override async Task<ActionResult<MainDb.DbModels.Actor>> GetByName(string name) => await base.GetByName(name);
 
         /// <summary>
         /// Post Type
         /// </summary>
         /// <param name="namedEntityDataModel"></param>
         /// <returns></returns>
-        [HttpPost]
-        public override async Task<ActionResult<MainDb.DbModels.Brand>> Post(NamedEntityDataModel namedEntityDataModel)
-            => await base.Post(namedEntityDataModel);
+        [HttpPost("2")]
+        public async Task<ActionResult<MainDb.DbModels.Actor>> Post2(NamedEntityDataModel namedEntityDataModel)
+            //=> await base.Post(namedEntityDataModel);
+        {
+            await _repository.AddActor(namedEntityDataModel.Name);
+            return Ok();
+        }
 
         /// <summary>
         /// Delete Type

@@ -6,6 +6,7 @@ using System.Security.Claims;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
 using YAPW.MainDb.DbModels;
+using YAPW.Models.Models.Settings;
 
 namespace YAPW.Controllers.Base
 {
@@ -21,10 +22,12 @@ namespace YAPW.Controllers.Base
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly TServiceWorker _entityServiceWorker;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IOptions<AppSetting> _settings;
 
         /// <summary>
         /// Current environment
         /// </summary>
+        protected Models.Models.Settings.Environment CurrentEnvironment { get; set; }
 
         /// <summary>
         /// The base controller Ctor
@@ -32,12 +35,14 @@ namespace YAPW.Controllers.Base
         public GenericEntitiesControllerBase(
             TServiceWorker entityServiceWorker,
             IHttpContextAccessor httpContextAccessor,
-            IWebHostEnvironment hostingEnvironment)
+            IWebHostEnvironment hostingEnvironment,
+            IOptions<AppSetting> settings)
         {
             _entityServiceWorker = entityServiceWorker;
             _httpContextAccessor = httpContextAccessor;
             _hostingEnvironment = hostingEnvironment;
-
+            _settings = settings;
+            CurrentEnvironment = GetCurrentEnvironmentSettings();
         }
 
         /// <summary>
@@ -87,6 +92,11 @@ namespace YAPW.Controllers.Base
 
             return NoContent();
         }
+
+        private Models.Models.Settings.Environment GetCurrentEnvironmentSettings() =>
+            _settings is not null && _hostingEnvironment is not null
+            ? _settings.Value.Environments.SingleOrDefault(e => e.Name.ToLower() == _hostingEnvironment.EnvironmentName.ToLower())
+            : throw new InvalidOperationException("Settings and hosting environment issues");
 
         #region Helpers
 

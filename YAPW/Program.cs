@@ -13,9 +13,10 @@ builder.Services.AddHttpClient("javaApi", c =>
     c.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
-var appSettings = builder.Configuration.GetSection("GlobalConfig").Get<AppSetting>(); 
+var appSettings = builder.Configuration.GetSection("GlobalConfig").Get<AppSetting>();
 var currentEnvironmentSettings = appSettings.Environments.SingleOrDefault(e => e.Name.ToLower() == builder.Environment.EnvironmentName.ToLower());
 var connectionString = currentEnvironmentSettings.SettingsData.ConnectionString;
+builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("GlobalConfig"));
 
 //builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=YAPWDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False", c => c.MigrationsAssembly("YAPW.MainDb")));
 //builder.Services.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=YAPWDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False", c => c.MigrationsAssembly("YAPW.MainDb"));

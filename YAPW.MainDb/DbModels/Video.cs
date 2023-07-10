@@ -9,56 +9,29 @@ namespace YAPW.MainDb.DbModels
     public class Video : NamedEntity
     {
         /// <summary>
-        /// Total likes
+        /// all actors
         /// </summary>
-        public int Likes { get; set; }
-
-        /// <summary>
-        /// Total Dislikes
-        /// </summary>
-        public int Dislikes { get; set; }
-
-        /// <summary>
-        /// Total views
-        /// </summary>
-        public int Views { get; set; }
-
-        public DateTime ReleaseDate { get; set; }
-
-        /// <summary>
-        /// all pornstars
-        /// </summary>
-        public List<Pornstar> Pornstars { get; set; }
+        public virtual ICollection<ActorVideo> ActorVideos { get; set; }
 
         /// <summary>
         /// Brand ~ Brazzers, Fidelity etc
         /// </summary>
-        public Brand Brand { get; set; }
+        public Guid BrandId { get; set; }
+        public virtual Brand Brand { get; set; }
 
         /// <summary>
         /// Categories ~ Teen, HD, 4K, Hotel
         /// </summary>
-        public List<Category> Categories { get; set; }
+        //public virtual List<Category> Categories { get; set; }
+        public virtual ICollection<VideoCategory> VideoCategories { get; set; }
 
         /// <summary>
         /// AWS, azure or gcp link?
         /// </summary>
-        public Link Link { get; set; }
+        public Guid LinkId { get; set; }
+        public virtual Link Link { get; set; }
 
-        /// <summary>
-        /// 720p, 1080, 4k
-        /// </summary>
-        public string BestQuality { get; set; }
-
-        /// <summary>
-        /// AWS, azure or gcp link?
-        /// </summary>
-        public Link HoverLink { get; set; }
-
-        /// <summary>
-        /// Time
-        /// </summary>
-        public double VideoLength { get; set; }
+        public virtual VideoInfo VideoInfo { get; set; }
 
     }
 }

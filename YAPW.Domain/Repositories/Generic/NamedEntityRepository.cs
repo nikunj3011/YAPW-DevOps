@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using YAPW.Domain.Interfaces.Repositories;
 using YAPW.MainDb;
 using YAPW.MainDb.DbModels;
@@ -8,7 +9,7 @@ namespace YAPW.Domain.Repositories.Generic;
 
 public class NamedEntityRepository<TNamedEntity, TContext> : EntityRepository<TNamedEntity, TContext>, INamedEntityRepository<TNamedEntity>
     where TNamedEntity : NamedEntity, INamedEntity
-    where TContext : DataContext
+    where TContext : DbContext
 {
     private readonly TContext context;
 

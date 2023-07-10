@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using YAPW.Domain.Interfaces.Services;
 using YAPW.Domain.Repositories.Generic;
+using YAPW.Domain.Repositories.Main;
 using YAPW.MainDb;
 using YAPW.MainDb.DbModels;
 
@@ -18,7 +19,7 @@ namespace YAPW.Domain.Services.Generic
     {
         private readonly TContext _context;
         private EntityRepository<TEntity, TContext> entityRepository;
-        //private OrderRepository<Order, TContext> orderRepository;
+        private LinkRepository<Link, TContext> linkRepository;
         //private OrderStatusRepository<OrderStatus, TContext> orderStatusRepository;
 
 
@@ -27,7 +28,8 @@ namespace YAPW.Domain.Services.Generic
         public EntityRepository<TEntity, TContext> EntityRepository => entityRepository ??= new EntityRepository<TEntity, TContext>(_context);
         //public OrderRepository<Order, TContext> OrderRepository => orderRepository ??= new OrderRepository<Order, TContext>(_context);
         //public OperationQuestionRepository<OperationQuestion, TContext> OperationQuestionRepository => operationQuestionRepository ??= new OperationQuestionRepository<OperationQuestion, TContext>(_context);
-        
+        public LinkRepository<Link, TContext> LinkRepository => linkRepository ??= new LinkRepository<Link, TContext>(_context);
+
         public async Task BeginTransaction()
         {
             await _context.Database.BeginTransactionAsync().ConfigureAwait(false);

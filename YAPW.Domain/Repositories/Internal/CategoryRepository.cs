@@ -6,14 +6,14 @@ using YAPW.MainDb;
 
 namespace YAPW.Domain.Repositories.Main;
 
-public class TypeRepository<TEntity, TContext> : NamedEntityRepository<TEntity, TContext>, ITypeService
-    where TEntity : MainDb.DbModels.Type
+public class CategoryRepository<TEntity, TContext> : NamedEntityRepository<TEntity, TContext>, ICategoryService
+    where TEntity : MainDb.DbModels.Category
     where TContext : DbContext
 {
     private readonly TContext _context;
     private readonly ServiceWorker<TContext> _serviceWorker;
 
-    public TypeRepository(TContext context) : base(context)
+    public CategoryRepository(TContext context) : base(context)
     {
         _context = context;
         _serviceWorker = new ServiceWorker<TContext>(_context);

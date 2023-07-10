@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using YAPW.Controllers.Base;
+using YAPW.Domain.Interfaces.Services;
+using YAPW.Domain.Repositories.Main;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
+using YAPW.MainDb.DbModels;
 using YAPW.Models.DataModels;
 using YAPW.Models.Models.Settings;
 
@@ -13,18 +16,23 @@ namespace YAPW.Controllers.Internal
     [Route("[controller]")]
     public class VideosController : GenericNamedEntitiesControllerBase<MainDb.DbModels.Video, DataContext, NamedEntityServiceWorker<MainDb.DbModels.Video, DataContext>, NamedEntityDataModel>
     {
-        private readonly EntityServiceWorker<MainDb.DbModels.Video, DataContext> _entityServiceWorker;
+        private readonly NamedEntityServiceWorker<MainDb.DbModels.Video, DataContext> _namedEntityServiceWorker;
         private readonly ServiceWorker<DataContext> _serviceWorker;
+        private readonly VideoRepository<Video, DataContext> _repository;
 
-        public VideosController(NamedEntityServiceWorker<MainDb.DbModels.Video, DataContext> entityServiceWorker,
+        public VideosController(ServiceWorker<DataContext> serviceWorker,
+        NamedEntityServiceWorker<MainDb.DbModels.Video, DataContext> namedEntityServiceWorker,
         IHttpContextAccessor httpContextAccessor,
         IWebHostEnvironment hostingEnvironment,
         IOptions<AppSetting> settings
         ) : base(
-            entityServiceWorker,
+            namedEntityServiceWorker,
             httpContextAccessor,
-            hostingEnvironment)
+            hostingEnvironment, settings)
         {
+            _serviceWorker = serviceWorker;
+            _namedEntityServiceWorker = namedEntityServiceWorker;
+            _repository = namedEntityServiceWorker.VideoRepository;
         }
 
         [HttpGet]
@@ -45,6 +53,17 @@ namespace YAPW.Controllers.Internal
         /// <returns></returns>
         [HttpGet("ByName/{name}")]
         public override async Task<ActionResult<MainDb.DbModels.Video>> GetByName(string name) => await base.GetByName(name);
+
+        /// <summary>
+        /// Get Types by Name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [HttpGet("SearchByName/{name}")]
+        public async Task<ActionResult<MainDb.DbModels.Video>> SearchByName(string name, int take)
+        {
+            return Ok(await _namedEntityServiceWorker.TypeRepository.SearchTypes(name, take));
+        }
 
         /// <summary>
         /// Post Type

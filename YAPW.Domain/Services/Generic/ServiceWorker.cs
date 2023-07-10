@@ -1,21 +1,15 @@
-﻿using Azure;
+﻿using EFCore.BulkExtensions;
 using Microsoft.Data.SqlClient;
-using System.Drawing;
-using System.Net.NetworkInformation;
-using System.Net;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using YAPW.Domain.Interfaces.Services;
-using YAPW.Domain.Repositories.Generic;
-using YAPW.MainDb;
-using static System.Collections.Specialized.BitVector32;
-using YAPW.MainDb.DbModels;
-using EFCore.BulkExtensions;
 using YAPW.Domain.Interfaces.Services.Generic;
+using YAPW.Domain.Repositories.Generic;
+using YAPW.Domain.Repositories.Main;
+using YAPW.MainDb.DbModels;
 
 namespace YAPW.Domain.Services.Generic
 {
-    public class ServiceWorker<TContext> : IServiceWorker where TContext : DataContext
+    public class ServiceWorker<TContext> : IServiceWorker where TContext : DbContext
     {
         #region Fields
 
@@ -27,20 +21,31 @@ namespace YAPW.Domain.Services.Generic
 
         #region Generic Entities
 
-        private EntityRepository<MainDb.DbModels.Type, TContext> typeRepository;
+        //private EntityRepository<Link, TContext> linkRepository;
+        private LinkRepository<Link, TContext> linkRepository;
 
         #endregion Generic Entities
 
         #region Generic Named Entities
 
-        private NamedEntityRepository<MainDb.DbModels.Type, TContext> type2Repository;
+        //private NamedEntityRepository<Brand, TContext> brandRepository;
+        //private NamedEntityRepository<Category, TContext> categoryRepository;
+        //private NamedEntityRepository<Photo, TContext> photoRepository;
+        //private NamedEntityRepository<Tag, TContext> tagRepository;
+        //private NamedEntityRepository<MainDb.DbModels.Type, TContext> typeRepository;
+        //private NamedEntityRepository<Video, TContext> videoRepository;
 
         #endregion Generic Named Entities
 
         #region Known Entities
 
-        //Logistics
-        //private TripRepository<Trip, TContext> tripRepository;
+        private BrandRepository<Brand, TContext> brandRepository;
+        private CategoryRepository<Category, TContext> categoryRepository;
+        private PhotoRepository<Photo, TContext> photoRepository;
+        private ActorRepository<Actor, TContext> actorRepository;
+        private TagRepository<Tag, TContext> tagRepository;
+        private TypeRepository<MainDb.DbModels.Type, TContext> typeRepository;
+        private VideoRepository<Video, TContext> videoRepository;
 
         #endregion Known Entities
 
@@ -50,22 +55,31 @@ namespace YAPW.Domain.Services.Generic
 
         #region Generic Entities
 
-        //public EntityRepository<LineSpeedEventReason, TContext> LineSpeedEventReasonRepository => lineSpeedEventReasonRepository ??= new EntityRepository<LineSpeedEventReason, TContext>(_context);
+        public LinkRepository<Link, TContext> LinkRepository => linkRepository ??= new LinkRepository<Link, TContext>(_context);
 
         #endregion Generic Entities
 
         #region Named Entities
 
-        //public NamedEntityRepository<Color, TContext> ColorRepository => colorRepository ??= new NamedEntityRepository<Color, TContext>(_context);
-        
+        //public NamedEntityRepository<Brand, TContext> BrandRepository => brandRepository ??= new NamedEntityRepository<Brand, TContext>(_context);
+        //public NamedEntityRepository<Category, TContext> CategoryRepository => categoryRepository ??= new NamedEntityRepository<Category, TContext>(_context);
+        //public NamedEntityRepository<Photo, TContext> PhotoRepository => photoRepository ??= new NamedEntityRepository<Photo, TContext>(_context);
+        //public NamedEntityRepository<Tag, TContext> TagRepository => tagRepository ??= new NamedEntityRepository<Tag, TContext>(_context);
+        //public NamedEntityRepository<MainDb.DbModels.Type, TContext> TypeRepository => typeRepository ??= new NamedEntityRepository<MainDb.DbModels.Type, TContext>(_context);
+        //public NamedEntityRepository<Video, TContext> VideoRepository => videoRepository ??= new NamedEntityRepository<Video, TContext>(_context);
+
         #endregion Named Entities
 
         #region Known Entities
 
-        //Logistics
-        //
         //public DocumentRepository<Document, TContext> DocumentRepository => documentRepository ??= new DocumentRepository<Document, TContext>(_context);
-
+        public BrandRepository<Brand, TContext> BrandRepository => brandRepository ??= new BrandRepository<Brand, TContext>(_context);
+        public CategoryRepository<Category, TContext> CategoryRepository => categoryRepository ??= new CategoryRepository<Category, TContext>(_context);
+        public PhotoRepository<Photo, TContext> PhotoRepository => photoRepository ??= new PhotoRepository<Photo, TContext>(_context);
+        public ActorRepository<Actor, TContext> ActorRepository => actorRepository ??= new ActorRepository<Actor, TContext>(_context);
+        public TagRepository<Tag, TContext> TagRepository => tagRepository ??= new TagRepository<Tag, TContext>(_context);
+        public TypeRepository<MainDb.DbModels.Type, TContext> TypeRepository => typeRepository ??= new TypeRepository<MainDb.DbModels.Type, TContext>(_context);
+        public VideoRepository<Video, TContext> VideoRepository => videoRepository ??= new VideoRepository<Video, TContext>(_context);
         #endregion Known Entities
 
         #endregion Properties

@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using YAPW.Controllers.Base;
+using YAPW.Domain.Repositories.Main;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
+using YAPW.MainDb.DbModels;
 using YAPW.Models.DataModels;
 using YAPW.Models.Models.Settings;
 
@@ -15,16 +17,21 @@ namespace YAPW.Controllers.Internal
     {
         private readonly EntityServiceWorker<MainDb.DbModels.Link, DataContext> _entityServiceWorker;
         private readonly ServiceWorker<DataContext> _serviceWorker;
+        private readonly LinkRepository<Link, DataContext> _repository;
 
-        public LinksController(EntityServiceWorker<MainDb.DbModels.Link, DataContext> entityServiceWorker,
+        public LinksController(ServiceWorker<DataContext> serviceWorker,
+        EntityServiceWorker<MainDb.DbModels.Link, DataContext> entityServiceWorker,
         IHttpContextAccessor httpContextAccessor,
         IWebHostEnvironment hostingEnvironment,
         IOptions<AppSetting> settings
         ) : base(
             entityServiceWorker,
             httpContextAccessor,
-            hostingEnvironment)
+            hostingEnvironment, settings)
         {
+            _serviceWorker = serviceWorker;
+            _entityServiceWorker = entityServiceWorker;
+            _repository = entityServiceWorker.LinkRepository;
         }
 
         [HttpGet]
@@ -37,6 +44,24 @@ namespace YAPW.Controllers.Internal
         /// <returns></returns>
         [HttpGet("{id}")]
         public override async Task<ActionResult<MainDb.DbModels.Link>> GetById(Guid id) => await base.GetById(id);
+
+        /// <summary>
+        /// Get Types by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("linkId")]
+        public async Task<ActionResult<MainDb.DbModels.Link>> GetByLinkId(string link)
+        {
+            try
+            {
+                return Ok(await _repository.GetByLink(link));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         ///// <summary>
         ///// Post Type

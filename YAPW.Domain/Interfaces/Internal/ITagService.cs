@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace YAPW.Domain.Interfaces
 {
-    public interface ITypeService
+    public interface ITagService
     {
         Task<IEnumerable<dynamic>> SearchTypes(string name, int take);
     }

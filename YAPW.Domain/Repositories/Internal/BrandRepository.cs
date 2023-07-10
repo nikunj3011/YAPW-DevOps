@@ -6,17 +6,19 @@ using YAPW.MainDb;
 
 namespace YAPW.Domain.Repositories.Main;
 
-public class TypeRepository<TEntity, TContext> : NamedEntityRepository<TEntity, TContext>, ITypeService
-    where TEntity : MainDb.DbModels.Type
+public class BrandRepository<TEntity, TContext> : NamedEntityRepository<TEntity, TContext>, IBrandService
+    where TEntity : MainDb.DbModels.Brand
     where TContext : DbContext
 {
     private readonly TContext _context;
     private readonly ServiceWorker<TContext> _serviceWorker;
+    private readonly DbSet<TEntity> _dbSet;
 
-    public TypeRepository(TContext context) : base(context)
+    public BrandRepository(TContext context) : base(context)
     {
         _context = context;
         _serviceWorker = new ServiceWorker<TContext>(_context);
+        _dbSet = _context.Set<TEntity>();
     }
 
     public async Task<IEnumerable<dynamic>> SearchTypes(string name, int take)

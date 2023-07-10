@@ -10,7 +10,7 @@ namespace YAPW.Domain.Repositories.Generic
 {
     public class EntityRepository<TEntity, TContext> : IEntityRepository<TEntity>
         where TEntity : EntityBase
-        where TContext : DataContext
+        where TContext : DbContext
     {
         public readonly TContext context;
         private readonly DbSet<TEntity> dbSet;

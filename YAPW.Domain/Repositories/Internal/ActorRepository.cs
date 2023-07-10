@@ -3,17 +3,19 @@ using YAPW.Domain.Interfaces;
 using YAPW.Domain.Repositories.Generic;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
+using YAPW.MainDb.DbModels;
+using YAPW.Models.DataModels;
 
 namespace YAPW.Domain.Repositories.Main;
 
-public class TypeRepository<TEntity, TContext> : NamedEntityRepository<TEntity, TContext>, ITypeService
-    where TEntity : MainDb.DbModels.Type
+public class ActorRepository<TEntity, TContext> : NamedEntityRepository<TEntity, TContext>, IActorService
+    where TEntity : MainDb.DbModels.Actor
     where TContext : DbContext
 {
     private readonly TContext _context;
     private readonly ServiceWorker<TContext> _serviceWorker;
 
-    public TypeRepository(TContext context) : base(context)
+    public ActorRepository(TContext context) : base(context)
     {
         _context = context;
         _serviceWorker = new ServiceWorker<TContext>(_context);
@@ -26,6 +28,21 @@ public class TypeRepository<TEntity, TContext> : NamedEntityRepository<TEntity, 
             t.Id,
             t.Name
         }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
+    }
+
+    public async Task<Actor> AddActor(string name)
+    {
+        //await SantitizeNamedEntityDataModel(ModelState, namedEntityDataModel, n => n.Name.ToLower() == namedEntityDataModel.Name.ToLower());
+        var cc = new Actor
+        {
+            Name = name,
+            Description = "",
+            ProfilePhotoLink = "",
+            TotalVideos = 100.ToString(),
+        };
+        await _serviceWorker.ActorRepository.AddAsync(cc);
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+        return cc;
     }
 
     #region Helpers
