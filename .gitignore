@@ -13,3 +13,7 @@ YAPW.Models/bin
 .vs
 YAPWEntities.API/obj
 YAPWEntities.API/bin
+Servicebrokers/VideoChange.Client.SignalR/bin
+Servicebrokers/VideoChange.Client.SignalR/obj
+Servicebrokers/YAPW.Service.Broker/bin
+Servicebrokers/YAPW.Service.Broker/obj

@@ -38,7 +38,7 @@ public class ActorRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
             Name = name,
             Description = "",
             ProfilePhotoLink = "",
-            TotalVideos = 100.ToString(),
+            TotalVideos = 100,
         };
         await _serviceWorker.ActorRepository.AddAsync(cc);
         await _context.SaveChangesAsync().ConfigureAwait(false);
