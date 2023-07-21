@@ -55,17 +55,25 @@ namespace YAPW.Service.Broker.Watchers
 
         private void OnStatusChanged(object sender, StatusChangedEventArgs e) => Hub.Clients.Client(_connectionId).SendAsync("monitoringStarted", e.Database, e.Server, e.Status.ToString());
 
-        private void OnNotificationReceived(object sender, RecordChangedEventArgs<Video> e) => _ = (e.Entity.Name.ToLower() switch
+        private void OnNotificationReceived(object sender, RecordChangedEventArgs<Video> e)
         {
-            var entity when entity.Equals("created", System.StringComparison.OrdinalIgnoreCase) => Hub.Clients.All.SendAsync("VideoStatus",
+            if (e.EntityOldValues.Name.ToLower() != e.Entity.Name.ToLower())
+            {
+                {
+                    _ = (e.Entity.Name.ToLower() switch
+                    {
+                        var entity when entity.Equals("created", System.StringComparison.OrdinalIgnoreCase) => Hub.Clients.All.SendAsync("VideoStatus",
                                                                                                                              e.Entity.Name,
                                                                                                                              e.Entity.Id,
                                                                                                                              e.Entity.BrandId),
-            _ => Hub.Clients.All.SendAsync("StatusChanged",
+                        _ => Hub.Clients.All.SendAsync("StatusChanged",
                                                                                                                              e.Entity.Name,
                                                                                                                              e.Entity.Id,
                                                                                                                              e.Entity.BrandId),
-        });
+                    });
+                }
+            }
+        }
 
         #endregion
 
@@ -75,7 +83,7 @@ namespace YAPW.Service.Broker.Watchers
 
         public void UnregisterOnChangeEvent() => sqlTableDependency.OnChanged -= OnNotificationReceived;
 
-        private void InitiateTableDependency() => sqlTableDependency ??= new SqlTableDependency<Video>(_connectionString, _tableName);
+        private void InitiateTableDependency() => sqlTableDependency ??= new SqlTableDependency<Video>(_connectionString, _tableName, includeOldValues: true);
 
         public void RgisterSqlDependencyEvents(string connectionId)
         {
