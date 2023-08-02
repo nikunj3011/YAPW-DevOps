@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace YAPW.MainDb.DbModels
 {
-    public class PhotoCategory : NamedEntity
+    public class PhotoCategory : EntityBase
     {
         [Required]
         [ForeignKey("Photo")]

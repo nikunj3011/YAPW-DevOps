@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using YAPW.Domain.Interfaces.External;
 using YAPW.Domain.Services.Generic;
 using YAPW.Domain.Services.Internal;
@@ -40,19 +41,36 @@ public static class SevicesInjector
 
     #region Databases Services
 
-    public static void AddDatabases(this IServiceCollection services, string connectionString)
+    public static void AddDatabases(this IServiceCollection services, string connectionString, bool isMySql = false)
     {
         if (string.IsNullOrWhiteSpace(connectionString))
         {
             throw new ArgumentException($"'{nameof(connectionString)}' cannot be null or whitespace.", nameof(connectionString));
         }
 
-        services.AddDbContext<DataContext>(options =>
+        if(isMySql)
         {
-            options.UseSqlServer(connectionString);
-            options.EnableSensitiveDataLogging();
-            options.EnableDetailedErrors();
-        });
+		    var serverVersion = new MySqlServerVersion(new Version(8, 0, 34));
+		    // Replace 'YourDbContext' with the name of your own DbContext derived class.
+		    services.AddDbContext<DataContext>(
+			    dbContextOptions => dbContextOptions
+				    .UseMySql(connectionString, serverVersion)
+				    // The following three options help with debugging, but should
+				    // be changed or removed for production.
+				    .LogTo(Console.WriteLine, LogLevel.Information)
+				    .EnableSensitiveDataLogging()
+				    .EnableDetailedErrors()
+		    );
+	    }
+        else
+        {
+			services.AddDbContext<DataContext>(options =>
+			{
+				options.UseSqlServer(connectionString);
+				options.EnableSensitiveDataLogging();
+				options.EnableDetailedErrors();
+			});
+		}
     }
     #endregion Databases Services
 }

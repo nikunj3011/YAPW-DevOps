@@ -19,6 +19,28 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
         _serviceWorker = new ServiceWorker<TContext>(_context);
     }
 
+    public async Task<IEnumerable<dynamic>> GetLimited(int take)
+    {
+        return await FindAsync(take: take, select: t => new
+        {
+            t.Id,
+            t.Name,
+            t.Photo.Link.LinkId
+        }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
+    }
+
+    public async Task<dynamic> GetByNameDetailed(string name)
+    {
+        var video = await FindSingleAsync(t=>t.Name.ToLower() == name.ToLower(), p=>p.Include(p=>p.Photo.Link).Include(p=>p.Link)).ConfigureAwait(false);
+        return new
+        {
+            video.Id,
+            video.Name,
+            video.Photo.Link.LinkId,
+            VideoLink = video.Link.LinkId,
+        };
+    }
+
     public async Task<IEnumerable<dynamic>> SearchTypes(string name, int take)
     {
         return await FindAsync(filter: v => v.Name.ToLower().Contains(name.ToLower()), take: take, select: t => new

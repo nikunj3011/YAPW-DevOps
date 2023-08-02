@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Security.Cryptography;
 using YAPW.MainDb.DbModels;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -60,24 +61,28 @@ namespace YAPW.MainDb
         }
         //dotnet ef migrations add InitialDb -c DataContext --project YAPW.MainDb
         //dotnet ef database update --project YAPW.MainDb
-        //dotnet ef migrations add InitialDb -c DataContext --project../YAPW.MainDb
-        //dotnet ef database update --project YAPW.MainDb
-        //ef migrations add InitialDb -c DataContext --project YAPW.MainDb
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=YAPWDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False", c => c.MigrationsAssembly("YAPW.MainDb"));
-            
-            
-            //optionsBuilder.UseSqlServer(connection, c => c.MigrationsAssembly("YAPW"));
-            //server=localhost\\SQLEXPRESS;Database=GameStoreDb;Integrated Security=true;MultipleActiveResultSets=true;
-            //optionsBuilder.EnableSensitiveDataLogging(true);
-            //optionsBuilder.EnableDetailedErrors(true);
-            //if (!optionsBuilder.IsConfigured)
-            ////{Data Source=tcp:DEVSERVER,49189;Initial Catalog=ditechDev;Integrated Security=False;User ID=devUser;Password=6RmZcEgZD3b5engcgFGBgq7D;Connect Timeout=30;Encrypt=True;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
-            //{
-            //    optionsBuilder.UseSqlServer("Data Source=MSIDITECHPROG;Initial Catalog=DitechTestIdentity;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-            //}
-        }
+
+            ///sql server
+            //optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=YAPWDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False", c => c.MigrationsAssembly("YAPW.MainDb"));
+
+
+            ///mysql
+            var serverversion = new MySqlServerVersion(new Version(8,0,34)); 
+            optionsBuilder.UseMySql("Server=localhost;Database=YAPWDb;Uid=root;Pwd=root;", serverversion);
+			//Old Guids = true;
+
+			//optionsBuilder.UseSqlServer(connection, c => c.MigrationsAssembly("YAPW"));
+			//server=localhost\\SQLEXPRESS;Database=GameStoreDb;Integrated Security=true;MultipleActiveResultSets=true;
+			//optionsBuilder.EnableSensitiveDataLogging(true);
+			//optionsBuilder.EnableDetailedErrors(true);
+			//if (!optionsBuilder.IsConfigured)
+			////{Data Source=tcp:DEVSERVER,49189;Initial Catalog=ditechDev;Integrated Security=False;User ID=devUser;Password=6RmZcEgZD3b5engcgFGBgq7D;Connect Timeout=30;Encrypt=True;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
+			//{
+			//    optionsBuilder.UseSqlServer("Data Source=MSIDITECHPROG;Initial Catalog=DitechTestIdentity;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+			//}
+		}
     }
 }

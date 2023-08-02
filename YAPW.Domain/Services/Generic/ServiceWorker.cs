@@ -23,6 +23,9 @@ namespace YAPW.Domain.Services.Generic
 
         //private EntityRepository<Link, TContext> linkRepository;
         private LinkRepository<Link, TContext> linkRepository;
+        private EntityRepository<VideoCategory, TContext> videoCategoryRepository;
+        private EntityRepository<PhotoCategory, TContext> photoCategoryRepository;
+        private EntityRepository<VideoInfo, TContext> videoInfoRepository;
 
         #endregion Generic Entities
 
@@ -56,6 +59,9 @@ namespace YAPW.Domain.Services.Generic
         #region Generic Entities
 
         public LinkRepository<Link, TContext> LinkRepository => linkRepository ??= new LinkRepository<Link, TContext>(_context);
+        public EntityRepository<VideoCategory, TContext> VideoCategoryRepository => videoCategoryRepository ??= new EntityRepository<VideoCategory, TContext>(_context);
+        public EntityRepository<PhotoCategory, TContext> PhotoCategoryRepository => photoCategoryRepository ??= new EntityRepository<PhotoCategory, TContext>(_context);
+        public EntityRepository<VideoInfo, TContext> VideoInfoRepository => videoInfoRepository ??= new EntityRepository<VideoInfo, TContext>(_context);
 
         #endregion Generic Entities
 

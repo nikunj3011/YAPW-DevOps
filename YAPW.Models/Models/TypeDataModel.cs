@@ -1,6 +1,6 @@
 ﻿namespace YAPW.Models
 {
-    public class TypeDataModel
+    public class TypeDataModel : NameDataModel
     {
 
     }

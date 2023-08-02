@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace YAPW.MainDb.DbModels
 {
-    public class VideoCategory : NamedEntity
+    public class VideoCategory : EntityBase
     {
         [Required]
         [ForeignKey("Video")]

@@ -33,5 +33,10 @@ namespace YAPW.MainDb.DbModels
 
         public virtual VideoInfo VideoInfo { get; set; }
 
+        /// <summary>
+        /// </summary>
+        public Guid PhotoId { get; set; }
+        public virtual Photo Photo { get; set; }
+
     }
 }

@@ -38,6 +38,12 @@ namespace YAPW.Controllers.Internal
         [HttpGet]
         public override async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> Get() => await base.Get();
 
+        [HttpGet("take/{take}")]
+        public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> Get(int take)
+        {
+            return Ok(await _repository.GetLimited(take));
+        }
+
         /// <summary>
         /// Get Types by Id
         /// </summary>
@@ -53,6 +59,17 @@ namespace YAPW.Controllers.Internal
         /// <returns></returns>
         [HttpGet("ByName/{name}")]
         public override async Task<ActionResult<MainDb.DbModels.Video>> GetByName(string name) => await base.GetByName(name);
+
+        /// <summary>
+        /// Get Types by Name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [HttpGet("Name/{name}")]
+        public async Task<ActionResult<MainDb.DbModels.Video>> GetByNameDetailed(string name)
+        {
+            return Ok(await _repository.GetByNameDetailed(name));
+        }
 
         /// <summary>
         /// Get Types by Name

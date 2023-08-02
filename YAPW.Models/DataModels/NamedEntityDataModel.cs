@@ -5,7 +5,7 @@ namespace YAPW.Models.DataModels;
 /// <summary>
 /// A generic Data model for adding a named entity
 /// </summary>
-public class NamedEntityDataModel
+public class NamedEntityDataModel : EntityDataModel
 {
     /// <summary>
     /// The entity name
