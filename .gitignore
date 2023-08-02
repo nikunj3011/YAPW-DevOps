@@ -17,3 +17,7 @@ Servicebrokers/VideoChange.Client.SignalR/bin
 Servicebrokers/VideoChange.Client.SignalR/obj
 Servicebrokers/YAPW.Service.Broker/bin
 Servicebrokers/YAPW.Service.Broker/obj
+*.exe
+*.tfstate
+*.tfstate.backup
+.terraform
