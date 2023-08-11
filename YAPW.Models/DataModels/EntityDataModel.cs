@@ -10,5 +10,5 @@ public class EntityDataModel
     /// <summary>
     /// The entity Id
     /// </summary>
-    public Guid Id { get; set; }
+    //public Guid Id { get; set; }
 }

@@ -3,6 +3,7 @@ using YAPW.Domain.Interfaces;
 using YAPW.Domain.Repositories.Generic;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
+using YAPW.Models;
 
 namespace YAPW.Domain.Repositories.Main;
 
@@ -50,14 +51,22 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
         }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
     }
 
-    #region Helpers
+	//public async Task<IEnumerable<VideoDataModel>> AddVideo(string name, int take)
+	//{
+	//	return await FindAsync(filter: v => v.Name.ToLower().Contains(name.ToLower()), take: take, select: t => new
+	//	{
+	//		t.Id,
+	//		t.Name
+	//	}, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
+	//}
+	#region Helpers
 
-    //private async Task<Category> GetVehicleTypeCategory()
-    //{
-    //    var vehicleTypeCategory = await _serviceWorker.CategoryRepository.FindSingleByNameAsync("vehicle type", false);
-    //    Guard.Against.Null(vehicleTypeCategory, nameof(vehicleTypeCategory));
-    //    return vehicleTypeCategory;
-    //}
+	//private async Task<Category> GetVehicleTypeCategory()
+	//{
+	//    var vehicleTypeCategory = await _serviceWorker.CategoryRepository.FindSingleByNameAsync("vehicle type", false);
+	//    Guard.Against.Null(vehicleTypeCategory, nameof(vehicleTypeCategory));
+	//    return vehicleTypeCategory;
+	//}
 
-    #endregion Helpers
+	#endregion Helpers
 }

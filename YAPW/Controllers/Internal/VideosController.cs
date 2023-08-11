@@ -6,6 +6,7 @@ using YAPW.Domain.Repositories.Main;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
 using YAPW.MainDb.DbModels;
+using YAPW.Models;
 using YAPW.Models.DataModels;
 using YAPW.Models.Models.Settings;
 
@@ -14,7 +15,7 @@ namespace YAPW.Controllers.Internal
     //quartz.net
     [ApiController]
     [Route("[controller]")]
-    public class VideosController : GenericNamedEntitiesControllerBase<MainDb.DbModels.Video, DataContext, NamedEntityServiceWorker<MainDb.DbModels.Video, DataContext>, NamedEntityDataModel>
+    public class VideosController : GenericNamedEntitiesControllerBase<MainDb.DbModels.Video, DataContext, NamedEntityServiceWorker<MainDb.DbModels.Video, DataContext>, VideoDataModel>
     {
         private readonly NamedEntityServiceWorker<MainDb.DbModels.Video, DataContext> _namedEntityServiceWorker;
         private readonly ServiceWorker<DataContext> _serviceWorker;
@@ -88,8 +89,39 @@ namespace YAPW.Controllers.Internal
         /// <param name="namedEntityDataModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public override async Task<ActionResult<MainDb.DbModels.Video>> Post(NamedEntityDataModel namedEntityDataModel)
-            => await base.Post(namedEntityDataModel);
+        public override async Task<ActionResult<MainDb.DbModels.Video>> Post(VideoDataModel namedEntityDataModel)
+        {
+            try
+            {
+				var video = new Video
+				{
+					Name = namedEntityDataModel?.Name,
+					Description = namedEntityDataModel?.Description,
+					BrandId = namedEntityDataModel.BrandId,
+					Link = new Link
+                    {
+                        LinkId = namedEntityDataModel?.LinkDataModel?.LinkId
+                    },
+					Photo = new Photo
+                    {
+                        Name = namedEntityDataModel?.PhotoDataModel?.Name,
+                        Description = namedEntityDataModel?.PhotoDataModel?.Description,
+                        BrandId = namedEntityDataModel.PhotoDataModel.BrandId,
+						Link = new Link
+						{
+							LinkId = namedEntityDataModel?.PhotoDataModel?.LinkDataModel?.LinkId
+						},
+					}
+				};
+				await _serviceWorker.VideoRepository.AddAsync(video);
+				await _serviceWorker.SaveAsync();
+                return Ok(video);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         /// <summary>
         /// Delete Type
