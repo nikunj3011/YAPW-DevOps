@@ -21,3 +21,5 @@ Servicebrokers/YAPW.Service.Broker/obj
 *.tfstate
 *.tfstate.backup
 .terraform
+YAPW.Website/YAPW.Website/bin
+YAPW.Website/YAPW.Website/obj
