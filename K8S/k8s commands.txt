@@ -1,0 +1,19 @@
+﻿kubectl apply -f xxx.yml (filename)
+kubectl get pods
+kubectl get deployments
+kubectl delete deploy  xxx.yaml
+
+nodeport service yml for nodeport
+
+kubectl get services
+kubectl rollout restart deployment _docker_name_ (pull from docker and restart with changes)
+
+ingress API Gateway
+kubectl get namespace
+kubectl get pods --namespace=ingress-nginx
+
+kubectl get storageclass
+kubectlt get pvc
+kubectl delete all --all
+
+kubectl create secret generic mssql --from-literal=SA_PASSWORD="secretpassword@123D"

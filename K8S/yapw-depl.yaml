@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YAPWservice-depl
+  namespace: default
+  labels:
+    app: YAPWservice
+    type: back-end
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: YAPWservice
+  template:
+    metadata:
+      labels:
+        app: YAPWservice
+    spec:
+      containers:
+        - name: YAPWservice
+          image: nikunj3011/YAPWs:latest
+          imagePullPolicy: Never
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: YAPWs-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: YAPWservice
+  ports:
+  - name: YAPWservice
+    protocol: TCP
+    port: 5000
+    targetPort: 5000
