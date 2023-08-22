@@ -26,7 +26,7 @@ builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("GlobalC
 ////}
 ///
 builder.Services.AddServiceWorkers();
-builder.Services.AddDatabases(connectionString, true);
+builder.Services.AddDatabases(connectionString, false);
 
 //builder.Services.AddAuthentication(OAuthValidationDefaults.AuthenticationScheme)
 //    .AddOAuthValidation();
