@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Linq.Expressions;
 using System.Security.Cryptography;
 using YAPW.MainDb.DbModels;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -34,11 +36,35 @@ namespace YAPW.MainDb
         public virtual DbSet<Video> Videos { get; set; }
         public virtual DbSet<VideoCategory> VideoCategories { get; set; }
         public virtual DbSet<VideoInfo> VideoInfos { get; set; }
+        public virtual DbSet<VideoTitle> VideoTitles { get; set; }
+        public virtual DbSet<VideoInfoVideoTitle> VideoInfoVideoTitles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            Expression<Func<EntityBase, bool>> filterExpr = bm => bm.Active.Equals(true);
+            foreach (var mutableEntityType in modelBuilder.Model.GetEntityTypes())
+            {
+                // check if current entity type is child of entity base
+                //
+                if (mutableEntityType.ClrType.IsAssignableTo(typeof(EntityBase)))
+                {
+                    // modify expression to handle correct child type
+                    var parameter = Expression.Parameter(mutableEntityType.ClrType);
+                    var body = ReplacingExpressionVisitor.Replace(filterExpr.Parameters[0], parameter, filterExpr.Body);
+                    var lambdaExpression = Expression.Lambda(body, parameter);
+
+                    // set filter
+                    //
+                    mutableEntityType.SetQueryFilter(lambdaExpression);
+                }
+            }
+            modelBuilder.Entity<VideoCategory>()
+             .HasIndex(n => new { n.Active, n.CategoryId, n.VideoId })
+             .HasDatabaseName("ActiveAndUnique")
+             .HasFilter("[Active] != 0")
+             .IsUnique();
             ////Handle the active equals true by using a global filter and reflection
             ////
             //Expression<Func<EntityBase, bool>> filterExpr = bm => bm.Active.Equals(true);
@@ -66,12 +92,12 @@ namespace YAPW.MainDb
             base.OnConfiguring(optionsBuilder);
 
             ///sql server
-            //optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=YAPWDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False", c => c.MigrationsAssembly("YAPW.MainDb"));
+            optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=YAPWDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False", c => c.MigrationsAssembly("YAPW.MainDb"));
 
 
             ///mysql
             var serverversion = new MySqlServerVersion(new Version(8,0,34)); 
-            optionsBuilder.UseMySql("Server=localhost;Database=YAPWDb;Uid=root;Pwd=root;", serverversion);
+            //optionsBuilder.UseMySql("Server=localhost;Database=YAPWDb;Uid=root;Pwd=root;", serverversion);
 			//Old Guids = true;
 
 			//optionsBuilder.UseSqlServer(connection, c => c.MigrationsAssembly("YAPW"));

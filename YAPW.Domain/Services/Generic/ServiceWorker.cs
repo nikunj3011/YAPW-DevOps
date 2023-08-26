@@ -26,6 +26,7 @@ namespace YAPW.Domain.Services.Generic
         private EntityRepository<VideoCategory, TContext> videoCategoryRepository;
         private EntityRepository<PhotoCategory, TContext> photoCategoryRepository;
         private EntityRepository<VideoInfo, TContext> videoInfoRepository;
+        private EntityRepository<VideoInfoVideoTitle, TContext> videoInfoVideoTitleRepository;
 
         #endregion Generic Entities
 
@@ -37,6 +38,7 @@ namespace YAPW.Domain.Services.Generic
         //private NamedEntityRepository<Tag, TContext> tagRepository;
         //private NamedEntityRepository<MainDb.DbModels.Type, TContext> typeRepository;
         //private NamedEntityRepository<Video, TContext> videoRepository;
+        private NamedEntityRepository<VideoTitle, TContext> videoTitleRepository;
 
         #endregion Generic Named Entities
 
@@ -62,6 +64,7 @@ namespace YAPW.Domain.Services.Generic
         public EntityRepository<VideoCategory, TContext> VideoCategoryRepository => videoCategoryRepository ??= new EntityRepository<VideoCategory, TContext>(_context);
         public EntityRepository<PhotoCategory, TContext> PhotoCategoryRepository => photoCategoryRepository ??= new EntityRepository<PhotoCategory, TContext>(_context);
         public EntityRepository<VideoInfo, TContext> VideoInfoRepository => videoInfoRepository ??= new EntityRepository<VideoInfo, TContext>(_context);
+        public EntityRepository<VideoInfoVideoTitle, TContext> VideoInfoVideoTitleRepository => videoInfoVideoTitleRepository ??= new EntityRepository<VideoInfoVideoTitle, TContext>(_context);
 
         #endregion Generic Entities
 
@@ -73,6 +76,7 @@ namespace YAPW.Domain.Services.Generic
         //public NamedEntityRepository<Tag, TContext> TagRepository => tagRepository ??= new NamedEntityRepository<Tag, TContext>(_context);
         //public NamedEntityRepository<MainDb.DbModels.Type, TContext> TypeRepository => typeRepository ??= new NamedEntityRepository<MainDb.DbModels.Type, TContext>(_context);
         //public NamedEntityRepository<Video, TContext> VideoRepository => videoRepository ??= new NamedEntityRepository<Video, TContext>(_context);
+        public NamedEntityRepository<VideoTitle, TContext> VideoTitleRepository => videoTitleRepository ??= new NamedEntityRepository<VideoTitle, TContext>(_context);
 
         #endregion Named Entities
 

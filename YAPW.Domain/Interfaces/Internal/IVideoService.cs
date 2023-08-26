@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using YAPW.Models;
 
 namespace YAPW.Domain.Interfaces
 {
     public interface IVideoService
     {
-        Task<IEnumerable<dynamic>> SearchTypes(string name, int take);
+        Task<IEnumerable<VideoDataModel>> GetLimited(int take);
+        Task<IEnumerable<VideoDataModel>> SearchTypes(string name, int take);
     }
 }

@@ -45,6 +45,30 @@ namespace YAPW.Controllers.Internal
             return Ok(await _repository.GetLimited(take));
         }
 
+        [HttpGet("random/{take}")]
+        public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> GetRandom(int take)
+        {
+            return Ok(await _repository.GetRandomLimited(take));
+        }
+
+        [HttpGet("brand/{take}/{brandName}")]
+        public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> GetRandomByBrand(string brandName, int take)
+        {
+            return Ok(await _repository.GetRandomLimitedByBrand(brandName, take));
+        }
+
+        [HttpGet("newReleases/{take}")]
+        public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> GetByReleaseDate(int take)
+        {
+            return Ok(await _repository.GetLimitedByReleaseDate(take));
+        }
+
+        [HttpGet("featured/byViews/{take}")]
+        public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> GetByViews(int take)
+        {
+            return Ok(await _repository.GetLimitedByViews(take));
+        }
+
         /// <summary>
         /// Get Types by Id
         /// </summary>
@@ -66,12 +90,9 @@ namespace YAPW.Controllers.Internal
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [HttpGet("Name/{name}")]
-        public async Task<ActionResult<MainDb.DbModels.Video>> GetByNameDetailed(string name)
-        {
-            return Ok(await _repository.GetByNameDetailed(name));
-        }
-
+        [HttpGet("Detailed/{name}")]
+        public async Task<VideoDataModel> GetByNameDetailed(string name) => await _repository.GetByNameDetailed(name);
+       
         /// <summary>
         /// Get Types by Name
         /// </summary>
@@ -98,20 +119,20 @@ namespace YAPW.Controllers.Internal
 					Name = namedEntityDataModel?.Name,
 					Description = namedEntityDataModel?.Description,
 					BrandId = namedEntityDataModel.BrandId,
-					Link = new Link
-                    {
-                        LinkId = namedEntityDataModel?.LinkDataModel?.LinkId
-                    },
-					Photo = new Photo
-                    {
-                        Name = namedEntityDataModel?.PhotoDataModel?.Name,
-                        Description = namedEntityDataModel?.PhotoDataModel?.Description,
-                        BrandId = namedEntityDataModel.PhotoDataModel.BrandId,
-						Link = new Link
-						{
-							LinkId = namedEntityDataModel?.PhotoDataModel?.LinkDataModel?.LinkId
-						},
-					}
+					//Link = new Link
+     //               {
+     //                   LinkId = namedEntityDataModel?.LinkDataModel?.LinkId
+     //               },
+					//Photo = new Photo
+     //               {
+     //                   Name = namedEntityDataModel?.PhotoDataModel?.Name,
+     //                   Description = namedEntityDataModel?.PhotoDataModel?.Description,
+     //                   BrandId = namedEntityDataModel.PhotoDataModel.BrandId,
+					//	Link = new Link
+					//	{
+					//		LinkId = namedEntityDataModel?.PhotoDataModel?.LinkDataModel?.LinkId
+					//	},
+					//}
 				};
 				await _serviceWorker.VideoRepository.AddAsync(video);
 				await _serviceWorker.SaveAsync();

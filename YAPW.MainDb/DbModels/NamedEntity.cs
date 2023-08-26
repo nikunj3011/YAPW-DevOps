@@ -14,7 +14,7 @@ namespace YAPW.MainDb.DbModels
         /// 
         /// </summary>
         [Required]
-        [MaxLength(100)]
+        [MaxLength(200)]
         [DataType(DataType.Text)]
         public string Name { get; set; }
 

@@ -14,13 +14,11 @@ namespace YAPW.MainDb.DbModels
         public virtual ICollection<ActorVideo> ActorVideos { get; set; }
 
         /// <summary>
-        /// Brand ~ Brazzers, Fidelity etc
         /// </summary>
         public Guid BrandId { get; set; }
         public virtual Brand Brand { get; set; }
 
         /// <summary>
-        /// Categories ~ Teen, HD, 4K, Hotel
         /// </summary>
         //public virtual List<Category> Categories { get; set; }
         public virtual ICollection<VideoCategory> VideoCategories { get; set; }
@@ -28,15 +26,15 @@ namespace YAPW.MainDb.DbModels
         /// <summary>
         /// AWS, azure or gcp link?
         /// </summary>
-        public Guid LinkId { get; set; }
-        public virtual Link Link { get; set; }
+        //public Guid LinkId { get; set; }
+        //public virtual Link Link { get; set; }
 
         public virtual VideoInfo VideoInfo { get; set; }
 
         /// <summary>
         /// </summary>
-        public Guid PhotoId { get; set; }
-        public virtual Photo Photo { get; set; }
+        //public Guid PhotoId { get; set; }
+        //public virtual Photo Photo { get; set; }
 
     }
 }

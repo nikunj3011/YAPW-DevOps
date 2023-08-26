@@ -14,13 +14,11 @@ namespace YAPW.MainDb.DbModels
         public virtual ICollection<ActorPhoto> Actors { get; set; }
 
         /// <summary>
-        /// Brand ~ ZZs, Fidelity etc
         /// </summary>
         public Guid BrandId { get; set; }
         public virtual Brand Brand { get; set; }
 
         /// <summary>
-        /// Categories ~ HD, 4K, Hotel
         /// </summary>
         public virtual ICollection<PhotoCategory> PhotoCategories { get; set; }
 
