@@ -14,6 +14,10 @@ namespace YAPW.MainDb.DbModels
         [ForeignKey("Link")]
         public Guid PhotoUrlId { get; set; }
         public virtual Link PhotoUrl { get; set; }
+
+        //[ForeignKey("VideoCategory")]
+        //public Guid VideoCategoryId { get; set; }
+        //public virtual VideoCategory VideoCategory { get; set; }
         //public List<Video> Videos { get; set; }
     }
 }

@@ -54,6 +54,20 @@ namespace YAPW.Controllers.Internal
         [HttpGet("ByName/{name}")]
         public override async Task<ActionResult<MainDb.DbModels.Category>> GetByName(string name) => await base.GetByName(name);
 
+        [HttpGet("all/minimal")]
+        public async Task<ActionResult<IEnumerable<dynamic>>> GetAllMinimal() => Ok(await _repository.GetAllMinimal());
+
+        /// <summary>
+        /// Get Random category by take
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [HttpGet("random/{take}")]
+        public async Task<ActionResult<IEnumerable<MainDb.DbModels.Category>>> GetRandom(int take)
+        {
+            return Ok(await _repository.GetRandomLimited(take));
+        }
+
         /// <summary>
         /// Post Type
         /// </summary>

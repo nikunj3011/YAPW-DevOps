@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\YAPW.Models\YAPW.Models.csproj" />
   </ItemGroup>
 
 </Project>

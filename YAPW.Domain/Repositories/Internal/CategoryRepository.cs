@@ -3,6 +3,8 @@ using YAPW.Domain.Interfaces;
 using YAPW.Domain.Repositories.Generic;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
+using YAPW.MainDb.DbModels;
+using YAPW.Models;
 
 namespace YAPW.Domain.Repositories.Main;
 
@@ -26,6 +28,26 @@ public class CategoryRepository<TEntity, TContext> : NamedEntityRepository<TEnti
             t.Id,
             t.Name
         }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
+    }
+
+    public async Task<IEnumerable<dynamic>> GetAllMinimal()
+    {
+        return await FindAsync(select: t => new
+        {
+            t.Id,
+            t.Name
+        }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
+    }
+
+    public async Task<IEnumerable<CategoryDataModel>> GetRandomLimited(int take)
+    {
+        var categoriesDb = await FindRandomAsyncNoSelect(take: take, include: p => p.Include(p=>p.PhotoUrl)).ConfigureAwait(false);
+        var categories = new List<CategoryDataModel>();
+        foreach (var item in categoriesDb)
+        {
+            categories.Add(item.AsCategoryDataModel());
+        }
+        return categories;
     }
 
     #region Helpers

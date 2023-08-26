@@ -20,6 +20,6 @@ namespace YAPW.MainDb.DbModels
         [ForeignKey("Category")]
         public Guid CategoryId { get; set; }
 
-        public virtual Category Order { get; set; }
+        public virtual Category Category { get; set; }
     }
 }

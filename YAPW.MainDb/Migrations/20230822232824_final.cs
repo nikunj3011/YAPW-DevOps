@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace YAPW.MainDb.Migrations
 {
     /// <inheritdoc />
-    public partial class updatesSQLServer : Migration
+    public partial class final : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,7 +36,7 @@ namespace YAPW.MainDb.Migrations
                     Active = table.Column<bool>(type: "bit", nullable: false),
                     LastModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -61,7 +61,7 @@ namespace YAPW.MainDb.Migrations
                     Active = table.Column<bool>(type: "bit", nullable: false),
                     LastModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -91,7 +91,7 @@ namespace YAPW.MainDb.Migrations
                     Active = table.Column<bool>(type: "bit", nullable: false),
                     LastModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -115,7 +115,7 @@ namespace YAPW.MainDb.Migrations
                     Active = table.Column<bool>(type: "bit", nullable: false),
                     LastModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -131,6 +131,29 @@ namespace YAPW.MainDb.Migrations
                         name: "FK_Photos_Links_LinkId",
                         column: x => x.LinkId,
                         principalTable: "Links",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Videos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BrandId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false),
+                    LastModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Videos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Videos_Brands_BrandId",
+                        column: x => x.BrandId,
+                        principalTable: "Brands",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                 });
@@ -219,43 +242,6 @@ namespace YAPW.MainDb.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Videos",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BrandId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LinkId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Active = table.Column<bool>(type: "bit", nullable: false),
-                    LastModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Videos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Videos_Brands_BrandId",
-                        column: x => x.BrandId,
-                        principalTable: "Brands",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_Videos_Links_LinkId",
-                        column: x => x.LinkId,
-                        principalTable: "Links",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_Videos_Photos_PhotoId",
-                        column: x => x.PhotoId,
-                        principalTable: "Photos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ActorVideos",
                 columns: table => new
                 {
@@ -323,6 +309,10 @@ namespace YAPW.MainDb.Migrations
                     ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BestQuality = table.Column<int>(type: "int", nullable: false),
                     VideoLength = table.Column<double>(type: "float", nullable: false),
+                    IsCensored = table.Column<bool>(type: "bit", nullable: false),
+                    VideoUrlId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CoverId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PosterId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false),
                     LastModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -331,9 +321,77 @@ namespace YAPW.MainDb.Migrations
                 {
                     table.PrimaryKey("PK_VideoInfos", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_VideoInfos_Links_CoverId",
+                        column: x => x.CoverId,
+                        principalTable: "Links",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_VideoInfos_Links_PosterId",
+                        column: x => x.PosterId,
+                        principalTable: "Links",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_VideoInfos_Links_VideoUrlId",
+                        column: x => x.VideoUrlId,
+                        principalTable: "Links",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
                         name: "FK_VideoInfos_Videos_VideoId",
                         column: x => x.VideoId,
                         principalTable: "Videos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VideoTitles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VideoInfoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: false),
+                    LastModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VideoTitles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VideoTitles_VideoInfos_VideoInfoId",
+                        column: x => x.VideoInfoId,
+                        principalTable: "VideoInfos",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VideoInfoVideoTitles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VideoInfoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VideoTitleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false),
+                    LastModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VideoInfoVideoTitles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VideoInfoVideoTitles_VideoInfos_VideoInfoId",
+                        column: x => x.VideoInfoId,
+                        principalTable: "VideoInfos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_VideoInfoVideoTitles_VideoTitles_VideoTitleId",
+                        column: x => x.VideoTitleId,
+                        principalTable: "VideoTitles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                 });
@@ -405,6 +463,13 @@ namespace YAPW.MainDb.Migrations
                 column: "LinkId");
 
             migrationBuilder.CreateIndex(
+                name: "ActiveAndUnique",
+                table: "VideoCategories",
+                columns: new[] { "Active", "CategoryId", "VideoId" },
+                unique: true,
+                filter: "[Active] != 0");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_VideoCategories_CategoryId",
                 table: "VideoCategories",
                 column: "CategoryId");
@@ -415,10 +480,35 @@ namespace YAPW.MainDb.Migrations
                 column: "VideoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_VideoInfos_CoverId",
+                table: "VideoInfos",
+                column: "CoverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VideoInfos_PosterId",
+                table: "VideoInfos",
+                column: "PosterId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_VideoInfos_VideoId",
                 table: "VideoInfos",
                 column: "VideoId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VideoInfos_VideoUrlId",
+                table: "VideoInfos",
+                column: "VideoUrlId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VideoInfoVideoTitles_VideoInfoId",
+                table: "VideoInfoVideoTitles",
+                column: "VideoInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VideoInfoVideoTitles_VideoTitleId",
+                table: "VideoInfoVideoTitles",
+                column: "VideoTitleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Videos_BrandId",
@@ -426,14 +516,9 @@ namespace YAPW.MainDb.Migrations
                 column: "BrandId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Videos_LinkId",
-                table: "Videos",
-                column: "LinkId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Videos_PhotoId",
-                table: "Videos",
-                column: "PhotoId");
+                name: "IX_VideoTitles_VideoInfoId",
+                table: "VideoTitles",
+                column: "VideoInfoId");
         }
 
         /// <inheritdoc />
@@ -455,19 +540,25 @@ namespace YAPW.MainDb.Migrations
                 name: "VideoCategories");
 
             migrationBuilder.DropTable(
-                name: "VideoInfos");
+                name: "VideoInfoVideoTitles");
 
             migrationBuilder.DropTable(
                 name: "Actors");
 
             migrationBuilder.DropTable(
+                name: "Photos");
+
+            migrationBuilder.DropTable(
                 name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Videos");
+                name: "VideoTitles");
 
             migrationBuilder.DropTable(
-                name: "Photos");
+                name: "VideoInfos");
+
+            migrationBuilder.DropTable(
+                name: "Videos");
 
             migrationBuilder.DropTable(
                 name: "Brands");

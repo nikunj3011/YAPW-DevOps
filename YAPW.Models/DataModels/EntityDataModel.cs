@@ -7,8 +7,13 @@ namespace YAPW.Models.DataModels;
 /// </summary>
 public class EntityDataModel
 {
-    /// <summary>
-    /// The entity Id
-    /// </summary>
-    //public Guid Id { get; set; }
+    public Guid Id { get; set; }
+
+    [Required]
+    [Display(Name = "Last Modification Date")]
+    public DateTime LastModificationDate { get; set; }
+
+    [Required]
+    [Display(Name = "Created date")]
+    public DateTime CreatedDate { get; set; }
 }

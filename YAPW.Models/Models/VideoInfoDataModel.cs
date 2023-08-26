@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace YAPW.MainDb.DbModels
+namespace YAPW.Models
 {
-    public class VideoInfo : EntityBase
+    public class VideoInfoDataModel
     {
         /// <summary>
         /// Total likes
         /// </summary>
         [Required]
         public Guid VideoId { get; set; }
-        public virtual Video Video { get; set; }
 
         /// <summary>
         /// Total likes
@@ -37,7 +31,7 @@ namespace YAPW.MainDb.DbModels
         /// <summary>
         /// 720p, 1080, 4k
         /// </summary>
-        public BestQuality BestQuality { get; set; }
+        //public BestQuality BestQuality { get; set; }
 
         /// <summary>
         /// Time
@@ -51,25 +45,15 @@ namespace YAPW.MainDb.DbModels
         [Required]
         public bool IsCensored { get; set; }
 
-
-
-        [ForeignKey("VideoUrl")]
         public Guid? VideoUrlId { get; set; }
-        public virtual Link VideoUrl { get; set; }
+        public string VideoUrl { get; set; }
 
-        [ForeignKey("Cover")]
         public Guid? CoverId { get; set; }
-        public virtual Link Cover { get; set; }
+        public string Cover { get; set; }
 
-        [ForeignKey("Poster")]
         public Guid? PosterId { get; set; }
-        public virtual Link Poster { get; set; }
+        public string Poster { get; set; }
 
-        public virtual ICollection<VideoTitle> VideoTitles { get; set; }
-    }
-
-    public enum BestQuality
-    {
-        P480, P720, P1080, P4K
+        public List<string> VideoTitles { get; set; }
     }
 }

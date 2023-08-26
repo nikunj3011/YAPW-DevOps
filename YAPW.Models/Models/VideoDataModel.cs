@@ -4,14 +4,10 @@ namespace YAPW.Models
 {
     public class VideoDataModel : NamedEntityDataModel
     {
-		public Guid BrandId { get; set; }
-
-        public LinkDataModel LinkDataModel { get; set; }
-
-        public PhotoDataModel PhotoDataModel { get; set; }
-
-		public string LinkId { get; set; }
-		public string VideoLink { get; set; }
-		public string LinkName { get; set; }
-	}
+        public Guid Id { get; set; }
+        public Guid BrandId { get; set; }
+        public BrandDataModel Brand { get; set; }
+        public List<CategoryDataModel> Categories { get; set; }
+        public VideoInfoDataModel VideoInfo { get; set; }
+    }
 }

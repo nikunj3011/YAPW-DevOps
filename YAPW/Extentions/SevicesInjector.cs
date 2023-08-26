@@ -20,6 +20,7 @@ public static class SevicesInjector
         services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Tag, DataContext>>();
         services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Type, DataContext>>();
         services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Video, DataContext>>();
+        services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.VideoTitle, DataContext>>();
         services.AddTransient<INameService, NameService>();
     }
 
@@ -28,6 +29,7 @@ public static class SevicesInjector
         //Operations
         //
         services.AddTransient<EntityServiceWorker<YAPW.MainDb.DbModels.Link, DataContext>>();
+        services.AddTransient<EntityServiceWorker<YAPW.MainDb.DbModels.VideoInfoVideoTitle, DataContext>>();
     }
 
     public static void AddServiceWorkers(this IServiceCollection services)
