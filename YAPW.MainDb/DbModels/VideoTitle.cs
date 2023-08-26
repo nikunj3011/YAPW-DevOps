@@ -8,6 +8,6 @@ namespace YAPW.MainDb.DbModels
 {
     public class VideoTitle : NamedEntity
     {
-
+         
     }
 }
