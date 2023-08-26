@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure;
+using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NetTopologySuite.Index.HPRtree;
 using Newtonsoft.Json;
@@ -35,97 +37,97 @@ namespace YAPW.Controllers.Internal
             _serviceWorker = serviceWorker;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<IEnumerable<NameDataModel>>> GetAll()
-        {
-            try
-            {
-                var brand = new Brand
-                {
-                    Name = "Best Company",
-                    Description = "Best of best"
-                };
-                await _serviceWorker.BrandRepository.AddAsync(brand);
-                var category = new Category
-                {
-                    Name = "Funny",
-                    Description = "whoa"
-                };
-                await _serviceWorker.CategoryRepository.AddAsync(category);
+        //[HttpPost]
+        //public async Task<ActionResult<IEnumerable<NameDataModel>>> GetAll()
+        //{
+        //    try
+        //    {
+        //        var brand = new Brand
+        //        {
+        //            Name = "Best Company",
+        //            Description = "Best of best"
+        //        };
+        //        await _serviceWorker.BrandRepository.AddAsync(brand);
+        //        var category = new Category
+        //        {
+        //            Name = "Funny",
+        //            Description = "whoa"
+        //        };
+        //        await _serviceWorker.CategoryRepository.AddAsync(category);
 
-                var link = new Link
-                {
-                    LinkId = "https://assets.mixkit.co/videos/preview/mixkit-going-down-a-curved-highway-through-a-mountain-range-41576-large.mp4"
-                };
-                await _serviceWorker.LinkRepository.AddAsync(link);
+        //        var link = new Link
+        //        {
+        //            LinkId = "https://assets.mixkit.co/videos/preview/mixkit-going-down-a-curved-highway-through-a-mountain-range-41576-large.mp4"
+        //        };
+        //        await _serviceWorker.LinkRepository.AddAsync(link);
 
-                var actorProfileLink = new Link
-                {
-                    LinkId = "https://images.unsplash.com/photo-1554844453-7ea2a562a6c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHBob3RvZ3JhcGh5fGVufDB8fDB8fHww&w=1000&q=80"
-                };
-                await _serviceWorker.LinkRepository.AddAsync(actorProfileLink);
+        //        var actorProfileLink = new Link
+        //        {
+        //            LinkId = "https://images.unsplash.com/photo-1554844453-7ea2a562a6c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHBob3RvZ3JhcGh5fGVufDB8fDB8fHww&w=1000&q=80"
+        //        };
+        //        await _serviceWorker.LinkRepository.AddAsync(actorProfileLink);
 
-                var actor = new Actor
-                {
-                    Name = "J J Spooderman",
-                    Description = "Best of best",
-                    ProfilePhotoLink = actorProfileLink,
-                    TotalVideos = 0
-                };
-                await _serviceWorker.ActorRepository.AddAsync(actor);
+        //        var actor = new Actor
+        //        {
+        //            Name = "J J Spooderman",
+        //            Description = "Best of best",
+        //            ProfilePhotoLink = actorProfileLink,
+        //            TotalVideos = 0
+        //        };
+        //        await _serviceWorker.ActorRepository.AddAsync(actor);
 
-                var photo = new Photo
-                {
-                    Name = "Spooderman the boss",
-                    Description = "Best of best",
-                    Brand = brand,
-                    Link = actorProfileLink,
-                };
-                await _serviceWorker.PhotoRepository.AddAsync(photo);
+        //        var photo = new Photo
+        //        {
+        //            Name = "Spooderman the boss",
+        //            Description = "Best of best",
+        //            Brand = brand,
+        //            Link = actorProfileLink,
+        //        };
+        //        await _serviceWorker.PhotoRepository.AddAsync(photo);
 
-                var video = new Video
-                {
-                    Name = "Spooderman the boss",
-                    Description = "Best of best",
-                    Brand = brand,
-                    Link = link,
-                    Photo = photo
-                };
-                await _serviceWorker.VideoRepository.AddAsync(video);
+        //        var video = new Video
+        //        {
+        //            Name = "Spooderman the boss",
+        //            Description = "Best of best",
+        //            Brand = brand,
+        //            Link = link,
+        //            Photo = photo
+        //        };
+        //        await _serviceWorker.VideoRepository.AddAsync(video);
 
-                var videoInfo = new VideoInfo
-                {
-                    Video = video,
-                    Likes = 100000,
-                    Dislikes = 0,
-                    Views = 10000,
-                    ReleaseDate = DateTime.Now,
-                };
-                await _serviceWorker.VideoInfoRepository.AddAsync(videoInfo);
+        //        var videoInfo = new VideoInfo
+        //        {
+        //            Video = video,
+        //            Likes = 100000,
+        //            Dislikes = 0,
+        //            Views = 10000,
+        //            ReleaseDate = DateTime.Now,
+        //        };
+        //        await _serviceWorker.VideoInfoRepository.AddAsync(videoInfo);
 
-                var videoCategory = new VideoCategory
-                {
-                    CategoryId = category.Id,
-                    VideoId  = video.Id,
-                };
-                await _serviceWorker.VideoCategoryRepository.AddAsync(videoCategory);
-                await _serviceWorker.SaveAsync();
+        //        var videoCategory = new VideoCategory
+        //        {
+        //            CategoryId = category.Id,
+        //            VideoId  = video.Id,
+        //        };
+        //        await _serviceWorker.VideoCategoryRepository.AddAsync(videoCategory);
+        //        await _serviceWorker.SaveAsync();
 
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message + "  " + ex.InnerException);
-            }
-        }
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message + "  " + ex.InnerException);
+        //    }
+        //}
 
-        [HttpPost("category")]
+        [HttpPost("category1")]
         public async Task<ActionResult<IEnumerable<NameDataModel>>> AddCategories()
         {
             try
             {
-                var category = $"[\r\n\t\t{{\r\n\t\t\t\"id\": 449,\r\n\t\t\t\"text\": \"3d\",\r\n\t\t\t\"count\": 61,\r\n\t\t\t\"description\": \"Computer generated waifus, not to be confused with IRL 3D waifus.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/3d-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/3d-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 115,\r\n\t\t\t\"text\": \"ahegao\",\r\n\t\t\t\"count\": 364,\r\n\t\t\t\"description\": \"Girls getting dicked silly, with the faces to match. \U0001f92a\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/ahegao-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/ahegao-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 40,\r\n\t\t\t\"text\": \"anal\",\r\n\t\t\t\"count\": 946,\r\n\t\t\t\"description\": \"B-b-but I poop from there!\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/anal-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/anal-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 522,\r\n\t\t\t\"text\": \"bdsm\",\r\n\t\t\t\"count\": 282,\r\n\t\t\t\"description\": \"Slaves and masters.  Hardcore bondage not for the faint-hearted.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/bdsm-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/bdsm-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 110,\r\n\t\t\t\"text\": \"big boobs\",\r\n\t\t\t\"count\": 1938,\r\n\t\t\t\"description\": \"The greatest creation known to mankind.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/big_boobs-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/big_boobs-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 169,\r\n\t\t\t\"text\": \"blow job\",\r\n\t\t\t\"count\": 2219,\r\n\t\t\t\"description\": \"When a girl uses her ultimate to please the dick.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/blow_job-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/blow_job-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 26,\r\n\t\t\t\"text\": \"bondage\",\r\n\t\t\t\"count\": 963,\r\n\t\t\t\"description\": \"Using ropes & chains for a different purpose.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/bondage-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/bondage-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 475,\r\n\t\t\t\"text\": \"boob job\",\r\n\t\t\t\"count\": 827,\r\n\t\t\t\"description\": \"Dick service with tits.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/boob_job-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/boob_job-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 523,\r\n\t\t\t\"text\": \"censored\",\r\n\t\t\t\"count\": 1794,\r\n\t\t\t\"description\": \"The parts you came to see are all pixelated, cucked by Japan.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/censored-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/censored-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 147,\r\n\t\t\t\"text\": \"comedy\",\r\n\t\t\t\"count\": 265,\r\n\t\t\t\"description\": \"Ruining the plot even more, like a shounen without blueballing.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/comedy-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/comedy-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 32,\r\n\t\t\t\"text\": \"cosplay\",\r\n\t\t\t\"count\": 338,\r\n\t\t\t\"description\": \"Girls dress up to get down.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/cosplay-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/cosplay-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 20,\r\n\t\t\t\"text\": \"creampie\",\r\n\t\t\t\"count\": 1877,\r\n\t\t\t\"description\": \"Reverse birth control when a guy cums inside. Whoops.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/creampie-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/creampie-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 104,\r\n\t\t\t\"text\": \"dark skin\",\r\n\t\t\t\"count\": 182,\r\n\t\t\t\"description\": \"Tanned beauties. 😍\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/dark_skin-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/dark_skin-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 219,\r\n\t\t\t\"text\": \"facial\",\r\n\t\t\t\"count\": 979,\r\n\t\t\t\"description\": \"Boom headshot.  When a guy cums on her face.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/facial-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/facial-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 501,\r\n\t\t\t\"text\": \"fantasy\",\r\n\t\t\t\"count\": 690,\r\n\t\t\t\"description\": \"Fantasy world with mythical creatures, isekai or RPG porn.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/fantasy-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/fantasy-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 220,\r\n\t\t\t\"text\": \"filmed\",\r\n\t\t\t\"count\": 277,\r\n\t\t\t\"description\": \"Twitch IRL section.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/filmed-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/filmed-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 314,\r\n\t\t\t\"text\": \"foot job\",\r\n\t\t\t\"count\": 99,\r\n\t\t\t\"description\": \"Like a hand job but worse.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/foot_job-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/foot_job-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 179,\r\n\t\t\t\"text\": \"futanari\",\r\n\t\t\t\"count\": 173,\r\n\t\t\t\"description\": \"Chicks with dicks. A little bit of everything.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/futanari-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/futanari-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 168,\r\n\t\t\t\"text\": \"gangbang\",\r\n\t\t\t\"count\": 679,\r\n\t\t\t\"description\": \"When there is a clear gender imbalance. Sharing is caring.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/gangbang-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/gangbang-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 521,\r\n\t\t\t\"text\": \"glasses\",\r\n\t\t\t\"count\": 533,\r\n\t\t\t\"description\": \"Sexy librarians getting fucked.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/glasses-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/glasses-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 463,\r\n\t\t\t\"text\": \"hand job\",\r\n\t\t\t\"count\": 608,\r\n\t\t\t\"description\": \"Zero-effort fapping.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/hand_job-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/hand_job-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 23,\r\n\t\t\t\"text\": \"harem\",\r\n\t\t\t\"count\": 971,\r\n\t\t\t\"description\": \"Having all the opportunities. Evolution of shounen anime.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/harem-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/harem-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 499,\r\n\t\t\t\"text\": \"hd\",\r\n\t\t\t\"count\": 1887,\r\n\t\t\t\"description\": \"Blu-ray quality videos in high res so you can see top-notch censors.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/hd-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/hd-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 12,\r\n\t\t\t\"text\": \"horror\",\r\n\t\t\t\"count\": 218,\r\n\t\t\t\"description\": \"Happy time with ghost girl -- or crippling gore, blood and death.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/horror-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/horror-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 6,\r\n\t\t\t\"text\": \"incest\",\r\n\t\t\t\"count\": 477,\r\n\t\t\t\"description\": \"Our parents aren't home, come over onii-chan.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/incest-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/incest-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 444,\r\n\t\t\t\"text\": \"inflation\",\r\n\t\t\t\"count\": 96,\r\n\t\t\t\"description\": \"The bigger her stomach, the more you're turned on.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/inflation-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/inflation-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 244,\r\n\t\t\t\"text\": \"lactation\",\r\n\t\t\t\"count\": 175,\r\n\t\t\t\"description\": \"Free protein shake during sex.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/lactation-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/lactation-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 73,\r\n\t\t\t\"text\": \"loli\",\r\n\t\t\t\"count\": 328,\r\n\t\t\t\"description\": \"Officer, I swear she said she was 18.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/loli-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/loli-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 56,\r\n\t\t\t\"text\": \"maid\",\r\n\t\t\t\"count\": 305,\r\n\t\t\t\"description\": \"Professional maids hired to clean some rooms and some cocks.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/maid-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/maid-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 524,\r\n\t\t\t\"text\": \"masturbation\",\r\n\t\t\t\"count\": 316,\r\n\t\t\t\"description\": \"This site was created so you could maximize this activity. 😎\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/masturbation-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/masturbation-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 245,\r\n\t\t\t\"text\": \"milf\",\r\n\t\t\t\"count\": 260,\r\n\t\t\t\"description\": \"Reverse loli.  Mom I'd Like to Fuck.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/milf-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/milf-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 265,\r\n\t\t\t\"text\": \"mind break\",\r\n\t\t\t\"count\": 186,\r\n\t\t\t\"description\": \"Girls getting brainwashed or loses their mind from excessive fucking.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/mind_break-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/mind_break-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 241,\r\n\t\t\t\"text\": \"mind control\",\r\n\t\t\t\"count\": 171,\r\n\t\t\t\"description\": \"Girls getting hypnotized or blackmailed with magic.. or a dick.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/mind_control-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/mind_control-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 75,\r\n\t\t\t\"text\": \"monster\",\r\n\t\t\t\"count\": 507,\r\n\t\t\t\"description\": \"When ghosts, aliens or unidentified creatures get a turn.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/monster-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/monster-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 527,\r\n\t\t\t\"text\": \"nekomimi\",\r\n\t\t\t\"count\": 36,\r\n\t\t\t\"description\": \"Catgirls!  Girls having cat-like features and feline behavior.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/nekomimi-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/nekomimi-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 261,\r\n\t\t\t\"text\": \"ntr\",\r\n\t\t\t\"count\": 275,\r\n\t\t\t\"description\": \"Like watching your girl getting it from someone else.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/ntr-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/ntr-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 78,\r\n\t\t\t\"text\": \"nurse\",\r\n\t\t\t\"count\": 176,\r\n\t\t\t\"description\": \"Girls demonstrating the best hospital services.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/nurse-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/nurse-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 255,\r\n\t\t\t\"text\": \"orgy\",\r\n\t\t\t\"count\": 239,\r\n\t\t\t\"description\": \"Dicks and pussy as far as the eye can see.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/orgy-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/orgy-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 266,\r\n\t\t\t\"text\": \"plot\",\r\n\t\t\t\"count\": 1292,\r\n\t\t\t\"description\": \"When you just wanted to nut, but it gave you a Netflix movie instead.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/plot-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/plot-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 25,\r\n\t\t\t\"text\": \"pov\",\r\n\t\t\t\"count\": 206,\r\n\t\t\t\"description\": \"You're the main character, good luck!\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/pov-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/pov-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 61,\r\n\t\t\t\"text\": \"pregnant\",\r\n\t\t\t\"count\": 87,\r\n\t\t\t\"description\": \"The scary version of inflation.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/pregnant-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/pregnant-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 223,\r\n\t\t\t\"text\": \"public sex\",\r\n\t\t\t\"count\": 636,\r\n\t\t\t\"description\": \"Shameless sex in public areas. Go ahead, they aren't looking!\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/public_sex-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/public_sex-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 38,\r\n\t\t\t\"text\": \"rape\",\r\n\t\t\t\"count\": 1485,\r\n\t\t\t\"description\": \"When girls didn't ask for it, and there is screaming in Japanese.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/rape-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/rape-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 486,\r\n\t\t\t\"text\": \"reverse rape\",\r\n\t\t\t\"count\": 130,\r\n\t\t\t\"description\": \"When the guy didn't ask for it, but not as bad as it sounds.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/reverse_rape-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/reverse_rape-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 372,\r\n\t\t\t\"text\": \"rimjob\",\r\n\t\t\t\"count\": 82,\r\n\t\t\t\"description\": \"Licking action that went too far south.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/rimjob-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/rimjob-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 299,\r\n\t\t\t\"text\": \"scat\",\r\n\t\t\t\"count\": 89,\r\n\t\t\t\"description\": \"Do we really have to do this? *cries in vanilla*\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/scat-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/scat-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 256,\r\n\t\t\t\"text\": \"school girl\",\r\n\t\t\t\"count\": 1246,\r\n\t\t\t\"description\": \"Sexual education with girls while they still attend school.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/school_girl-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/school_girl-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 317,\r\n\t\t\t\"text\": \"shota\",\r\n\t\t\t\"count\": 99,\r\n\t\t\t\"description\": \"Proof that size doesn't matter.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/shota-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/shota-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 520,\r\n\t\t\t\"text\": \"softcore\",\r\n\t\t\t\"count\": 36,\r\n\t\t\t\"description\": \"The kind of hentai that god approves of.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/softcore-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/softcore-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 35,\r\n\t\t\t\"text\": \"swimsuit\",\r\n\t\t\t\"count\": 274,\r\n\t\t\t\"description\": \"Another form of fan-service beach episodes.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/swimsuit-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/swimsuit-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 50,\r\n\t\t\t\"text\": \"teacher\",\r\n\t\t\t\"count\": 403,\r\n\t\t\t\"description\": \"Not the bad kind of detention. Crime without victims.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/teacher-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/teacher-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 15,\r\n\t\t\t\"text\": \"tentacle\",\r\n\t\t\t\"count\": 358,\r\n\t\t\t\"description\": \"Highly evolved creatures able to penetrate all kinds of holes.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/tentacle-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/tentacle-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 525,\r\n\t\t\t\"text\": \"threesome\",\r\n\t\t\t\"count\": 171,\r\n\t\t\t\"description\": \"Contains sex scenes with more complexity and social dynamic.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/threesome-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/threesome-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 469,\r\n\t\t\t\"text\": \"toys\",\r\n\t\t\t\"count\": 777,\r\n\t\t\t\"description\": \"Making use of advanced tools like dildos, vibrators, and anal beads.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/toys-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/toys-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 341,\r\n\t\t\t\"text\": \"trap\",\r\n\t\t\t\"count\": 26,\r\n\t\t\t\"description\": \"Do you see that hot girl? That is actually a guy. BAMBOOZLED\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/trap-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/trap-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 257,\r\n\t\t\t\"text\": \"tsundere\",\r\n\t\t\t\"count\": 51,\r\n\t\t\t\"description\": \"It's not like I wanted you to shove that dick in my ass, b-b-BAKA!\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/tsundere-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/tsundere-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 514,\r\n\t\t\t\"text\": \"ugly bastard\",\r\n\t\t\t\"count\": 187,\r\n\t\t\t\"description\": \"When the ugliest dudes fucks all the hottest chicks.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/ugly_bastard-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/ugly_bastard-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 28,\r\n\t\t\t\"text\": \"uncensored\",\r\n\t\t\t\"count\": 1202,\r\n\t\t\t\"description\": \"And God said: “Let there be light”. - God, 1:3-5 NIV\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/uncensored-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/uncensored-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 190,\r\n\t\t\t\"text\": \"vanilla\",\r\n\t\t\t\"count\": 406,\r\n\t\t\t\"description\": \"Traditional, wholesome, feel-good family-friendly porn.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/vanilla-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/vanilla-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 30,\r\n\t\t\t\"text\": \"virgin\",\r\n\t\t\t\"count\": 856,\r\n\t\t\t\"description\": \"This site was created to primarily serve this demographic.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/virgin-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/virgin-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 274,\r\n\t\t\t\"text\": \"watersports\",\r\n\t\t\t\"count\": 267,\r\n\t\t\t\"description\": \"When the chance for a golden shower is 100%.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/watersports-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/watersports-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 526,\r\n\t\t\t\"text\": \"x-ray\",\r\n\t\t\t\"count\": 286,\r\n\t\t\t\"description\": \"Learning about female body internals during sex.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/x-ray-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/x-ray-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 97,\r\n\t\t\t\"text\": \"yaoi\",\r\n\t\t\t\"count\": 8,\r\n\t\t\t\"description\": \"When a dude fucks another dude. Miss me with that gay shit.\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/yaoi-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/yaoi-vertical.min.jpg\"\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 3,\r\n\t\t\t\"text\": \"yuri\",\r\n\t\t\t\"count\": 640,\r\n\t\t\t\"description\": \"Girl-on-girl action. You can't really say they're \\\"fucking\\\".\",\r\n\t\t\t\"wide_image_url\": \"https://static-assets-44d.pages.dev/images/tags/yuri-horizontal.min.jpg\",\r\n\t\t\t\"tall_image_url\": \"https://static-assets-44d.pages.dev/images/tags/yuri-vertical.min.jpg\"\r\n\t\t}}\r\n\t]";
-                var categories = JsonConvert.DeserializeObject<List<Categories>>(category);
+                string jsonCategories = System.IO.File.ReadAllText("categories.json");
+                var categories = JsonConvert.DeserializeObject<List<Categories>>(jsonCategories);
                 foreach (var item in categories)
                 {
                     var newLink = new Link
@@ -152,12 +154,12 @@ namespace YAPW.Controllers.Internal
             }
         }
 
-        [HttpPost("brand")]
+        [HttpPost("brand2")]
         public async Task<ActionResult<IEnumerable<NameDataModel>>> AddBrands()
         {
             try
             {
-                var jsonBrand = $"[\r\n\t\t{{\r\n\t\t\t\"id\": 1,\r\n\t\t\t\"title\": \"37c-Binetsu\",\r\n\t\t\t\"slug\": \"37c-binetsu\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 190,\r\n\t\t\t\"title\": \"AIC\",\r\n\t\t\t\"slug\": \"aic\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 182,\r\n\t\t\t\"title\": \"Ajia-Do\",\r\n\t\t\t\"slug\": \"ajia-do\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 2,\r\n\t\t\t\"title\": \"Almond Collective\",\r\n\t\t\t\"slug\": \"almond-collective\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 185,\r\n\t\t\t\"title\": \"Alpha Polis\",\r\n\t\t\t\"slug\": \"alpha-polis\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 12\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 114,\r\n\t\t\t\"title\": \"Ameliatie\",\r\n\t\t\t\"slug\": \"ameliatie\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 3,\r\n\t\t\t\"title\": \"Amour\",\r\n\t\t\t\"slug\": \"amour\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 15\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 4,\r\n\t\t\t\"title\": \"Animac\",\r\n\t\t\t\"slug\": \"animac\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 11\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 141,\r\n\t\t\t\"title\": \"Antechinus\",\r\n\t\t\t\"slug\": \"antechinus\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 11\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 137,\r\n\t\t\t\"title\": \"APPP\",\r\n\t\t\t\"slug\": \"appp\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 5,\r\n\t\t\t\"title\": \"Arms\",\r\n\t\t\t\"slug\": \"arms\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 21\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 124,\r\n\t\t\t\"title\": \"Bishop\",\r\n\t\t\t\"slug\": \"bishop\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 6,\r\n\t\t\t\"title\": \"Blue Eyes\",\r\n\t\t\t\"slug\": \"blue-eyes\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 7\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 127,\r\n\t\t\t\"title\": \"BOMB! CUTE! BOMB!\",\r\n\t\t\t\"slug\": \"bomb-cute-bomb\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 14\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 7,\r\n\t\t\t\"title\": \"Bootleg\",\r\n\t\t\t\"slug\": \"bootleg\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 10\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 8,\r\n\t\t\t\"title\": \"BreakBottle\",\r\n\t\t\t\"slug\": \"breakbottle\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 9,\r\n\t\t\t\"title\": \"BugBug\",\r\n\t\t\t\"slug\": \"bugbug\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 10,\r\n\t\t\t\"title\": \"Bunnywalker\",\r\n\t\t\t\"slug\": \"bunnywalker\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 98\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 11,\r\n\t\t\t\"title\": \"Celeb\",\r\n\t\t\t\"slug\": \"celeb\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 12,\r\n\t\t\t\"title\": \"Central Park Media\",\r\n\t\t\t\"slug\": \"central-park-media\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 33\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 13,\r\n\t\t\t\"title\": \"ChiChinoya\",\r\n\t\t\t\"slug\": \"chichinoya\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 27\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 135,\r\n\t\t\t\"title\": \"Chocolat\",\r\n\t\t\t\"slug\": \"chocolat\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 4\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 14,\r\n\t\t\t\"title\": \"ChuChu\",\r\n\t\t\t\"slug\": \"chuchu\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 15,\r\n\t\t\t\"title\": \"Circle Tribute\",\r\n\t\t\t\"slug\": \"circle-tribute\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 16,\r\n\t\t\t\"title\": \"CoCoans\",\r\n\t\t\t\"slug\": \"cocoans\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 17,\r\n\t\t\t\"title\": \"Collaboration Works\",\r\n\t\t\t\"slug\": \"collaboration-works\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 51\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 109,\r\n\t\t\t\"title\": \"Comet\",\r\n\t\t\t\"slug\": \"comet\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 112,\r\n\t\t\t\"title\": \"Comic Media\",\r\n\t\t\t\"slug\": \"comic-media\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 11\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 18,\r\n\t\t\t\"title\": \"Cosmos\",\r\n\t\t\t\"slug\": \"cosmos\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 19,\r\n\t\t\t\"title\": \"Cranberry\",\r\n\t\t\t\"slug\": \"cranberry\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 20,\r\n\t\t\t\"title\": \"Crimson\",\r\n\t\t\t\"slug\": \"crimson\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 21,\r\n\t\t\t\"title\": \"D3\",\r\n\t\t\t\"slug\": \"d3\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 8\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 22,\r\n\t\t\t\"title\": \"Daiei\",\r\n\t\t\t\"slug\": \"daiei\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 22\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 23,\r\n\t\t\t\"title\": \"demodemon\",\r\n\t\t\t\"slug\": \"demodemon\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 24,\r\n\t\t\t\"title\": \"Digital Works\",\r\n\t\t\t\"slug\": \"digital-works\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 18\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 25,\r\n\t\t\t\"title\": \"Discovery\",\r\n\t\t\t\"slug\": \"discovery\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 76\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 128,\r\n\t\t\t\"title\": \"Dollhouse\",\r\n\t\t\t\"slug\": \"dollhouse\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 26,\r\n\t\t\t\"title\": \"EBIMARU-DO\",\r\n\t\t\t\"slug\": \"ebimaru-do\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 27,\r\n\t\t\t\"title\": \"Echo\",\r\n\t\t\t\"slug\": \"echo\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 28,\r\n\t\t\t\"title\": \"ECOLONUN\",\r\n\t\t\t\"slug\": \"ecolonun\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 29,\r\n\t\t\t\"title\": \"Edge\",\r\n\t\t\t\"slug\": \"edge\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 25\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 30,\r\n\t\t\t\"title\": \"Erozuki\",\r\n\t\t\t\"slug\": \"erozuki\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 31,\r\n\t\t\t\"title\": \"evee\",\r\n\t\t\t\"slug\": \"evee\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 4\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 32,\r\n\t\t\t\"title\": \"FINAL FUCK 7\",\r\n\t\t\t\"slug\": \"final-fuck-7\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 33,\r\n\t\t\t\"title\": \"Five Ways\",\r\n\t\t\t\"slug\": \"five-ways\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 40\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 133,\r\n\t\t\t\"title\": \"Friends Media Station\",\r\n\t\t\t\"slug\": \"friends-media-station\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 34,\r\n\t\t\t\"title\": \"Front Line\",\r\n\t\t\t\"slug\": \"front-line\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 4\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 35,\r\n\t\t\t\"title\": \"fruit\",\r\n\t\t\t\"slug\": \"fruit\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 187,\r\n\t\t\t\"title\": \"Godoy\",\r\n\t\t\t\"slug\": \"godoy\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 36,\r\n\t\t\t\"title\": \"GOLD BEAR\",\r\n\t\t\t\"slug\": \"gold-bear\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 13\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 37,\r\n\t\t\t\"title\": \"gomasioken\",\r\n\t\t\t\"slug\": \"gomasioken\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 38,\r\n\t\t\t\"title\": \"Green Bunny\",\r\n\t\t\t\"slug\": \"green-bunny\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 121\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 179,\r\n\t\t\t\"title\": \"Groover\",\r\n\t\t\t\"slug\": \"groover\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 39,\r\n\t\t\t\"title\": \"Hoods Entertainment\",\r\n\t\t\t\"slug\": \"hoods-entertainment\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 4\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 40,\r\n\t\t\t\"title\": \"Hot Bear\",\r\n\t\t\t\"slug\": \"hot-bear\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 6\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 41,\r\n\t\t\t\"title\": \"Hykobo\",\r\n\t\t\t\"slug\": \"hykobo\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 5\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 119,\r\n\t\t\t\"title\": \"IRONBELL\",\r\n\t\t\t\"slug\": \"ironbell\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 116,\r\n\t\t\t\"title\": \"Ivory Tower\",\r\n\t\t\t\"slug\": \"ivory-tower\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 178,\r\n\t\t\t\"title\": \"J.C.\",\r\n\t\t\t\"slug\": \"j-c\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 42,\r\n\t\t\t\"title\": \"Jellyfish\",\r\n\t\t\t\"slug\": \"jellyfish\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 8\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 136,\r\n\t\t\t\"title\": \"Jewel\",\r\n\t\t\t\"slug\": \"jewel\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 43,\r\n\t\t\t\"title\": \"Jumondo\",\r\n\t\t\t\"slug\": \"jumondo\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 44,\r\n\t\t\t\"title\": \"kate_sai\",\r\n\t\t\t\"slug\": \"kate_sai\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 45,\r\n\t\t\t\"title\": \"KENZsoft\",\r\n\t\t\t\"slug\": \"kenzsoft\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 46,\r\n\t\t\t\"title\": \"King Bee\",\r\n\t\t\t\"slug\": \"king-bee\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 5\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 132,\r\n\t\t\t\"title\": \"Kitty Media\",\r\n\t\t\t\"slug\": \"kitty-media\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 47,\r\n\t\t\t\"title\": \"Knack\",\r\n\t\t\t\"slug\": \"knack\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 6\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 191,\r\n\t\t\t\"title\": \"KoaLa\",\r\n\t\t\t\"slug\": \"koala\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 48,\r\n\t\t\t\"title\": \"Kuril\",\r\n\t\t\t\"slug\": \"kuril\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 49,\r\n\t\t\t\"title\": \"L.\",\r\n\t\t\t\"slug\": \"l\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 50,\r\n\t\t\t\"title\": \"Lemon Heart\",\r\n\t\t\t\"slug\": \"lemon-heart\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 14\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 51,\r\n\t\t\t\"title\": \"Lilix\",\r\n\t\t\t\"slug\": \"lilix\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 52,\r\n\t\t\t\"title\": \"Lune Pictures\",\r\n\t\t\t\"slug\": \"lune-pictures\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 18\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 53,\r\n\t\t\t\"title\": \"Magic Bus\",\r\n\t\t\t\"slug\": \"magic-bus\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 4\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 54,\r\n\t\t\t\"title\": \"Magin Label\",\r\n\t\t\t\"slug\": \"magin-label\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 37\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 130,\r\n\t\t\t\"title\": \"Majin Petit\",\r\n\t\t\t\"slug\": \"majin-petit\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 20\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 55,\r\n\t\t\t\"title\": \"Marigold\",\r\n\t\t\t\"slug\": \"marigold\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 13\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 56,\r\n\t\t\t\"title\": \"Mary Jane\",\r\n\t\t\t\"slug\": \"mary-jane\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 131\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 57,\r\n\t\t\t\"title\": \"MediaBank\",\r\n\t\t\t\"slug\": \"mediabank\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 71\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 58,\r\n\t\t\t\"title\": \"Media Blasters\",\r\n\t\t\t\"slug\": \"media-blasters\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 25\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 142,\r\n\t\t\t\"title\": \"Metro Notes\",\r\n\t\t\t\"slug\": \"metro-notes\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 134,\r\n\t\t\t\"title\": \"Milky\",\r\n\t\t\t\"slug\": \"milky\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 23\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 143,\r\n\t\t\t\"title\": \"MiMiA Cute\",\r\n\t\t\t\"slug\": \"mimia-cute\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 59,\r\n\t\t\t\"title\": \"Moon Rock\",\r\n\t\t\t\"slug\": \"moon-rock\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 60,\r\n\t\t\t\"title\": \"Moonstone Cherry\",\r\n\t\t\t\"slug\": \"moonstone-cherry\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 184,\r\n\t\t\t\"title\": \"Mousou Senka\",\r\n\t\t\t\"slug\": \"mousou-senka\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 10\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 61,\r\n\t\t\t\"title\": \"MS Pictures\",\r\n\t\t\t\"slug\": \"ms-pictures\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 345\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 126,\r\n\t\t\t\"title\": \"Muse\",\r\n\t\t\t\"slug\": \"muse\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 139,\r\n\t\t\t\"title\": \"N43\",\r\n\t\t\t\"slug\": \"n43\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 62,\r\n\t\t\t\"title\": \"Nihikime no Dozeu\",\r\n\t\t\t\"slug\": \"nihikime-no-dozeu\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 6\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 177,\r\n\t\t\t\"title\": \"Nikkatsu Video\",\r\n\t\t\t\"slug\": \"nikkatsu-video\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 131,\r\n\t\t\t\"title\": \"nur\",\r\n\t\t\t\"slug\": \"nur\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 31\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 63,\r\n\t\t\t\"title\": \"NuTech Digital\",\r\n\t\t\t\"slug\": \"nutech-digital\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 46\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 111,\r\n\t\t\t\"title\": \"Obtain Future\",\r\n\t\t\t\"slug\": \"obtain-future\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 9\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 120,\r\n\t\t\t\"title\": \"Otodeli\",\r\n\t\t\t\"slug\": \"otodeli\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 64,\r\n\t\t\t\"title\": \"@ OZ\",\r\n\t\t\t\"slug\": \"oz\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 6\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 65,\r\n\t\t\t\"title\": \"Pashmina\",\r\n\t\t\t\"slug\": \"pashmina\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 22\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 186,\r\n\t\t\t\"title\": \"Passione\",\r\n\t\t\t\"slug\": \"passione\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 24\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 192,\r\n\t\t\t\"title\": \"Pastel\",\r\n\t\t\t\"slug\": \"pastel\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 123,\r\n\t\t\t\"title\": \"Peach Pie\",\r\n\t\t\t\"slug\": \"peach-pie\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 66,\r\n\t\t\t\"title\": \"Pinkbell\",\r\n\t\t\t\"slug\": \"pinkbell\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 67,\r\n\t\t\t\"title\": \"Pink Pineapple\",\r\n\t\t\t\"slug\": \"pink-pineapple\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 518\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 122,\r\n\t\t\t\"title\": \"Pix\",\r\n\t\t\t\"slug\": \"pix\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 68,\r\n\t\t\t\"title\": \"Pixy Soft\",\r\n\t\t\t\"slug\": \"pixy-soft\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 71\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 69,\r\n\t\t\t\"title\": \"Pocomo Premium\",\r\n\t\t\t\"slug\": \"pocomo-premium\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 70,\r\n\t\t\t\"title\": \"PoRO\",\r\n\t\t\t\"slug\": \"poro\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 176\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 71,\r\n\t\t\t\"title\": \"Project No.9\",\r\n\t\t\t\"slug\": \"project-no-9\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 72,\r\n\t\t\t\"title\": \"Queen Bee\",\r\n\t\t\t\"slug\": \"queen-bee\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 99\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 73,\r\n\t\t\t\"title\": \"Rabbit Gate\",\r\n\t\t\t\"slug\": \"rabbit-gate\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 188,\r\n\t\t\t\"title\": \"ROJIURA JACK\",\r\n\t\t\t\"slug\": \"rojiura-jack\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 74,\r\n\t\t\t\"title\": \"sakamotoJ\",\r\n\t\t\t\"slug\": \"sakamotoj\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 138,\r\n\t\t\t\"title\": \"Sakura Purin\",\r\n\t\t\t\"slug\": \"sakura-purin\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 75,\r\n\t\t\t\"title\": \"SANDWICHWORKS\",\r\n\t\t\t\"slug\": \"sandwichworks\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 76,\r\n\t\t\t\"title\": \"Schoolzone\",\r\n\t\t\t\"slug\": \"schoolzone\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 15\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 77,\r\n\t\t\t\"title\": \"seismic\",\r\n\t\t\t\"slug\": \"seismic\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 78,\r\n\t\t\t\"title\": \"SELFISH\",\r\n\t\t\t\"slug\": \"selfish\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 26\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 79,\r\n\t\t\t\"title\": \"Seven\",\r\n\t\t\t\"slug\": \"seven\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 80,\r\n\t\t\t\"title\": \"Shadow Prod. Co.\",\r\n\t\t\t\"slug\": \"shadow-prod-co\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 4\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 107,\r\n\t\t\t\"title\": \"Shelf\",\r\n\t\t\t\"slug\": \"shelf\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 4\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 81,\r\n\t\t\t\"title\": \"Shinyusha\",\r\n\t\t\t\"slug\": \"shinyusha\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 110,\r\n\t\t\t\"title\": \"ShoSai\",\r\n\t\t\t\"slug\": \"shosai\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 82,\r\n\t\t\t\"title\": \"Showten\",\r\n\t\t\t\"slug\": \"showten\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 27\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 176,\r\n\t\t\t\"title\": \"SoftCell\",\r\n\t\t\t\"slug\": \"softcell\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 6\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 83,\r\n\t\t\t\"title\": \"Soft on Demand\",\r\n\t\t\t\"slug\": \"soft-on-demand\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 11\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 125,\r\n\t\t\t\"title\": \"SPEED\",\r\n\t\t\t\"slug\": \"speed\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 84,\r\n\t\t\t\"title\": \"STARGATE3D\",\r\n\t\t\t\"slug\": \"stargate3d\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 85,\r\n\t\t\t\"title\": \"Studio 9 Maiami\",\r\n\t\t\t\"slug\": \"studio-9-maiami\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 15\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 86,\r\n\t\t\t\"title\": \"Studio Akai Shohosen\",\r\n\t\t\t\"slug\": \"studio-akai-shohosen\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 87,\r\n\t\t\t\"title\": \"Studio Deen\",\r\n\t\t\t\"slug\": \"studio-deen\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 88,\r\n\t\t\t\"title\": \"Studio Fantasia\",\r\n\t\t\t\"slug\": \"studio-fantasia\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 89,\r\n\t\t\t\"title\": \"Studio FOW\",\r\n\t\t\t\"slug\": \"studio-fow\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 5\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 90,\r\n\t\t\t\"title\": \"studio GGB\",\r\n\t\t\t\"slug\": \"studio-ggb\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 189,\r\n\t\t\t\"title\": \"Studio Gokumi\",\r\n\t\t\t\"slug\": \"studio-gokumi\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 11\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 140,\r\n\t\t\t\"title\": \"Studio Houkiboshi\",\r\n\t\t\t\"slug\": \"studio-houkiboshi\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 91,\r\n\t\t\t\"title\": \"Studio Zealot\",\r\n\t\t\t\"slug\": \"studio-zealot\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 115,\r\n\t\t\t\"title\": \"Suiseisha\",\r\n\t\t\t\"slug\": \"suiseisha\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 8\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 92,\r\n\t\t\t\"title\": \"Suzuki Mirano\",\r\n\t\t\t\"slug\": \"suzuki-mirano\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 107\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 93,\r\n\t\t\t\"title\": \"SYLD\",\r\n\t\t\t\"slug\": \"syld\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 113,\r\n\t\t\t\"title\": \"TDK Core\",\r\n\t\t\t\"slug\": \"tdk-core\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 118,\r\n\t\t\t\"title\": \"t japan\",\r\n\t\t\t\"slug\": \"t-japan\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 183,\r\n\t\t\t\"title\": \"TNK\",\r\n\t\t\t\"slug\": \"tnk\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 12\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 94,\r\n\t\t\t\"title\": \"TOHO\",\r\n\t\t\t\"slug\": \"toho\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 95,\r\n\t\t\t\"title\": \"Toranoana\",\r\n\t\t\t\"slug\": \"toranoana\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 3\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 96,\r\n\t\t\t\"title\": \"T-Rex\",\r\n\t\t\t\"slug\": \"t-rex\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 28\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 129,\r\n\t\t\t\"title\": \"Triangle\",\r\n\t\t\t\"slug\": \"triangle\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 2\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 117,\r\n\t\t\t\"title\": \"Trimax\",\r\n\t\t\t\"slug\": \"trimax\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 97,\r\n\t\t\t\"title\": \"TYS Work\",\r\n\t\t\t\"slug\": \"tys-work\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 181,\r\n\t\t\t\"title\": \"U-Jin\",\r\n\t\t\t\"slug\": \"u-jin\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 4\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 98,\r\n\t\t\t\"title\": \"Umemaro-3D\",\r\n\t\t\t\"slug\": \"umemaro-3d\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 6\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 99,\r\n\t\t\t\"title\": \"Union Cho\",\r\n\t\t\t\"slug\": \"union-cho\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 100,\r\n\t\t\t\"title\": \"Valkyria\",\r\n\t\t\t\"slug\": \"valkyria\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 9\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 101,\r\n\t\t\t\"title\": \"Vanilla\",\r\n\t\t\t\"slug\": \"vanilla\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 139\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 102,\r\n\t\t\t\"title\": \"White Bear\",\r\n\t\t\t\"slug\": \"white-bear\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 12\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 103,\r\n\t\t\t\"title\": \"X City\",\r\n\t\t\t\"slug\": \"x-city\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 12\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 104,\r\n\t\t\t\"title\": \"yosino\",\r\n\t\t\t\"slug\": \"yosino\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 1\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 105,\r\n\t\t\t\"title\": \"Y.O.U.C.\",\r\n\t\t\t\"slug\": \"y-o-u-c\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 14\r\n\t\t}},\r\n\t\t{{\r\n\t\t\t\"id\": 106,\r\n\t\t\t\"title\": \"ZIZ\",\r\n\t\t\t\"slug\": \"ziz\",\r\n\t\t\t\"website_url\": null,\r\n\t\t\t\"logo_url\": null,\r\n\t\t\t\"email\": null,\r\n\t\t\t\"count\": 19\r\n\t\t}}\r\n\t]";
+                string jsonBrand = System.IO.File.ReadAllText("brands.json");
                 var brands = JsonConvert.DeserializeObject<List<Brands>>(jsonBrand);
                 var newLink = new Link
                 {
@@ -177,7 +179,133 @@ namespace YAPW.Controllers.Internal
                     _serviceWorker.BrandRepository.Add(newBrand);
                     await _serviceWorker.SaveAsync();
                 }
+                await _serviceWorker.SaveAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message + "  " + ex.InnerException);
+            }
+        }
 
+        [HttpPost("video3")]
+        public async Task<ActionResult<IEnumerable<NameDataModel>>> AddVideos()
+        {
+            try
+            {
+                string jsonVideo = System.IO.File.ReadAllText("video.json");
+                var videos = JsonConvert.DeserializeObject<List<Videos>>(jsonVideo);
+                foreach (var item in videos)
+                {
+                    var videoTitles = new List<VideoTitle>();
+                    foreach (var videoTitle in item.Titles)
+                    {
+                        var newVideoTitle = new VideoTitle
+                        {
+                            Name = videoTitle,
+                            Description = ""
+                        };
+                        videoTitles.Add(newVideoTitle);
+                        _serviceWorker.VideoTitleRepository.Add(newVideoTitle);
+                    }
+
+                    var posterLink = new Link
+                    {
+                        LinkId = item.PosterUrl
+                    };
+                    _serviceWorker.LinkRepository.Add(posterLink);
+
+                    var coverLink = new Link
+                    {
+                        LinkId = item.CoverUrl
+                    };
+                    _serviceWorker.LinkRepository.Add(coverLink);
+
+                    var videoLink = new Link
+                    {
+                        LinkId = item.Slug
+                    };
+                    _serviceWorker.LinkRepository.Add(videoLink);
+
+                    DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                    DateTime createdDate = start.AddSeconds(item.CreatedAt).ToLocalTime();
+
+                    long realeaseDate = item.ReleasedAt;
+                    start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                    DateTime releaseDate = start.AddSeconds(item.ReleasedAt).ToLocalTime();
+                    var brand = await _serviceWorker.BrandRepository.FindSingleAsync(p => p.Name.ToLower() == item.Brand.ToLower(), null);
+
+                    var newVideo = new Video
+                    {
+                        Name = item.Name,
+                        Description = item.Description,
+                        BrandId = brand.Id,
+                        VideoCategories = new List<VideoCategory>(),
+                        //Link = videoLink,
+                        //Photo = null
+                        //VideoInfo = new VideoInfo(),
+                    };
+                    _serviceWorker.VideoRepository.Add(newVideo);
+
+                    var newVideoInfo = new VideoInfo
+                    {
+                        Views = 0,
+                        VideoTitles = videoTitles,
+                        VideoUrlId = videoLink.Id,
+                        PosterId = posterLink.Id,
+                        CoverId = coverLink.Id,
+                        VideoLength = 0,
+                        IsCensored = item.IsCensored,
+                        CreatedDate = createdDate,
+                        ReleaseDate = releaseDate,
+                        VideoId = newVideo.Id
+                    };
+                    _serviceWorker.VideoInfoRepository.Add(newVideoInfo);
+
+                    var videoCateogries = new List<VideoCategory>();
+                    foreach (var tag in item.Tags)
+                    {
+                        var category = await _serviceWorker.CategoryRepository.FindSingleAsync(p => p.Name.ToLower() == tag.ToLower(), null);
+                        var newVideoCategory = new VideoCategory
+                        {
+                            CategoryId = category.Id,
+                            //Category = category,
+                            VideoId = newVideo.Id
+                        };
+                        _serviceWorker.VideoCategoryRepository.Add(newVideoCategory);
+                        await _serviceWorker.SaveAsync();
+
+                        videoCateogries.Add(newVideoCategory);
+                    }
+                    newVideo.VideoCategories = videoCateogries;
+                    newVideo.VideoInfo = newVideoInfo;
+
+                    _serviceWorker.VideoRepository.Update(newVideo);
+                    await _serviceWorker.SaveAsync();
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message + "  " + ex.InnerException);
+            }
+        }
+
+        [HttpPost("video4")]
+        public async Task<ActionResult<IEnumerable<NameDataModel>>> AddVideo()
+        {
+            try
+            {
+                //string jsonVideo = System.IO.File.ReadAllText("video.json");
+                var videos = await _serviceWorker.VideoRepository.FindAsync(p=>p.Name.Contains(""), null);
+                foreach (var item in videos)
+                {
+                    item.Description = item.Description.Replace("<p>", "");
+                    item.Description = item.Description.Replace("</p>", "");
+                    _serviceWorker.VideoRepository.Update(item);
+                }
+                await _serviceWorker.SaveAsync();
                 return Ok();
             }
             catch (Exception ex)
@@ -230,6 +358,72 @@ namespace YAPW.Controllers.Internal
 
         [JsonProperty("count")]
         public long Count { get; set; }
+    }
+
+    public class Videos
+    {
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("titles")]
+        public string[] Titles { get; set; }
+
+        [JsonProperty("slug")]
+        public string Slug { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("views")]
+        public long Views { get; set; }
+
+        [JsonProperty("interests")]
+        public long Interests { get; set; }
+
+        [JsonProperty("poster_url")]
+        public string PosterUrl { get; set; }
+
+        [JsonProperty("cover_url")]
+        public string CoverUrl { get; set; }
+
+        [JsonProperty("brand")]
+        public string Brand { get; set; }
+
+        [JsonProperty("brand_id")]
+        public long BrandId { get; set; }
+
+        [JsonProperty("duration_in_ms")]
+        public long DurationInMs { get; set; }
+
+        [JsonProperty("is_censored")]
+        public bool IsCensored { get; set; }
+
+        [JsonProperty("rating")]
+        public long Rating { get; set; }
+
+        [JsonProperty("likes")]
+        public long Likes { get; set; }
+
+        [JsonProperty("dislikes")]
+        public long Dislikes { get; set; }
+
+        [JsonProperty("downloads")]
+        public long Downloads { get; set; }
+
+        [JsonProperty("monthly_rank")]
+        public long MonthlyRank { get; set; }
+
+        [JsonProperty("tags")]
+        public string[] Tags { get; set; }
+
+        [JsonProperty("created_at")]
+        public long CreatedAt { get; set; }
+
+        [JsonProperty("released_at")]
+        public long ReleasedAt { get; set; }
     }
 
 
