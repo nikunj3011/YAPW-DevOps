@@ -1,0 +1,28 @@
+﻿@{
+    var controllerName = this.ViewContext.RouteData.Values["Controller"].ToString();
+    var actionName = this.ViewContext.RouteData.Values["Action"].ToString();
+    var area = this.ViewContext.RouteData.Values["Area"];
+    var strArea = area is not null ? area.ToString() : "";
+    var breadCrumpClass = area is not null ? "breadcrumb-item" : "";
+    var x = 0;
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                @*<h1 class="m-0">@ViewData["Title"]</h1>*@
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="@breadCrumpClass"><a  asp-area="@strArea" asp-controller="@controllerName" asp-action="@actionName" data-name="@controllerName" class="ajaxLoad">@strArea</a></li>
+                    <li class="breadcrumb-item"><a  asp-area="@strArea" asp-controller="@controllerName" asp-action="@actionName" data-name="@controllerName" class="ajaxLoad">@controllerName</a></li>
+                    <li class="breadcrumb-item active">@actionName</li>
+                    @*<li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Starter Page</li>*@
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+

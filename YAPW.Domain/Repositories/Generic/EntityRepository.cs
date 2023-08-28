@@ -150,6 +150,50 @@ namespace YAPW.Domain.Repositories.Generic
 
             return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
         }
+        public int FindCount(
+            int take = 0,
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            bool activeOnly = true,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            bool includeExtraFields = false,
+            CancellationToken cancellationToken = new CancellationToken(),
+            bool ignoreGlobalFilter = false,
+            bool splitQuery = true)
+        {
+            IQueryable<TEntity> query = dbSet;
+            query = query.Where(q => q.Active.Equals(activeOnly)).AsNoTracking();
+            Random rand = new Random();
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (include != null)
+            {
+                if (splitQuery)
+                {
+                    query = include(query).AsSplitQuery();
+                }
+                else
+                {
+                    query = include(query);
+                }
+            }
+
+            if (ignoreGlobalFilter)
+            {
+                query = query.IgnoreQueryFilters();
+            }
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            return query.Count();
+        }
 
         public async Task<IEnumerable<TEntity>> FindRandomAsyncNoSelect(
             int take = 0,

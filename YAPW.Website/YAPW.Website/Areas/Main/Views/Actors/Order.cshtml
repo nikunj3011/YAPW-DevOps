@@ -1,0 +1,267 @@
+﻿@*@model Ditech.Portal.NET.Areas.Operations.ViewModels.OrderViewModel
+
+@{
+    var tanks = ViewBag.Tanks;
+}
+<style>
+    tr {
+        cursor: pointer;
+    }
+</style>
+<div class="row">
+    <div class="col-md-4" style="padding:  ; ">
+        <div class="card" style="padding: 20px;background-color: white;color:black;">
+            <div class="form-group col-md-12">
+                <h3 class="text-center"><b>@Model.ErpNumber</b></h3>
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-3" style="padding:  ;">
+                    <div class="form-group">
+                        <b>Type</b>
+                    </div>
+                    <div class="form-group">
+                        <b>Order Id</b>
+                    </div>
+                </div>
+
+                <div class="col-md-9 col-9" style="padding:  ;">
+                    <div class="form-group text-right">
+                        <p class="text-right">@Model.Type</p>
+                    </div>
+                    <div class="form-group text-right">
+                        <p class="text-right">@Model.InternalNumber</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4" style="padding:  ;">
+        <div class="card" style="padding: 20px;background-color:#17A2B8; color:white;">
+            <div class="form-group col-md-12">
+                @if (@Model.LoadType == "")
+                {
+                    <h3 class="text-center"><b>No Load Type</b></h3>
+                }
+                else
+                {
+                    <h3 class="text-center"><b>@Model.LoadType</b></h3>
+                }
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-3" style="padding:  ;">
+                    <div class="form-group">
+                        <b>Trailer</b>
+                    </div>
+                    <div class="form-group">
+                        <b>Current Status</b>
+                    </div>
+                </div>
+
+                <div class="col-md-9 col-9" style="padding:  ;">
+                    <div class="form-group text-right">
+                        @if (@Model.Trailer == "")
+                        {
+                            <p class="text-right">-</p>
+                        }
+                        else
+                        {
+                            <p class="text-right">@Model.Trailer</p>
+                        }
+                    </div>
+                    <div class="form-group text-right">
+                        <p class="text-right">@Model.CurrentStatus</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4" style="padding:  ;">
+        <div class="card" style="padding: 19px;background-color:#DC3545;color:white;">
+            <div class="form-group col-md-12">
+                @if (@Model.CustomerLongName == "")
+                {
+                    <h3 class="text-center"><b>No Customer</b></h3>
+                }
+                else
+                {
+                    <h3 class="text-center"><b>&nbsp; @Model.CustomerLongName</b></h3>
+                }
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-3" style="padding:  ;">
+                    <div class="form-group">
+                        <b>Customer</b>
+                    </div>
+                    <div class="form-group">
+                        <b>Last Update</b>
+                    </div>
+                </div>
+
+                <div class="col-md-9 col-9" style="padding:  ;">
+                    @if (@Model.CustomerLongName == "")
+                    {
+                        <p class="text-right">No Customer</p>
+                    }
+                    else
+                    {
+                        <p class="text-right">@Model.CustomerName <aa style="font-size:80%">(@ViewBag.CustomerAddress)</aa></p>
+                    }
+                    <div class="form-group text-right">
+                        <p class="text-right">@Model.LastUpdate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-3 col-xl-3 col-md-3 col-sm-12 col-12">
+        <div class="card" style="padding: 17.5px;background-color:#F3F1EF; color:black;">
+            <div class="form-group col-md-12" id="tanksCount">
+                <h4 class="text-center"><b>Tanks : </b><b class="text-right">@tanks </b></h4>
+            </div>
+            <div class="row">
+
+                <table class="table table-sm" id="statusTank">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.TanksStatus)
+                        {
+                            <tr>
+                                <td>@item.status</td>
+                                <td>@item.TankCount</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="col-lg-9 col-xl-9 col-md-9 col-sm-12 col-12">
+        <div class="card" style="padding: 17.5px; background-color:#FDFDFD; color:black;">
+            <table class="table table-bordered table-hover table-responsive-sm table-sm table-striped orderTanksTable">
+                <thead>
+                    <tr>
+                        <th>
+                            <b> Serial Number</b>
+                        </th>
+                        <th>
+                            <b> Job #</b>
+                        </th>
+                        <th>
+                            <b> Status</b>
+                        </th>
+                        <th>
+                            <b>Type</b>
+                        </th>
+
+                        <th>
+                            <b>Size</b>
+                        </th>
+
+                        <th>
+                            <b>Last Update</b>
+                        </th>
+
+                        <th>
+                            <b>Orientation</b>
+                        </th>
+
+                        <th>
+                            <b>Manufacturer</b>
+                        </th>
+
+                        <th>
+                            <b>Color</b>
+                        </th>
+
+                        <th>
+                            <b>Crn</b>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Tanks)
+                    {
+                        <tr href="operations/orders/Tank?id=@Html.DisplayFor(modelItem => item.Id)"
+                        class="showIziModal" data-izimodal-refresh="true" data-izimodal-open="#addAddressModal"
+                        data-izimodal-zindex="9999" data-izimodal-preventClose="true" data-izimodal-width="1300px" data-izimodal-fullScreenBUtton="true"
+                        data-izimodal-title='<span style="opacity:0.6;"><i class="fa-solid fa-prescription-bottle"></i>&nbsp; Tank </span>'
+                        data-izimodal-color="#343A40">
+
+                            <td class="@Html.DisplayFor(modelItem => item.Id)">
+                                @Html.DisplayFor(modelItem => item.CurrentSerialNumber)
+                            </td>
+                             <td class="@Html.DisplayFor(modelItem => item.Job)">
+                                @Html.DisplayFor(modelItem => item.Job)
+                            </td>
+                            <td class="@Html.DisplayFor(modelItem => item.Id)">
+                                @Html.DisplayFor(modelItem => item.CurrentStatus)
+                            </td>
+                            <td class="@Html.DisplayFor(modelItem => item.Id)">
+                                @Html.DisplayFor(modelItem => item.Type)
+                            </td>
+                            <td class="@Html.DisplayFor(modelItem => item.Id)">
+                                @Html.DisplayFor(modelItem => item.Size)
+                            </td>
+                            <td class="@Html.DisplayFor(modelItem => item.Id)">
+                                @item.LastUpdate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+                            </td>
+                            <td class="@Html.DisplayFor(modelItem => item.Id)">
+                                @Html.DisplayFor(modelItem => item.Orientation)
+                            </td>
+                            <td class="@Html.DisplayFor(modelItem => item.Id)">
+                                @item.Manufacturer
+                            </td>
+                            <td class="@Html.DisplayFor(modelItem => item.Id)">
+                                @Html.DisplayFor(modelItem => item.Color)
+                            </td>
+                            <td class="@Html.DisplayFor(modelItem => item.Id)">
+                                @Html.DisplayFor(modelItem => item.Crn)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    var table;
+    $(document).ready(function () {
+        table = $('.orderTanksTable').DataTable({
+            dom: 'Blfrtip',
+            stateSave: true,
+            pageLength: 150,
+            responsive: true,
+            retrieve: true,
+            buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+        });
+    });
+    $("#statusTank tr").click(function () {
+        var count = 0;
+        $(this).find("td").each(function () {
+            if (count == 0) {
+                table.search($(this).html()).draw();
+            }
+            count++;
+        });
+    });
+
+    $("#tanksCount").click(function () {
+        table.search("").draw();
+    });
+</script>
+*@

@@ -1,0 +1,338 @@
+﻿@using YAPW.Models;
+@model List<VideoDataModel>
+@{
+    Layout = null;
+    var videosRandom = ViewBag.VideosRandom as List<VideoDataModel>;
+    //var a = DateTime.Now.Year.ToString("MM YYYY");
+    //var releaseDate = M;
+    var categoriesRandom = ViewBag.Categories as List<CategoryDataModel>;
+    var brandsRandom = ViewBag.Brands as List<BrandDataModel>;
+}
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Londrina+Outline&display=swap" rel="stylesheet">
+</head>
+<style>
+    #description::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    #description {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+
+    .owl-item, .item {
+        width: 100vh;
+    }
+
+    /*main images styles*/
+    figure.snip1466 {
+        position: relative;
+        overflow: hidden;
+        margin: 10px;
+        width: 100%;
+        color: #ffffff;
+        font-size: 16px;
+        background-color: #000000;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        text-align:center;
+        font-size:70px;
+    }
+
+        figure.snip1466 *,
+        figure.snip1466 *:before,
+        figure.snip1466 *:after {
+            -webkit-transition: all 0.4s ease;
+            transition: all 0.4s ease;
+        }
+
+        figure.snip1466 img {
+            max-width: 100%;
+            backface-visibility: hidden;
+            vertical-align: top;
+        }
+
+        figure.snip1466 i {
+            position: absolute;
+            line-height: 50px;
+            width: 50px;
+            text-align: center;
+            font-size: 28px;
+            z-index: 1;
+            bottom: 0;
+            right: 0;
+            -webkit-transform: translate(100%, 100%);
+            transform: translate(100%, 100%);
+        }
+
+            figure.snip1466 i:after {
+                position: absolute;
+                bottom: 3px;
+                right: 3px;
+                content: '';
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 0 0 75px 75px;
+                border-color: transparent transparent #34495e;
+                z-index: -1;
+            }
+
+        figure.snip1466 a {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1;
+        }
+
+        figure.snip1466:hover img,
+        figure.snip1466.hover img {
+            zoom: 1;
+            filter: alpha(opacity=70);
+            -webkit-opacity: 0.7;
+            opacity: 0.7;
+            -webkit-transform: scale(1.2);
+            transform: scale(1.2);
+        }
+
+        figure.snip1466:hover i,
+        figure.snip1466.hover i {
+            -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+        }
+    .row {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+</style>
+<div class="row " style="padding:7%;">
+    <div class="col-lg-12 ">
+        <div class="card card-outline " style="background-color:black">
+            <div class="tableOverlayContainer">
+                <div class="overlay tableOverlay" style="display:none">
+                    <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+                </div>
+                <div>
+                    @*Trending*@
+                    @if (Model?.Count > 0)
+                    {
+                        <div id="Main-carousel" class="owl-carousel owl-theme">
+                            @foreach (var item in Model)
+                            {
+                                <div class="card" style="width:auto; height:auto;background-color:#0C0B0D;border-radius:10px; padding:10px">
+                                    <div class="row" >
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-12" style="background-image:linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.5) ),url('@item.VideoInfo.Poster');background-repeat:no-repeat;background-size: 110% 135%;">
+
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-12" style="padding-top:3%;text-align:center;">
+                                                    <h3 style="font-weight:800; opacity:0.8"><i>@item.Brand.Name 's</i></h3>
+
+                                                    <p style="font-size:50px;color:white; ">
+                                                        @*font-family: 'Londrina Outline', cursive;/*max-height:120px; overflow-x:scroll;overflow-y:hidden*/*@
+                                                        <b>@item.Name</b>
+                                                    </p>
+                                                </div>
+                                                <div class="col-lg-10 col-md-10 col-sm-12 col-12">
+                                                    <div id="description" style="font-size:40px;opacity:0.9;max-height:180px; overflow:scroll;">
+                                                        @item.Description
+                                                    </div>
+
+                                                    <div><i class="fa-regular fa-calendar"></i> @item.VideoInfo.ReleaseDate.Month @item.VideoInfo.ReleaseDate.Year</div>
+                                                    <div><i class="fa-regular fa-clock"></i> @item.VideoInfo.VideoLength</div>
+                                                    <div><i class="fa-regular fa-eye"></i> @item.VideoInfo.Views</div>
+                                                    <div>
+                                                        <b>
+                                                            <i class="fa-solid fa-tags"></i>
+                                                            @foreach (var category in item.Categories)
+                                                            {
+                                                                <a style="color:#BD421B;" href="#">@category.Name</a>
+                                                            }
+                                                        </b>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2 col-md-2 col-sm-12 col-12">
+                                                    <div style="text-align:right; color:#EA2E2E;border-width:50px;">
+                                                        @*<i class="fa-solid fa-star"></i>*@
+                                                        <figure class="snip1466">
+                                                            <img src=@item.VideoInfo.Cover alt="sample52" height="394" width="268" />
+                                                            <a href="Main/Videos/Name/@item.VideoInfo.VideoUrl" class="nav-link ajaxLoad" style="padding-top:100px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7) )">
+                                                                <i class="fa-solid fa-circle-play"></i>
+                                                            </a>
+                                                        </figure>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-2 col-md-2 col-sm-12 col-12">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+                <div>
+                    @*ad*@
+                </div>
+                <div class="row ">
+                    @*Latest Releases*@
+                    @if (Model?.Count > 0)
+                    {
+                        <h2 style="text-align:center">Latest Releases</h2>
+                        <div id="sub-carousel1" class="owl-carousel owl-theme">
+                            @foreach (var item in Model)
+                            {
+                                <figure class="snip1466">
+                                    <img src=@item.VideoInfo.Cover alt="sample52" />
+                                    <a href="Main/Videos/Name/@item.VideoInfo.VideoUrl" class="nav-link ajaxLoad" style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <p style="font-size:large"> <span>@item.Name</span></p>
+                                </figure>
+                            }
+                        </div>
+
+                       @* <button class="btn btn-navbar" type="button" data-widget="navbar-search" style="text-align:center">
+                            <i class="fas fa-times"></i>
+                        </button>*@
+                    }
+                </div>
+                <div>
+                    @*ad*@
+                </div>
+                <div class="row ">
+                    @*Categories*@
+                    @if (Model?.Count > 0)
+                    {
+                        <h2 style="text-align:center">Categories</h2>
+                        <div id="sub-carousel3" class="owl-carousel owl-theme">
+                            @foreach (var item in categoriesRandom)
+                            {
+                                <figure class="snip1466">
+                                    <img src=@item.PhotoLink alt="sample52" />
+                                    <a href="Main/Videos/Name/@item.Name" class="nav-link ajaxLoad" style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <p style="font-size:large"> <span>@item.Name</span></p>
+                                </figure>
+                            }
+                        </div>
+
+                        @*<button class="btn btn-navbar" type="button" data-widget="navbar-search" style="text-align:center">
+                    <i class="fas fa-times"></i>
+                    </button>*@
+
+                    }
+                </div>
+                <div>
+                    @*ad*@
+                </div>
+                <div class="row ">
+                    @*Random*@
+                    @if (Model?.Count > 0)
+                    {
+                        <h2 style="text-align:center">Random</h2>
+                        <div id="sub-carousel2" class="owl-carousel owl-theme">
+                            @foreach (var item in videosRandom)
+                            {
+                                <figure class="snip1466">
+                                    <img src=@item.VideoInfo.Cover alt="sample52" />
+                                    <a href="Main/Videos/Name/@item.VideoInfo.VideoUrl" class="nav-link ajaxLoad" style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <p style="font-size:large"> <span>@item.Name</span></p>
+                                </figure>
+                            }
+                        </div>
+
+                        @*<button class="btn btn-navbar" type="button" data-widget="navbar-search" style="text-align:center">
+                            <i class="fas fa-times"></i>
+                        </button>*@
+                    }
+                </div>
+                <div>
+                    @*ad*@
+                </div>
+                <div class="row ">
+                    @*Famous Brands*@
+                    @if (Model?.Count > 0)
+                    {
+                        <h2 style="text-align:center">Trending Brands</h2>
+                        <div id="sub-carousel4" class="owl-carousel owl-theme">
+                            @foreach (var item in brandsRandom)
+                            {
+                                <figure class="snip1466">
+                                    <img src=@item.PhotoLink alt="sample52" />
+                                    <a href="Main/Videos/Name/@item.Name" class="nav-link ajaxLoad" style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <p style="font-size:large"> <span>@item.Name</span></p>
+                                </figure>
+                            }
+                        </div>
+
+                        @*<button class="btn btn-navbar" type="button" data-widget="navbar-search" style="text-align:center">
+                    <i class="fas fa-times"></i>
+                    </button>*@
+                    }
+                </div>
+            </div>
+            <div class="card-body OrderListContainer">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $(function () {
+            // Owl Carousel
+            var owlMain = $("#Main-carousel");
+            owlMain.owlCarousel({
+                items: 1,
+                margin: 10,
+                loop: true,
+                nav: true
+            });
+
+            var owl = $("#sub-carousel1");
+            owl.owlCarousel({
+                items: 6,
+                margin: 15,
+                loop: true,
+                nav: true
+            });
+
+            var owl2 = $("#sub-carousel2");
+            owl2.owlCarousel({
+                items: 6,
+                margin: 15,
+                loop: true,
+                nav: true
+            });
+
+            var owl3 = $("#sub-carousel3");
+            owl3.owlCarousel({
+                items: 6,
+                margin: 15,
+                loop: true,
+                nav: true
+            });
+
+            var owl4 = $("#sub-carousel4");
+            owl4.owlCarousel({
+                items: 6,
+                margin: 15,
+                loop: true,
+                nav: true
+            });
+        });
+    });
+</script>

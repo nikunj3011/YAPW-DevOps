@@ -1,0 +1,172 @@
+﻿@using YAPW.Models;
+@model VideoGetModel
+@{
+    Layout = null;
+    var BrandTypes = ViewData["BrandsSelectList"] as SelectList;
+    var CategoriesTypes = ViewData["CategoriesSelectList"] as SelectList;
+}
+<div class="row ">
+    <div class="col-lg-12 ">
+        <div class="card card-outline " style="padding:5%">
+            <div class="">
+                <form asp-action="Order" id="addReasonForm">
+                    <div id="errorMessage" class="text-danger" style="font-weight: bold; text-align: center;"></div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group row">
+                        <div class="col-lg-2 col-md-2 col-sm-6 col-6">
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-6 col-6">
+                            <span>
+                                <div class="card-tools">
+                                    <div class="form-group">
+                                        <input id="erpNumberOrder" asp-for="Search" class="form-control form-control-md orderNumberInput" placeholder="Search" autofocus />
+                                        <span asp-validation-for="Search" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-6 col-6">
+                            <span>
+                                <div class="card-tools">
+                                    <div class="form-group">
+                                        @Html.DropDownListFor(model => model.BrandId, BrandTypes, "Select Brand", new { @class = "form-control", id = "selectBrand" })
+                                        <span asp-validation-for="BrandId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-6 col-6">
+                            <span>
+                                <div class="card-tools">
+                                    <div class="form-group">
+                                        @Html.DropDownListFor(model => model.CategoryId, CategoriesTypes, "Select Category", new { @class = "form-control", id = "selectCategory" })
+                                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-6 col-6">
+                            <span>
+                                <div class="card-tools">
+                                    <div class="form-group">
+                                        @Html.DropDownListFor(model => model.Order, @Html.GetEnumSelectList<Order>(), "Select Order", new { @class = "form-control", id = "selectOrderType" })
+                                        <span asp-validation-for="Order" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-6 col-6">
+                            <span>
+                                <div class="card-tools">
+                                    <div class="form-group">
+                                        <button id="btnSubmitReason" style="background-color:#17A2B8;color:white;" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Processing" class="btn btn-block"> Search</button>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="tableOverlayContainer">
+                <div class="overlay tableOverlay" style="display:none">
+                    <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+                </div>
+            </div>
+            <div class="card-body OrderListContainer">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $(document).bind('keypress', function (e) {
+            if (e.which === 13) { // Return
+                $('.btnRefreshOrders').trigger('click');
+            }
+        });
+        PrepareAndPostFormWithoutRefreshNew('#addReasonForm', "#errorMessage", "#btnSubmitReason", "main/videos/Post", '#addReasonModal', '', ".OrderListContainer", ".overlay", ".tableOverlayContainer");
+    });
+
+    function PrepareAndPostFormWithoutRefreshNew(formElement, errorContainer, submitButton, postUrl, modalToClose, modalOrigin, afterSuccessLoadArea, overlay, ocontainer) {
+
+        var afterSuccessUrl = modalOrigin === null || modalOrigin === "" || modalOrigin === undefined ? $("#RequestOrigin").val() : modalOrigin;
+        var loadingArea = IsNullOrEmptyOrWhiteSpace(afterSuccessLoadArea) ? "#mainContentArea" : afterSuccessLoadArea
+        $(formElement).on('submit', function (e) {
+            var form = $(this);
+
+            $(errorContainer).html("");
+            if (form.valid()) {
+                //$(submitButton).button("loading");
+                $(overlay).remove();
+                let overlayy = '<div class="overlay"><i class="fas fa-2x fa-sync-alt fa-spin"></i></div>';
+                $(ocontainer).append(overlayy);
+                $(overlay).insertAfter(ocontainer);
+                $(submitButton).attr('disabled', true);
+
+                e.preventDefault();
+                $(afterSuccessLoadArea).html("");
+                $.ajax({
+                    type: "POST",
+                    url: postUrl,
+                    data: form.serialize(),
+                    success: function (response) {
+                        $(afterSuccessLoadArea).html(response);
+                        //console.log("s")
+                        //var pagesData = ""
+                        //var videoData = ""
+                        //var i = 0
+                        //while(i<5){
+                        //    pagesData = pagesData + `<button class="btn btn-navbar" type="button" data-widget="navbar-search" style="text-align:center">
+                        //        ${i}
+                        //    </button> <br/>`;
+                        //    i++;
+                        //}
+                        //cc = `<div>
+                        //        <div id="pages">
+                        //            ${pagesData}
+                        //        </div>
+                        //        <div id ="videoSearchData">
+                        //            ${videoData}
+                        //        </div>
+                        //      </div>`
+                        //$(afterSuccessLoadArea).html(c)
+                        //const obj = JSON.parse(response)
+                        //console.log(obj)
+
+                        //$("#videoSearchData").html(
+                        //    `<div class="col-lg-3 col-md-3 col-sm-6 col-6" style="text-align:center">
+                        //                    <figure class="snip1466">
+                        //                        <img src=item.VideoInfo.Cover alt="sample52" />
+                        //                        <a href="Main/Videos/Name/item.VideoInfo.VideoUrl" class="nav-link ajaxLoad" style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                        //                        <p style="font-size:large"> <span>item.Name</span></p>
+                        //                    </figure>
+                        //                </div>`
+                        //);
+
+                    },
+                    failure: function (response) {
+                        alert("failed" + response);
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        $(errorContainer).append(xhr.responseText + '<br />');
+                        $(formElement + " input:text").first().focus();
+                        $(submitButton).attr('disabled', false);
+                    }
+                }).always(function () {
+                    $(overlay).hide();
+                    $(submitButton).attr('disabled', false);
+                    $(submitButton).button("reset");
+                });
+            }
+        });
+        $(overlay).hide();
+    }
+
+</script>

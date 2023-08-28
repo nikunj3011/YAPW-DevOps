@@ -1,0 +1,91 @@
+﻿@using static Ditech.Portal.NET.Helpers.NavigationIndicatorHelper;
+@*@using Microsoft.AspNetCore.Identity;
+@{
+    var userName = User.Identity.IsAuthenticated ? @User.Claims.Where(c => c.Type.ToLower() == "name").Select(c => c.Value).FirstOrDefault() : "Visitor";
+}
+*@
+@functions {
+}
+
+<aside class="main-sidebar  elevation-4" style=" font-size:18px; ">
+@*<a href="~/Home" class="brand-link">
+    @*<img src="~/img/ditech_logo.png" alt="AdminLTE Logo" class="brand-image  elevation-3"
+        style="opacity: .8">
+    <img src="~/img/favicon.png" class="brand-image"
+         style="opacity: .8">
+    <span class="brand-text font-weight-light">Ditech Testing</span>
+</a>*@
+<div class="sidebar" >
+
+<nav class="mt-2">
+<ul class="nav nav-pills nav-sidebar nav-child-indent nav-compact flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+<li class="nav-item " style="background-color:#202020; color:#FFF;border-radius:7px; margin:5px;">
+    <a asp-route="default" class="nav-link ajaxLoad">
+        <i class="nav-icon fas fa-home"></i>
+        <p>
+            Home
+        </p>
+    </a>
+</li>
+
+<li class="nav-item" style="background-color:#202020; color:#FFF;border-radius:7px; margin:5px;">
+    <a asp-area="Main" asp-controller="Videos" asp-action="Index" class="nav-link ajaxLoad">
+        <i class="fas fa-solid fa-clone nav-icon"></i>
+        <p>Videos</p>
+    </a>
+</li>
+
+<li class="nav-item"style="background-color:#202020; color:#FFF;border-radius:7px; margin:5px;">
+    <a asp-area="Main" asp-controller="Videos" asp-action="Search" class="nav-link ajaxLoad">
+        <i class="fas fa-solid fa-clone nav-icon"></i>
+        <p>Search</p> @*by category by year views asc desc brands*@
+    </a>
+</li>
+
+        
+<li class="nav-item" style="background-color:#202020; color:#FFF;border-radius:7px; margin:5px;">
+    <a asp-area="Main" asp-controller="Videos" asp-action="Categories" class="nav-link ajaxLoad">
+        <i class="fas fa-solid fa-clone nav-icon"></i>
+        <p>Categories</p>
+    </a>
+</li>
+
+<li class="nav-item" style="background-color:#202020; color:#FFF;border-radius:7px; margin:5px;">
+    <a asp-area="Main" asp-controller="Videos" asp-action="Brands" class="nav-link ajaxLoad">
+        <i class="fas fa-solid fa-clone nav-icon"></i>
+        <p>Brands</p>
+    </a>
+</li>
+
+<li class="nav-item" style="background-color:#202020; color:#FFF;border-radius:7px; margin:5px;">
+    <a asp-area="Main" asp-controller="Videos" asp-action="Unsensored" class="nav-link ajaxLoad">
+        <i class="fas fa-solid fa-clone nav-icon"></i>
+        <p>Unsensored</p>
+    </a>
+</li>
+@*Operations menu*@
+@*<li class="nav-item "  style="background-color:#202020; color:#FFF;border-radius:7px; margin:5px;">
+    <a href="#" class="nav-link">
+        <i class="fas fa-users-cog nav-icon"></i>
+        <p>
+            @*Operations
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+    </ul>
+</li>
+
+<li class="nav-item "  style="background-color:#202020; color:#FFF;border-radius:7px; margin:5px;">
+    <a href="/dashboard/privacy" class="nav-link ajaxLoad ">
+        <i class="nav-icon fas fa-lock"></i>
+        @*<p>
+            Privacy
+        </p>
+    </a>
+</li>*@
+</ul>
+</nav>
+</div>
+</aside>

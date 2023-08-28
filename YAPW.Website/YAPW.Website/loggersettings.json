@@ -1,0 +1,47 @@
+{
+  "AllowedHosts": "*",
+  "Serilog": {
+    "Using": [ "Serilog.Enrichers.ClientInfo" ],
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Information",
+        "System": "Warning"
+      }
+    },
+    "WriteTo": [
+      {
+        "Name": "Console"
+      },
+      //{
+      //  "Name": "File",
+      //  "Args": {
+      //    "path": "D:\\Logs\\log.txt",
+      //    "outputTemplate": "{Timestamp} {Message}{NewLine:1}{Exception:1}"
+      //  }
+      //},
+      //{
+      //  "Name": "File",
+      //  "Args": {
+      //    "path": "D:\\Logs\\structuredLog.json",
+      //    "formatter": "Serilog.Formatting.Json.JsonFormatter, Serilog"
+      //  }
+      //},
+      {
+        "Name": "Seq",
+        "Args": { "serverUrl": "http://localhost:5341" }
+      }
+    ],
+    "Enrich": [
+      "FromLogContext",
+      "WithMachineName",
+      "WithProcessId",
+      "WithThreadId",
+      "WithClientIp",
+      "WithClientAgent"
+    ],
+    "Properties": {
+      "ApplicationName": "Ditech.Portal.Internal"
+    }
+  }
+}
