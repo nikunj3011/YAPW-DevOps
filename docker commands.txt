@@ -1,0 +1,19 @@
+﻿Create Dockerfile in the web application folder
+Put the following content into it
+
+FROM microsoft/aspnetcore
+
+COPY ./publish /publish
+WORKDIR /publish
+EXPOSE 5000/tcp
+ENTRYPOINT ["dotnet", "GameLibrary.dll"]
+
+Build and publish the project by running 
+dotnet publish -c Release -o publish
+
+Build Docker image by running 
+docker build -t gamelibrary .
+
+docker run -p 8080:80 -d nikunj3011/gamelibrary
+
+C:\Windows\System32\drivers\etc

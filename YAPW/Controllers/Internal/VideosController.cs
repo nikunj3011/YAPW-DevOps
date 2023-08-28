@@ -63,6 +63,12 @@ namespace YAPW.Controllers.Internal
             return Ok(await _repository.GetLimitedByReleaseDate(take));
         }
 
+        [HttpPost("search")]
+        public async Task<ActionResult<IEnumerable<dynamic>>> SearchWithPagination(VideoGetModel videoGetModel)
+        {
+            return Ok(await _repository.SearchWithPagination(videoGetModel));
+        }
+
         [HttpGet("featured/byViews/{take}")]
         public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> GetByViews(int take)
         {

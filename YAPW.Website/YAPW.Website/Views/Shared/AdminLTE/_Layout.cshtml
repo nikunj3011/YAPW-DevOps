@@ -1,0 +1,68 @@
+﻿@using Syncfusion.EJ2
+@{
+    Layout = null;
+    //IgnoreBody();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] - Ditech testing</title>
+
+    @*<link rel="icon" href="~/img/favicon.png">*@
+    <partial name="AdminLTE/_Styles" />
+    <partial name="AdminLTE/_Scripts" />
+
+</head>
+<body id="mainBodyContent" class="hold-transition layout-fixed layout-navbar-fixed layout-footer-fixed" style="background-color:#100F10; color:#B3B3B3;">
+    @*/* border-color: #202020;*/*@
+    <div class="wrapper">
+
+        <partial name="AdminLTE/_TopNavigation" />
+
+        <partial name="AdminLTE/_MainNavigation" />
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" style="background-color:#070708; color:#B3B3B3;">
+            <!-- Content Header (Page header) -->
+            <!-- Main content -->
+            <div class="content">
+                <div class="container-fluid">
+                    <main id="mainContentArea">
+                        @RenderBody()
+                    </main>
+                    <!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Control Sidebar -->
+        @*<aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+            <div class="p-3">
+                <h5>Title</h5>
+                <p>Sidebar content</p>
+            </div>
+        </aside>*@
+        <!-- /.control-sidebar -->
+
+        @*<partial name="AdminLTE/_Footer" />*@
+    </div>
+    <!-- ./wrapper -->
+    @*@RenderSection("_Scripts", required: false)*@
+    <script>
+        var currentUrl = window.location.hash.substr(1);
+        //alert(currentUrl);
+        if (currentUrl !== "") {
+            CancelAllAjaxRequest();
+            window.history.pushState( currentUrl, null, "#" + currentUrl);
+            LoadAjaxPage('GET',currentUrl,false);
+        }
+    </script>
+   @Html.EJS().ScriptManager()
+</body>
+</html>
+

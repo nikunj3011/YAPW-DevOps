@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "sweetalert@2.1.2",
+      "destination": "wwwroot/plugins/sweetalert/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "sweetalert2@11.1.9",
+      "destination": "wwwroot/plugins/sweetalert2/"
+    },
+    {
+      "library": "flatpickr@4.6.9",
+      "destination": "wwwroot/plugins/flatpickr/"
+//<<<<<<< HEAD
+    },
+    {
+      "library": "magicsuggest@2.1.5",
+      "destination": "wwwroot/magicsuggest/"
+    },
+    {
+      "library": "chartjs-plugin-datalabels@2.0.0",
+      "destination": "wwwroot/plugins/chartjs-plugin-datalabels/"
+//=======
+//>>>>>>> 49e51af6c44c7aa0e36895677d180bf681ccc201
+    }
+  ]
+}

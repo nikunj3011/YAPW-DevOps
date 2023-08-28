@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using YAPW.Domain.Interfaces;
 using YAPW.Domain.Repositories.Generic;
@@ -45,6 +46,34 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
             videosOp.Add(item.AsVideoDataModel());
         }
         return videosOp;
+    }
+
+    public async Task<VideoSearchResponse> SearchWithPagination(VideoGetModel videoGetModel)
+    {
+        IEnumerable<TEntity> videos = new List<TEntity>();
+        if(videoGetModel.Order == Order.Ascending)
+        {
+            videos = await FindAsyncNoSelect(filter: p => p.Name.ToLower().Contains(videoGetModel.Search) && p.BrandId == videoGetModel.BrandId /*&& p.VideoCategories.Select(l => l.Id).Contains(videoGetModel.CategoryId)*/, orderBy: p => p.OrderBy(p => p.VideoInfo.ReleaseDate), include: _videoIncludes).ConfigureAwait(false);
+        }
+        else if (videoGetModel.Order == Order.Descending)
+        {
+            videos = await FindAsyncNoSelect(filter: p => p.Name == videoGetModel.Search && p.BrandId == videoGetModel.BrandId /*&& p.VideoCategories.Select(l => l.Id).Contains(videoGetModel.CategoryId)*/, orderBy: p => p.OrderByDescending(p => p.VideoInfo.ReleaseDate), include: _videoIncludes).ConfigureAwait(false);
+        }
+        var pageResult = 20f;
+        var pageCount = Math.Ceiling(videos.Count() / pageResult);
+        videos = videos.Skip((videoGetModel.Page) * (int)pageResult).Take((int)pageResult).ToList();
+
+        var videosOp = new List<VideoDataModel>();
+        foreach (var item in videos)
+        {
+            videosOp.Add(item.AsVideoDataModel());
+        }
+        return new VideoSearchResponse
+        {
+            Videos = videosOp,
+            CurrentPage = videoGetModel.Page,
+            Pages = (int)pageCount,
+        };
     }
 
     public async Task<IEnumerable<VideoDataModel>> GetLimitedByViews(int take)

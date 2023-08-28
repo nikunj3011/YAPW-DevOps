@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "YAPW.Website": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:55656;http://localhost:55657"
+    }
+  }
+}
