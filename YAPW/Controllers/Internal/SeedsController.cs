@@ -6,6 +6,7 @@ using NetTopologySuite.Index.HPRtree;
 using Newtonsoft.Json;
 using System.Net.Http;
 using YAPW.Controllers.Base;
+using YAPW.Domain.Interfaces.Services;
 using YAPW.Domain.Repositories.Main;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
@@ -195,6 +196,8 @@ namespace YAPW.Controllers.Internal
             {
                 string jsonVideo = System.IO.File.ReadAllText("video.json");
                 var videos = JsonConvert.DeserializeObject<List<Videos>>(jsonVideo);
+                await _namedEntityServiceWorker.BeginTransaction();
+
                 foreach (var item in videos)
                 {
                     var videoTitles = new List<VideoTitle>();
@@ -283,11 +286,13 @@ namespace YAPW.Controllers.Internal
                     _serviceWorker.VideoRepository.Update(newVideo);
                     await _serviceWorker.SaveAsync();
                 }
+                await _namedEntityServiceWorker.CommitTransaction();
 
                 return Ok();
             }
             catch (Exception ex)
             {
+                await _namedEntityServiceWorker.RollBackTransaction();
                 return BadRequest(ex.Message + "  " + ex.InnerException);
             }
         }

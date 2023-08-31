@@ -120,7 +120,9 @@ namespace YAPW.Controllers.Internal
         {
             try
             {
-				var video = new Video
+                await _namedEntityServiceWorker.BeginTransaction();
+
+                var video = new Video
 				{
 					Name = namedEntityDataModel?.Name,
 					Description = namedEntityDataModel?.Description,
@@ -142,10 +144,14 @@ namespace YAPW.Controllers.Internal
 				};
 				await _serviceWorker.VideoRepository.AddAsync(video);
 				await _serviceWorker.SaveAsync();
+                await _namedEntityServiceWorker.CommitTransaction();
+
                 return Ok(video);
             }
             catch (Exception ex)
             {
+                await _namedEntityServiceWorker.RollBackTransaction();
+
                 return BadRequest(ex.Message);
             }
         }

@@ -32,10 +32,13 @@ public class CategoryRepository<TEntity, TContext> : NamedEntityRepository<TEnti
 
     public async Task<IEnumerable<dynamic>> GetAllMinimal()
     {
-        return await FindAsync(select: t => new
+        return await FindAsync(select: t => new CategoryDataModel
         {
-            t.Id,
-            t.Name
+            Id = t.Id,
+            Name = t.Name,
+            PhotoLink = t.PhotoUrl.LinkId,
+            Count = t.Count,
+            Description = t.Description
         }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
     }
 

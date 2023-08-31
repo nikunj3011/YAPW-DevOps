@@ -104,6 +104,7 @@ namespace YAPW.Domain.Repositories.Generic
 
         public async Task<IEnumerable<TEntity>> FindAsyncNoSelect(
             int take = 0,
+            int skip = 0,
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             bool activeOnly = true,
@@ -141,6 +142,11 @@ namespace YAPW.Domain.Repositories.Generic
             if (orderBy != null)
             {
                 query = orderBy(query);
+            }
+
+            if (skip > 0)
+            {
+                query = query.Skip(skip);
             }
 
             if (take > 0)

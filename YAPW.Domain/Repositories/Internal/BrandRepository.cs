@@ -32,13 +32,22 @@ public class BrandRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
         }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
     }
 
-    public async Task<IEnumerable<dynamic>> GetAllMinimal()
+    public async Task<IEnumerable<BrandDataModel>> GetAllMinimal()
     {
-        return await FindAsync(select: t => new
+        var brandsDb = await FindAsync(include: p => p.Include(p => p.Logo)).ConfigureAwait(false);
+        var brands = new List<BrandDataModel>();
+        foreach (var item in brandsDb)
         {
-            t.Id,
-            t.Name
-        }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
+            var videoImage = await _serviceWorker.VideoRepository.FindAsync(filter: v => v.Brand.Name.ToLower() == item.Name.ToLower(), select: t => new
+            {
+                t.Id,
+                t.Name,
+                t.VideoInfo.Cover.LinkId
+            }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
+            item.Logo.LinkId = videoImage?.FirstOrDefault().LinkId;
+            brands.Add(item.AsBrandDataModel());
+        }
+        return brands;
     }
 
     public async Task<IEnumerable<BrandDataModel>> GetRandomLimited(int take)
