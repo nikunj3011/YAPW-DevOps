@@ -601,7 +601,7 @@
                                     <i class="fa-solid fa-tags"></i>
                                     @foreach (var category in Model.Categories)
                                     {
-                                        <a style="color:#BD421B;" href="Main/Videos/Search?catgory=@category.Name">@category.Name</a>
+                                        <a style="color:#BD421B;" href="Main/Videos/Search?category=@category.Name" class="ajaxLoad">@category.Name</a>
                                     }
                                 </b>
                             </div>

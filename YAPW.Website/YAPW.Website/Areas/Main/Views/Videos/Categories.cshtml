@@ -2,13 +2,10 @@
 @model List<CategoryDataModel>
 @{
     Layout = null;
+    var count = 0;
 }
-<head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Londrina+Outline&display=swap" rel="stylesheet">
-</head>
 <style>
+
     /*main images styles*/
     figure.snip1466 {
         position: relative;
@@ -90,12 +87,8 @@
             transform: translate(0, 0);
         }
 
-    .row {
-        width: 100%;
-        margin: 0 auto;
-    }
-
 </style>
+
 <div class="row " style="padding:7%;">
     <div class="col-lg-12">
         <div class="card card-outline " style="background-color:black">
@@ -103,20 +96,23 @@
                 <div class="overlay tableOverlay" style="display:none">
                     <i class="fas fa-2x fa-sync-alt fa-spin"></i>
                 </div>
-                <h2 style="text-align:center">Categories</h2>
-                <div class="row " style="padding-left:5%">
+                <h2 style="text-align:center">Categorys</h2>
+                <input type="text" id="myInput" style="margin: auto;display: block;" size="50" placeholder="Search for Categories.." title="Type in a name">
+
+                <div class="row " style="padding-left:6%">
                     @*Random*@
                     @if (Model?.Count > 0)
                     {
                         @foreach (var item in Model)
                         {
-                            <div id="col-lg-4 col-md-4 col-sm-6 col-6 ">
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-12" id="Category-@count">
                                 <figure class="snip1466">
-                                    <img src=@item.PhotoLink alt="sample52" style="width:268px;height:394px;"/>
+                                    <img src=@item.PhotoLink alt="sample52" style="width:268px;height:394px;" />
                                     <a href="Main/Videos/Search?category=@item.Name" class="nav-link ajaxLoad" style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
-                                    <p style="font-size:large"> <span>@item.Name</span></p>
+                                    <p style="font-size:large" id="CategorySpan-@count"><span>@item.Name</span></p>
                                 </figure>
                             </div>
+                            @@count++;
                         }
                     }
                 </div>
@@ -128,11 +124,29 @@
     </div>
 </div>
 
-<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-
 <script>
     $(document).ready(function () {
+        $('#myInput').on('input', function (e) {
+            myFunction()
+        });
 
+        function myFunction() {
+            var Category, p, input, filter, a, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            // var aaa = $(`#CategorySpan-0 span`).html()
+            console.log("s")
+            for (i = 0; i < @Model.Count; i++) {
+                a = $(`#CategorySpan-${i} span`).html()
+                // txtValue = a.textContent || a.innerText;
+                if (a.toUpperCase().indexOf(filter) != -1) {
+                    $(`#Category-${i}`).css("display", "");
+                } else {
+                    $(`#Category-${i}`).css("display", "none");
+                }
+            }
+        }
     });
+
+
 </script>

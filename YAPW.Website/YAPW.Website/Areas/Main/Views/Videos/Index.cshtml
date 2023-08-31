@@ -14,6 +14,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Londrina+Outline&display=swap" rel="stylesheet">
 </head>
 <style>
+    
+.owl-theme img{width:100%;min-height:200px;}
+
+    .owl-carousel .owl-prev, .owl-carousel .owl-next {
+        position: absolute;
+        top: 30%;
+        transform: translateY(-50%);
+        background-color: #fff !important;
+        color: #000 !important;
+        font-size: 1.5em !important;
+        width: 40px;
+        height: 40px;
+        border-radius: 100% !important;
+        font-weight: bold;
+        padding: 10px !important;
+        text-align: center;
+        box-shadow: 0px 0px 5px 0px #fff;
+    }
+.owl-carousel .owl-prev:hover, .owl-carousel .owl-next:hover{box-shadow:0px 0px 0px 0px #000; background-color:red !important; color:#fff !important;}
+.owl-carousel .owl-prev{left:-30px;}
+.owl-carousel .owl-next{right:-30px;}
+.owl-theme .owl-dots .owl-dot.active span{background:red !important; width:25px; transition:0.2s ease-in-out;}
+.owl-theme .owl-dots .owl-dot:hover span{background:red !important; transition:0.2s ease-in-out;}
+
+    #descriptionMain {
+        font-size: 25px;
+    }
+
+    #mainPBrandName {
+        font-size: 50px;
+    }
+
+/* Responsive design custom css */
+@@media only screen and (max-width:480px){
+        #mainH3BrandName, #mainPBrandName, #descriptionMain, #mainReleaseMain, #mainVideoLengthMain, #mainVideoViewsMain,
+        #mainVideoViewsCategory {
+            font-size:15px;
+        }
+  .owl-theme .owl-dots .owl-dot{display:none;}
+  .owl-carousel .owl-prev, .owl-carousel .owl-next{width:30px; height:30px; font-size:14px !important; top:45%; box-shadow:0px 0px 0px 0px #000;}
+  .owl-carousel .owl-prev{left:0px;}
+.owl-carousel .owl-next{right:0px;}
+}
     #description::-webkit-scrollbar {
         display: none;
     }
@@ -134,27 +177,27 @@
 
                                             <div class="row">
                                                 <div class="col-lg-12 col-md-12 col-sm-12 col-12" style="padding-top:3%;text-align:center;">
-                                                    <h3 style="font-weight:800; opacity:0.8"><i>@item.Brand.Name 's</i></h3>
+                                                    <h3 style="font-weight:800; opacity:0.8" id="mainH3BrandName"><i>@item.Brand.Name 's</i></h3>
 
-                                                    <p style="font-size:50px;color:white; ">
+                                                    <p id="mainPBrandName" style="color:white; ">
                                                         @*font-family: 'Londrina Outline', cursive;/*max-height:120px; overflow-x:scroll;overflow-y:hidden*/*@
                                                         <b>@item.Name</b>
                                                     </p>
                                                 </div>
                                                 <div class="col-lg-10 col-md-10 col-sm-12 col-12">
-                                                    <div id="description" style="font-size:40px;opacity:0.9;max-height:180px; overflow:scroll;">
+                                                    <div id="descriptionMain" style="opacity:0.9;max-height:150px; overflow:scroll;overflow-x: hidden;">
                                                         @item.Description
                                                     </div>
 
-                                                    <div><i class="fa-regular fa-calendar"></i> @item.VideoInfo.ReleaseDate.Month @item.VideoInfo.ReleaseDate.Year</div>
-                                                    <div><i class="fa-regular fa-clock"></i> @item.VideoInfo.VideoLength</div>
-                                                    <div><i class="fa-regular fa-eye"></i> @item.VideoInfo.Views</div>
+                                                    <div id="mainReleaseMain"><i class="fa-regular fa-calendar"></i> @item.VideoInfo.ReleaseDate.Month @item.VideoInfo.ReleaseDate.Year</div>
+                                                    <div id="mainVideoLengthMain"><i class="fa-regular fa-clock"></i> @item.VideoInfo.VideoLength</div>
+                                                    <div id="mainVideoViewsMain"><i class="fa-regular fa-eye"></i> @item.VideoInfo.Views</div>
                                                     <div>
                                                         <b>
                                                             <i class="fa-solid fa-tags"></i>
                                                             @foreach (var category in item.Categories)
                                                             {
-                                                                <a style="color:#BD421B;" href="Main/Videos/Search?catgory=@category.Name">@category.Name</a>
+                                                                <a id="mainVideoViewsCategory" style="color:#BD421B;" href="Main/Videos/Search?category=@category.Name" class="ajaxLoad">@category.Name</a>
                                                             }
                                                         </b>
                                                     </div>
@@ -212,7 +255,12 @@
                     @*Categories*@
                     @if (Model?.Count > 0)
                     {
-                        <h2 style="text-align:center">Categories</h2>
+                        <h2 style="text-align:center">
+                            <a asp-area="Main" asp-controller="Videos" asp-action="Categories" class="ajaxLoad">
+                                @* <i class="fa-solid fa-building"></i> *@
+                                Categories
+                            </a>
+                        </h2>
                         <div id="sub-carousel3" class="owl-carousel owl-theme">
                             @foreach (var item in categoriesRandom)
                             {
@@ -237,7 +285,12 @@
                     @*Random*@
                     @if (Model?.Count > 0)
                     {
-                        <h2 style="text-align:center">Random</h2>
+                        <h2 style="text-align:center">
+                            <a asp-area="Main" asp-controller="Videos" asp-action="Random" class="ajaxLoad">
+                                @* <i class="fa-solid fa-building"></i> *@
+                                Random
+                            </a>
+                        </h2>
                         <div id="sub-carousel2" class="owl-carousel owl-theme">
                             @foreach (var item in videosRandom)
                             {
@@ -261,7 +314,11 @@
                     @*Famous Brands*@
                     @if (Model?.Count > 0)
                     {
-                        <h2 style="text-align:center">Brands</h2>
+                        <h2 style="text-align:center">
+                            <a asp-area="Main" asp-controller="Videos" asp-action="Brands" class="ajaxLoad">
+                                Brands
+                            </a>
+                        </h2>
                         <div id="sub-carousel4" class="owl-carousel owl-theme">
                             @foreach (var item in brandsRandom)
                             {
@@ -299,6 +356,7 @@
                 items: 1,
                 margin: 10,
                 loop: true,
+                autoplay: true,     
                 nav: true
             });
 
@@ -307,7 +365,20 @@
                 items: 6,
                 margin: 15,
                 loop: true,
-                nav: true
+                nav: true,
+                responsive: {
+                    0: {
+                        items: 2
+                    },
+                    600: {
+                        items: 2,
+                        merge: true,
+
+                    },
+                    1000: {
+                        items: 6
+                    }
+                }
             });
 
             var owl2 = $("#sub-carousel2");
@@ -315,7 +386,20 @@
                 items: 6,
                 margin: 15,
                 loop: true,
-                nav: true
+                nav: true,
+                responsive: {
+                    0: {
+                        items: 2
+                    },
+                    600: {
+                        items: 2,
+                        merge: true,
+
+                    },
+                    1000: {
+                        items: 6
+                    }
+                }
             });
 
             var owl3 = $("#sub-carousel3");
@@ -323,7 +407,20 @@
                 items: 6,
                 margin: 15,
                 loop: true,
-                nav: true
+                nav: true,
+                responsive: {
+                    0: {
+                        items: 2
+                    },
+                    600: {
+                        items: 2,
+                        merge: true,
+
+                    },
+                    1000: {
+                        items: 6
+                    }
+                }
             });
 
             var owl4 = $("#sub-carousel4");
@@ -331,7 +428,20 @@
                 items: 6,
                 margin: 15,
                 loop: true,
-                nav: true
+                nav: true,
+                responsive: {
+                    0: {
+                        items: 2
+                    },
+                    600: {
+                        items: 2,
+                        merge: true,
+
+                    },
+                    1000: {
+                        items: 6
+                    }
+                }
             });
         });
     });
