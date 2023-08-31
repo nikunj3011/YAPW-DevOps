@@ -76,18 +76,23 @@ public class VideosController : BaseController
 	[HttpGet]
 	[Route("Search")]
     [OutputCache(Duration = 7200)]
-    public async Task<IActionResult> Search(string name, string brand = "", string category = "", Order order = Order.Ascending)
+    public async Task<IActionResult> Search(string name, string brand = "", string category = "", Order order = Order.Descending)
 	{
 		try
 		{
             //TO : DO add caching for these two
-            ViewBag.Brands = await ExecuteServiceRequest<List<NamedEntityDataModel>>(HttpMethod.Get, $"brands/all/minimal");
-            ViewBag.Categories = await ExecuteServiceRequest<List<NamedEntityDataModel>>(HttpMethod.Get, $"categories/all/minimal");
-            ViewData["BrandsSelectList"] = new SelectList(ViewBag.Brands, "Id", "Name");
-            ViewData["CategoriesSelectList"] = new SelectList(ViewBag.Categories, "Id", "Name");
-            ViewBag.Category = category;
-            ViewBag.Brand = brand;
-            ViewBag.Order = order.ToString();
+            var brands = await ExecuteServiceRequest<List<NamedEntityDataModel>>(HttpMethod.Get, $"brands/all/minimal");
+            ViewBag.Brands = brands;
+            var categories = await ExecuteServiceRequest<List<NamedEntityDataModel>>(HttpMethod.Get, $"categories/all/minimal");
+            ViewBag.Categories = categories;
+
+            ViewBag.Category = categories.Where(p => p.Name.ToLower() == category.ToLower())?.FirstOrDefault()?.Id;
+            ViewBag.Brand = brands.Where(p=>p.Name.ToLower() == brand.ToLower())?.FirstOrDefault()?.Id;
+            ViewBag.Order = order;
+            //if (ViewBag.Brand == null) { ViewBag.Brand = ""; }
+            //if (ViewBag.Category == null) { ViewBag.Category = ""; }
+            ViewData["BrandsSelectList"] = new SelectList(ViewBag.Brands, "Id", "Name", ViewBag.Brand);
+            ViewData["CategoriesSelectList"] = new SelectList(ViewBag.Categories, "Id", "Name", ViewBag.Category);
             return PartialView();
 		}
 		catch (Exception ex)
@@ -103,6 +108,8 @@ public class VideosController : BaseController
     {
         try
         {
+            if (videoGetModel.Search == null)
+                videoGetModel.Search = "";
             //TO : DO add caching for these two
             //ViewBag.Categories = await ExecuteServiceRequest<List<NamedEntityDataModel>>(HttpMethod.Get, $"categories/all/minimal");
             //ViewData["BrandsSelectList"] = new SelectList(ViewBag.Brands, "Id", "Name");
@@ -137,7 +144,7 @@ public class VideosController : BaseController
     {
         try
         {
-            var videos = await ExecuteServiceRequest<List<BrandDataModel>>(HttpMethod.Get, $"brands/random/100");
+            var videos = await ExecuteServiceRequest<List<BrandDataModel>>(HttpMethod.Get, $"brands/all/minimal");
             return PartialView(videos);
         }
         catch (Exception ex)
@@ -153,7 +160,7 @@ public class VideosController : BaseController
     {
         try
         {
-            var videos = await ExecuteServiceRequest<List<CategoryDataModel>>(HttpMethod.Get, $"categories/random/200");
+            var videos = await ExecuteServiceRequest<List<CategoryDataModel>>(HttpMethod.Get, $"categories/all/minimal");
             return PartialView(videos);
         }
         catch (Exception ex)

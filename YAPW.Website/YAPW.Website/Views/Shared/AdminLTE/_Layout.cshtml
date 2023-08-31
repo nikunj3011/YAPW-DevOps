@@ -1,7 +1,5 @@
-﻿@using Syncfusion.EJ2
-@{
+﻿@{
     Layout = null;
-    //IgnoreBody();
 }
 
 <!DOCTYPE html>
@@ -10,22 +8,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewData["Title"] - Ditech testing</title>
-
     @*<link rel="icon" href="~/img/favicon.png">*@
     <partial name="AdminLTE/_Styles" />
     <partial name="AdminLTE/_Scripts" />
 
 </head>
-<body id="mainBodyContent" class="hold-transition layout-fixed layout-navbar-fixed layout-footer-fixed" style="background-color:#100F10; color:#B3B3B3;">
+<body id="mainBodyContent" class="" style="background-color:#100F10; color:#B3B3B3;">
     @*/* border-color: #202020;*/*@
-    <div class="wrapper">
+    <div id="mainWrapper" class="wrapper">
 
         <partial name="AdminLTE/_TopNavigation" />
 
-        <partial name="AdminLTE/_MainNavigation" />
+        @* <partial name="AdminLTE/_MainNavigation" /> *@
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper" style="background-color:#070708; color:#B3B3B3;">
+        <div class="" style="background-color:#070708; color:#B3B3B3;">
             <!-- Content Header (Page header) -->
             <!-- Main content -->
             <div class="content">
@@ -61,8 +58,17 @@
             window.history.pushState( currentUrl, null, "#" + currentUrl);
             LoadAjaxPage('GET',currentUrl,false);
         }
+        $(document).ready(function () {
+            let menu = document.querySelector('#menu-icon');
+            let navList = document.querySelector('.nav-list');
+
+            menu.onclick = () => {
+                // menu.classList.toggle('bx-x');
+                navList.classList.toggle('open');
+            }
+            // $("#mainWrapper").toggleClass("toggle");
+        });
     </script>
-   @Html.EJS().ScriptManager()
 </body>
 </html>
 

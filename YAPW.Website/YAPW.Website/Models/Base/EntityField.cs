@@ -1,10 +1,5 @@
-﻿using Ditech.Portal.NET.Models.Shared;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ditech.Portal.NET.Models.Base
 {
@@ -29,7 +24,7 @@ namespace Ditech.Portal.NET.Models.Base
         [Display(Name = "Field")]
         public Guid FieldId { get; set; }
 
-        public  Field Field { get; set; }
+        public Field Field { get; set; }
 
         /// <summary>
         ///

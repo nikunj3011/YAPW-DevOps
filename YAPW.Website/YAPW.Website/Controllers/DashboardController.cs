@@ -1,11 +1,6 @@
-﻿using Ditech.Portal.NET.Attributes;
-using Ditech.Portal.NET.Models;
-using Ditech.Portal.NET.Models.Shared;
-using Microsoft.AspNetCore.Authorization;
+﻿using Ditech.Portal.NET.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;

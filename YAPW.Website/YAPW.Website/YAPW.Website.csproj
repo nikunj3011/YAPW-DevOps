@@ -99,6 +99,7 @@
 		<Folder Include="Areas\Main\Data\" />
 		<Folder Include="Areas\Main\Models\" />
 		<Folder Include="Areas\Main\ViewModels\" />
+		<Folder Include="ViewModels\" />
 	</ItemGroup>
 
 	<ItemGroup>
