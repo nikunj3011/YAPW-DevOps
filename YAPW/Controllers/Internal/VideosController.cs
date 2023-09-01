@@ -37,7 +37,10 @@ namespace YAPW.Controllers.Internal
         }
 
         [HttpGet]
-        public override async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> Get() => await base.Get();
+        public override async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> Get()
+        {
+            throw new Exception("Blocking to view videos for now");
+        }
 
         [HttpGet("take/{take}")]
         public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> Get(int take)
@@ -98,7 +101,7 @@ namespace YAPW.Controllers.Internal
         /// <returns></returns>
         [HttpGet("Detailed/{name}")]
         public async Task<VideoDataModel> GetByNameDetailed(string name) => await _repository.GetByNameDetailed(name);
-       
+
         /// <summary>
         /// Get Types by Name
         /// </summary>
@@ -116,7 +119,7 @@ namespace YAPW.Controllers.Internal
         /// <param name="namedEntityDataModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public override async Task<ActionResult<MainDb.DbModels.Video>> Post(VideoDataModel namedEntityDataModel)
+        public override async Task<ActionResult<MainDb.DbModels.Video>> Post(VideoDataModel namedEntityDataModel, CancellationToken cancellationToken)
         {
             try
             {
@@ -162,6 +165,6 @@ namespace YAPW.Controllers.Internal
         /// <param name="id">Type Id</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public override async Task<IActionResult> Delete(Guid id) => await base.Delete(id);
+        public override async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken) => await base.Delete(id, cancellationToken);
     }
 }

@@ -1,10 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
+using RTools_NTS.Util;
 using YAPW.Controllers.Base;
 using YAPW.Domain.Repositories.Main;
 using YAPW.Domain.Services.Generic;
 using YAPW.MainDb;
 using YAPW.MainDb.DbModels;
+using YAPW.Models;
 using YAPW.Models.DataModels;
 using YAPW.Models.Models.Settings;
 
@@ -18,18 +23,21 @@ namespace YAPW.Controllers.Internal
         private readonly NamedEntityServiceWorker<MainDb.DbModels.Category, DataContext> _namedEntityServiceWorker;
         private readonly ServiceWorker<DataContext> _serviceWorker;
         private readonly CategoryRepository<Category, DataContext> _repository;
+        private readonly IOutputCacheStore _cache;
 
         public CategoriesController(ServiceWorker<DataContext> serviceWorker,
         NamedEntityServiceWorker<MainDb.DbModels.Category, DataContext> namedEntityServiceWorker,
         IHttpContextAccessor httpContextAccessor,
         IWebHostEnvironment hostingEnvironment,
-        IOptions<AppSetting> settings
+        IOptions<AppSetting> settings,
+        IOutputCacheStore cache
         ) : base(
             namedEntityServiceWorker,
             httpContextAccessor,
             hostingEnvironment,
             settings)
         {
+            _cache = cache;
             _serviceWorker = serviceWorker;
             _namedEntityServiceWorker = namedEntityServiceWorker;
             _repository = namedEntityServiceWorker.CategoryRepository;
@@ -55,7 +63,11 @@ namespace YAPW.Controllers.Internal
         public override async Task<ActionResult<MainDb.DbModels.Category>> GetByName(string name) => await base.GetByName(name);
 
         [HttpGet("all/minimal")]
-        public async Task<ActionResult<IEnumerable<dynamic>>> GetAllMinimal() => Ok(await _repository.GetAllMinimal());
+        [OutputCache(PolicyName = "CategoyMinimalPolicy")]
+        public async Task<ActionResult<IEnumerable<CategoryDataModel>>> GetAllMinimal()
+        {
+            return Ok(await _repository.GetAllMinimal());
+        }
 
         /// <summary>
         /// Get Random category by take
@@ -74,8 +86,12 @@ namespace YAPW.Controllers.Internal
         /// <param name="namedEntityDataModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public override async Task<ActionResult<MainDb.DbModels.Category>> Post(NamedEntityDataModel namedEntityDataModel)
-            => await base.Post(namedEntityDataModel);
+        [OutputCache(PolicyName = "CategoyMinimalPolicy")]
+        public override async Task<ActionResult<MainDb.DbModels.Category>> Post(NamedEntityDataModel namedEntityDataModel, CancellationToken token)
+        {
+            await _cache.EvictByTagAsync("CategoyMinimalPolicy_Tag", token);
+            return await base.Post(namedEntityDataModel, token);
+        }
 
         /// <summary>
         /// Delete Type
@@ -83,6 +99,11 @@ namespace YAPW.Controllers.Internal
         /// <param name="id">Type Id</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public override async Task<IActionResult> Delete(Guid id) => await base.Delete(id);
+        [OutputCache(PolicyName = "CategoyMinimalPolicy")]
+        public override async Task<IActionResult> Delete(Guid id, CancellationToken token)
+        {
+            await _cache.EvictByTagAsync("CategoyMinimalPolicy_Tag", token);
+            return await base.Delete(id, token);
+        }
     }
 }

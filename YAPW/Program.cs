@@ -27,6 +27,15 @@ builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("GlobalC
 ///
 builder.Services.AddServiceWorkers();
 builder.Services.AddDatabases(connectionString, false);
+builder.Services.AddMemoryCache();
+builder.Services.AddOutputCache(options =>
+{
+    options.AddBasePolicy(policy => policy
+        .Expire(TimeSpan.FromDays(1)));
+    options.AddPolicy("CategoyMinimalPolicy", policy => policy
+        .Expire(TimeSpan.FromDays(1))
+        .Tag("CategoyMinimalPolicy_Tag"));
+});
 
 //builder.Services.AddAuthentication(OAuthValidationDefaults.AuthenticationScheme)
 //    .AddOAuthValidation();
@@ -47,7 +56,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseOutputCache();
 app.UseAuthorization();
 app.UseAuthentication();
 

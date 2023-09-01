@@ -28,7 +28,7 @@ public abstract class GenericNamedEntitiesControllerBase<TEntity, TContext, TSer
         IOptions<AppSetting> settings) : base(
             entityServiceWorker,
             httpContextAccessor,
-            hostingEnvironment, 
+            hostingEnvironment,
             settings)
     {
         _entityServiceWorker = entityServiceWorker;
@@ -43,7 +43,7 @@ public abstract class GenericNamedEntitiesControllerBase<TEntity, TContext, TSer
     /// <param name="namedEntityDataModel"></param>
     /// <returns></returns>
     [HttpPost]
-    public virtual async Task<ActionResult<TEntity>> Post(TNamedEntityDataModel namedEntityDataModel)
+    public virtual async Task<ActionResult<TEntity>> Post(TNamedEntityDataModel namedEntityDataModel, CancellationToken cancellationToken)
     {
         try
         {

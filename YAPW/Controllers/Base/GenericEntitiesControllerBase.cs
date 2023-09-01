@@ -78,7 +78,7 @@ namespace YAPW.Controllers.Base
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public virtual async Task<IActionResult> Delete(Guid id)
+        public virtual async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
             var entity = await _entityServiceWorker.EntityRepository.FindSingleByIDAsync(id, null);
 

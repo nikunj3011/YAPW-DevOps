@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using YAPW.Domain.Interfaces;
 using YAPW.Domain.Repositories.Generic;
 using YAPW.Domain.Services.Generic;
@@ -32,22 +33,41 @@ public class BrandRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
         }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
     }
 
-    public async Task<IEnumerable<BrandDataModel>> GetAllMinimal()
+    public async Task<IEnumerable<BrandDataModel>> GetAllMinimal(IMemoryCache _memoryCache)
     {
-        var brandsDb = await FindAsync(include: p => p.Include(p => p.Logo)).ConfigureAwait(false);
-        var brands = new List<BrandDataModel>();
-        foreach (var item in brandsDb)
+        var cacheKey = "brandList";
+        //checks if cache entries exists
+        if (!_memoryCache.TryGetValue(cacheKey, out List<BrandDataModel> brandList))
         {
-            var videoImage = await _serviceWorker.VideoRepository.FindAsync(filter: v => v.Brand.Name.ToLower() == item.Name.ToLower(), select: t => new
+
+            var brandsDb = await FindAsync(include: p => p.Include(p => p.Logo)).ConfigureAwait(false);
+            var brands = new List<BrandDataModel>();
+            foreach (var item in brandsDb)
             {
-                t.Id,
-                t.Name,
-                t.VideoInfo.Cover.LinkId
-            }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
-            item.Logo.LinkId = videoImage?.FirstOrDefault().LinkId;
-            brands.Add(item.AsBrandDataModel());
+                var videoImage = await _serviceWorker.VideoRepository.FindAsync(filter: v => v.Brand.Name.ToLower() == item.Name.ToLower(), select: t => new
+                {
+                    t.Id,
+                    t.Name,
+                    t.VideoInfo.Cover.LinkId
+                }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
+                item.Logo.LinkId = videoImage?.FirstOrDefault().LinkId;
+                brands.Add(item.AsBrandDataModel());
+            }
+            //calling the server
+            brandList = brands;
+
+            //setting up cache options
+            var cacheExpiryOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = DateTime.Now.AddDays(1),
+                Priority = CacheItemPriority.High,
+                SlidingExpiration = TimeSpan.FromDays(1)
+            };
+            //setting cache entries
+            _memoryCache.Set(cacheKey, brandList, cacheExpiryOptions);
         }
-        return brands;
+
+        return brandList;
     }
 
     public async Task<IEnumerable<BrandDataModel>> GetRandomLimited(int take)
