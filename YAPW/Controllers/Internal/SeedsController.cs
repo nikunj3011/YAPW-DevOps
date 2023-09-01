@@ -1,10 +1,16 @@
 ﻿using Azure;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Options;
 using NetTopologySuite.Index.HPRtree;
 using Newtonsoft.Json;
+using System;
+using System.Diagnostics.Eventing.Reader;
+using System.Net;
 using System.Net.Http;
+using System.Text;
 using YAPW.Controllers.Base;
 using YAPW.Domain.Interfaces.Services;
 using YAPW.Domain.Repositories.Main;
@@ -318,10 +324,65 @@ namespace YAPW.Controllers.Internal
                 return BadRequest(ex.Message + "  " + ex.InnerException);
             }
         }
+
+        [HttpPost("checkvideos")]
+        public async Task<ActionResult<dynamic>> CheckVideo()
+        {
+            try
+            {
+                //string jsonVideo = System.IO.File.ReadAllText("video.json");
+                var videos = await _serviceWorker.VideoRepository.FindAsyncNoSelect(include: p=>p.Include(p=>p.VideoInfo.VideoUrl));
+                var invalidCount = 0;
+                var validCount = 0;
+                Categories categories = new Categories();
+                var validVideos = new List<string>();
+                var invalidVideos = new List<string>();
+
+                foreach (var item in videos.Item1)
+                {
+                    string c = $"https://www.youtube.com/watch?v={item.VideoInfo.VideoUrl.LinkId}.mp4";
+                    
+                    bool status = categories.CheckUrlStatus(c);
+                    if (status)
+                    {
+                        validCount++;
+                        validVideos.Add(item.Name);
+                    }
+                    else
+                    {
+                        invalidCount++;
+                        invalidVideos.Add(item.Name);
+                    }
+                }
+                return Ok(invalidVideos);
+                //Client.
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message + "  " + ex.InnerException);
+            }
+        }
     }
 
     public class Categories
     {
+        public bool CheckUrlStatus(string Website)
+        {
+            try
+            {
+                var request = WebRequest.Create(Website) as HttpWebRequest;
+                request.Method = "HEAD";
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    return response.StatusCode == HttpStatusCode.OK;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         [JsonProperty("id")]
         public long Id { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Linq;
 using YAPW.Domain.Interfaces;
 using YAPW.Domain.Repositories.Generic;
 using YAPW.Domain.Services.Generic;
@@ -30,7 +31,7 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
     {
         var videos = await FindAsyncNoSelect(take: take, include: _videoIncludes).ConfigureAwait(false);
         var videosOp = new List<VideoDataModel>();
-        foreach (var item in videos)
+        foreach (var item in videos.Item1)
         {
             videosOp.Add(item.AsVideoDataModel());
         }
@@ -41,7 +42,7 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
     {
         var videos = await FindAsyncNoSelect(orderBy:p=>p.OrderByDescending(p=>p.VideoInfo.ReleaseDate) ,take: take, include: _videoIncludes).ConfigureAwait(false);
         var videosOp = new List<VideoDataModel>();
-        foreach (var item in videos)
+        foreach (var item in videos.Item1)
         {
             videosOp.Add(item.AsVideoDataModel());
         }
@@ -50,53 +51,47 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
 
     public async Task<VideoSearchResponse> SearchWithPagination(VideoGetModel videoGetModel)
     {
-        IEnumerable<TEntity> videos = new List<TEntity>();
+        (IEnumerable<TEntity>, int) videos = (new List<TEntity>(), 0);
 
-        var pageResult = 20f;
-        var pageCount = Math.Ceiling(FindCount() / pageResult);
-        var skip = (videoGetModel.Page) * (int)pageResult;
-        //videos = videos.Skip().Take((int)pageResult).ToList();
+        decimal pageResult = 20;
+        var pageCountAndSkip = FindPageCountAndSkip(pageResult, videoGetModel.Page);
         if (videoGetModel.Order == Order.Ascending)
         {
-            if(videoGetModel.BrandId != null)
-            {
-                videos = await FindAsyncNoSelect(take: (int)pageResult, skip: skip, filter: p => p.Name.ToLower().Contains(videoGetModel.Search) && p.BrandId == videoGetModel.BrandId /*&& p.VideoCategories.Select(l => l.Id).Contains(videoGetModel.CategoryId)*/, orderBy: p => p.OrderBy(p => p.VideoInfo.ReleaseDate), include: _videoIncludes).ConfigureAwait(false);
-            }
-            else
-            {
-                videos = await FindAsyncNoSelect(take: (int)pageResult, skip: skip, filter: p => p.Name.ToLower().Contains(videoGetModel.Search), orderBy: p => p.OrderBy(p => p.VideoInfo.ReleaseDate), include: _videoIncludes).ConfigureAwait(false);
-            }
+            videos = await FindAsyncNoSelect(take: (int)pageResult, skip: pageCountAndSkip.skip, filter: p => p.Name.ToLower().Contains(videoGetModel.Search)
+                                                                                                 && p.BrandId.ToString().Contains(videoGetModel.BrandId == null ? "" : videoGetModel.BrandId.ToString())
+                                                                                                 && p.VideoCategories.Any(l => l.CategoryId.ToString().Contains(videoGetModel.CategoryId == null ? "" : videoGetModel.CategoryId.ToString())), orderBy: p => p.OrderBy(p => p.VideoInfo.ReleaseDate), include: _videoIncludes).ConfigureAwait(false);
         }
         else if (videoGetModel.Order == Order.Descending)
         {
-            if (videoGetModel.BrandId != null)
-            {
-                videos = await FindAsyncNoSelect(take: (int)pageResult, skip: skip, filter: p => p.Name.ToLower().Contains(videoGetModel.Search) && p.BrandId == videoGetModel.BrandId /*&& p.VideoCategories.Select(l => l.Id).Contains(videoGetModel.CategoryId)*/, orderBy: p => p.OrderByDescending(p => p.VideoInfo.ReleaseDate), include: _videoIncludes).ConfigureAwait(false);
-            }
-            else
-            {
-                videos = await FindAsyncNoSelect(take: (int)pageResult, skip: skip, filter: p => p.Name.ToLower().Contains(videoGetModel.Search), orderBy: p => p.OrderByDescending(p => p.VideoInfo.ReleaseDate), include: _videoIncludes).ConfigureAwait(false);
-            }
+            videos = await FindAsyncNoSelect(take: (int)pageResult, skip: pageCountAndSkip.skip, filter: p => p.Name.ToLower().Contains(videoGetModel.Search)
+                                                                                                 && p.BrandId.ToString().Contains(videoGetModel.BrandId == null ? "" : videoGetModel.BrandId.ToString())
+                                                                                                 && p.VideoCategories.Any(l => l.CategoryId.ToString().Contains(videoGetModel.CategoryId == null ? "" : videoGetModel.CategoryId.ToString())), orderBy: p => p.OrderByDescending(p => p.VideoInfo.ReleaseDate), include: _videoIncludes).ConfigureAwait(false);
         }
-
         var videosOp = new List<VideoDataModel>();
-        foreach (var item in videos)
+        foreach (var item in videos.Item1)
         {
             videosOp.Add(item.AsVideoDataModel());
         }
-        return new VideoSearchResponse
+        var responce =  new VideoSearchResponse
         {
             Videos = videosOp,
             CurrentPage = videoGetModel.Page,
-            Pages = (int)pageCount,
+            Pages = (int)videos.Item2/(int)pageResult,
         };
+        return responce;
+        (decimal pageCount, int skip) FindPageCountAndSkip(decimal pageResult, int page)
+        {
+            var pageCount = Math.Ceiling(FindCount() / pageResult);
+            var skip = (videoGetModel.Page) * (int)pageResult;
+            return (pageCount, skip);
+        }
     }
 
     public async Task<IEnumerable<VideoDataModel>> GetLimitedByViews(int take)
     {
         var videos = await FindAsyncNoSelect(orderBy: p => p.OrderByDescending(p => p.VideoInfo.Views).ThenByDescending(p=>p.VideoInfo.ReleaseDate), take: take, include: _videoIncludes).ConfigureAwait(false);
         var videosOp = new List<VideoDataModel>();
-        foreach (var item in videos)
+        foreach (var item in videos.Item1)
         {
             videosOp.Add(item.AsVideoDataModel());
         }

@@ -102,7 +102,7 @@ namespace YAPW.Domain.Repositories.Generic
             return await query.Select(select).ToListAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TEntity>> FindAsyncNoSelect(
+        public async Task<(IEnumerable<TEntity>,int)> FindAsyncNoSelect(
             int take = 0,
             int skip = 0,
             Expression<Func<TEntity, bool>> filter = null,
@@ -116,7 +116,7 @@ namespace YAPW.Domain.Repositories.Generic
         {
             IQueryable<TEntity> query = dbSet;
             query = query.Where(q => q.Active.Equals(activeOnly)).AsNoTracking();
-
+            int pageCount = 0;
             if (filter != null)
             {
                 query = query.Where(filter);
@@ -143,7 +143,7 @@ namespace YAPW.Domain.Repositories.Generic
             {
                 query = orderBy(query);
             }
-
+            pageCount = query.Count();
             if (skip > 0)
             {
                 query = query.Skip(skip);
@@ -151,10 +151,10 @@ namespace YAPW.Domain.Repositories.Generic
 
             if (take > 0)
             {
-                return await query.Take(take).ToListAsync(cancellationToken).ConfigureAwait(false);
+                return (await query.Take(take).ToListAsync(cancellationToken).ConfigureAwait(false), pageCount);
             }
 
-            return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
+            return (await query.ToListAsync(cancellationToken).ConfigureAwait(false), pageCount);
         }
         public int FindCount(
             int take = 0,
