@@ -1,3 +1,6 @@
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using System;
 using YAPW.Extentions;
 using YAPW.Models.Models.Settings;
 
@@ -16,16 +19,16 @@ builder.Services.AddHttpClient("javaApi", c =>
 var appSettings = builder.Configuration.GetSection("GlobalConfig").Get<AppSetting>();
 var currentEnvironmentSettings = appSettings.Environments.SingleOrDefault(e => e.Name.ToLower() == builder.Environment.EnvironmentName.ToLower());
 var connectionString = currentEnvironmentSettings.SettingsData.ConnectionString;
+//var azureKeyVaultUrl = currentEnvironmentSettings.SettingsData.AzureKeyVaultUrl;
 builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("GlobalConfig"));
+//builder.Configuration.AddAzureKeyVault(
+//       new Uri($"https://{azureKeyVaultUrl}.vault.azure.net/"),
+//       new DefaultAzureCredential());
+//var client = new SecretClient(new Uri($"https://{azureKeyVaultUrl}.vault.azure.net/"), new DefaultAzureCredential());
+//var secret = await client.GetSecretAsync("ConnectionString");
 
-//builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=YAPWDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False", c => c.MigrationsAssembly("YAPW.MainDb")));
-//builder.Services.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=YAPWDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False", c => c.MigrationsAssembly("YAPW.MainDb"));
-//builder.Services.adda(connectionString);
-//void ConfigureServices(IServiceCollection services)
-//{
-////}
-///
 builder.Services.AddServiceWorkers();
+//builder.Services.AddDatabases(secret.Value.Value, false);
 builder.Services.AddDatabases(connectionString, false);
 builder.Services.AddMemoryCache();
 builder.Services.AddOutputCache(options =>

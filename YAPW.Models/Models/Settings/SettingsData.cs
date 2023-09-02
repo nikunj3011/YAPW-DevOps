@@ -3,6 +3,7 @@
     public class SettingsData
     {
         public string ConnectionString { get; set; }
+        public string AzureKeyVaultUrl { get; set; }
         public string ApiUrl { get; set; }
         public string ApiName { get; set; }
         public string NormalizedApiName { get; set; }
