@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: backend-yapw
-        image: yapw:latest
+        image: nikunj3011/yapw:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 80
