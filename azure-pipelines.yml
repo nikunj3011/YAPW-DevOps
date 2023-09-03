@@ -21,10 +21,19 @@ stages:
       vmImage: ubuntu-latest
     steps:
     - task: Docker@2
-      displayName: Build an image
+      displayName: Build API
       inputs:
         containerRegistry: 'nikunj3011-docker-hub'
         repository: 'nikunj3011/YAPW'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: '$(tag)'
+    - task: Docker@2
+      displayName: Build Website
+      inputs:
+        containerRegistry: 'nikunj3011-docker-hub'
+        repository: 'nikunj3011/YAPW.Website'
+        command: 'buildAndPush'
+        Dockerfile: '**/YAPW.Website/Dockerfile'
+        tags: '$(tag)'
+    
