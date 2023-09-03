@@ -1,37 +1,53 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: YAPWservice-depl
-  namespace: default
+  name: backend-yapw
   labels:
-    app: YAPWservice
-    type: back-end
+    team: development
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: YAPWservice
+      app: backend-yapw
   template:
     metadata:
       labels:
-        app: YAPWservice
+        app: backend-yapw
     spec:
       containers:
-        - name: YAPWservice
-          image: nikunj3011/YAPWs:latest
-          imagePullPolicy: Never
+      - name: backend-yapw
+        image: yapw:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
           
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: YAPWs-clusterip-srv
+  name: backendsrv-yapw
 spec:
   type: ClusterIP
   selector:
-    app: YAPWservice
+    app: backend-yapw
   ports:
-  - name: YAPWservice
-    protocol: TCP
-    port: 5000
-    targetPort: 5000
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backendlb-yapw
+spec:
+  type: LoadBalancer
+  selector:
+    app: backend-yapw
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30080
+
+# http://localhost/swagger/index.html

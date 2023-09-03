@@ -1,11 +1,33 @@
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using System;
+using System.Net;
 using YAPW.Extentions;
 using YAPW.Models.Models.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//builder.WebHost.ConfigureKestrel(serverOptions =>
+//{
+
+//    serverOptions.Listen(IPAddress.Any, 7024, options =>
+//    {
+//        options.Protocols = HttpProtocols.Http1AndHttp2AndHttp3;
+
+//    });
+//    serverOptions.Listen(IPAddress.Any, 5206, options =>
+//    {
+//        options.Protocols = HttpProtocols.Http1AndHttp2AndHttp3;
+//    });
+//});
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ConfigureHttpsDefaults(listenOptions =>
+    {
+        // ...
+    });
+});
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -47,16 +69,18 @@ builder.Services.AddOutputCache(options =>
 //builder.Services.AddTransient<INameService, NameService>();
 //builder.Services.Add(SevicesInjector);
 builder.Services.AddHttpContextAccessor();
-
 //builder.Services.AddScoped<ITypeService, TypeService>();
 var app = builder.Build();
 
+
+app.UseSwagger();
+app.UseSwaggerUI();
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//}
+
+//app.UseKestrel(options => { options.Listen(IPAddress.Any, 1234); });
 
 app.UseHttpsRedirection();
 app.UseOutputCache();
