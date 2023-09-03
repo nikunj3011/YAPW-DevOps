@@ -24,7 +24,7 @@ stages:
       displayName: Build an image
       inputs:
         containerRegistry: 'nikunj3011-docker-hub'
-        repository: 'nikunj3011/YAPW.API'
+        repository: 'nikunj3011/YAPW'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: '$(tag)'
