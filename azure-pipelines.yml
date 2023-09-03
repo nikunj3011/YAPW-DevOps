@@ -34,6 +34,6 @@ stages:
         containerRegistry: 'nikunj3011-docker-hub'
         repository: 'nikunj3011/YAPW.Website'
         command: 'buildAndPush'
-        Dockerfile: '**/YAPW.Website/Dockerfile'
+        Dockerfile: 'YAPW.Website/Dockerfile'
         tags: '$(tag)'
     
