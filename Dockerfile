@@ -22,6 +22,6 @@ ENTRYPOINT ["dotnet", "YAPW.dll"]
 
 #docker run -p 5001:80 -d yapw
 #docker run -p 5000:80 -p 5001:443 -e https://localhost:7024;http://localhost:5206
-
+#docker build -t yapw .
 # docker run -p 8080:80 yapw .
 # http://localhost:8080/swagger/index.html
