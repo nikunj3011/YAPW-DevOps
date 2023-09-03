@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.CodeAnalysis;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,10 +23,50 @@ public class VideosController : BaseController
 {
     public AppBase appBase = new AppBase();
     private readonly IHttpClientFactory _clientFactory;
+    private readonly IMemoryCache _memoryCache;
 
-    public VideosController(IHttpClientFactory clientFactory) : base(clientFactory)
+    public VideosController(IHttpClientFactory clientFactory, IMemoryCache memoryCache) : base(clientFactory)
     {
+        _memoryCache = memoryCache;
         _clientFactory = clientFactory;
+        CacheData();
+    }
+
+    private async Task<(List<NamedEntityDataModel> categories, List<NamedEntityDataModel> brands)> CacheData()
+    {
+        //TO : DO add caching for these two
+        var cacheKeyCategory = "categoryList";
+        //checks if cache entries exists
+        if (!_memoryCache.TryGetValue(cacheKeyCategory, out List<NamedEntityDataModel> categories))
+        {
+            categories = await ExecuteServiceRequest<List<NamedEntityDataModel>>(HttpMethod.Get, $"categories/all/minimal");
+            //setting up cache options
+            var cacheExpiryOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = DateTime.Now.AddHours(1),
+                Priority = CacheItemPriority.High,
+                SlidingExpiration = TimeSpan.FromHours(1)
+            };
+            //setting cache entries
+            _memoryCache.Set(cacheKeyCategory, categories, cacheExpiryOptions);
+        }
+
+        var cacheKeyBrand = "brandList";
+        //checks if cache entries exists
+        if (!_memoryCache.TryGetValue(cacheKeyBrand, out List<NamedEntityDataModel> brands))
+        {
+            brands = await ExecuteServiceRequest<List<NamedEntityDataModel>>(HttpMethod.Get, $"brands/all/minimal");
+            //setting up cache options
+            var cacheExpiryOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = DateTime.Now.AddHours(1),
+                Priority = CacheItemPriority.High,
+                SlidingExpiration = TimeSpan.FromHours(1)
+            };
+            //setting cache entries
+            _memoryCache.Set(cacheKeyBrand, brands, cacheExpiryOptions);
+        }
+        return (categories, brands);
     }
 
     [HttpGet("Index")]
@@ -80,14 +121,13 @@ public class VideosController : BaseController
 	{
 		try
 		{
-            //TO : DO add caching for these two
-            var brands = await ExecuteServiceRequest<List<NamedEntityDataModel>>(HttpMethod.Get, $"brands/all/minimal");
-            ViewBag.Brands = brands;
-            var categories = await ExecuteServiceRequest<List<NamedEntityDataModel>>(HttpMethod.Get, $"categories/all/minimal");
-            ViewBag.Categories = categories;
+            var c = await CacheData();
+            ViewBag.Brands = c.brands;
+            ViewBag.Categories = c.categories;
+            ViewBag.Name = name;
 
-            ViewBag.Category = categories.Where(p => p.Name.ToLower() == category.ToLower())?.FirstOrDefault()?.Id;
-            ViewBag.Brand = brands.Where(p=>p.Name.ToLower() == brand.ToLower())?.FirstOrDefault()?.Id;
+            ViewBag.Category = c.categories.Where(p => p.Name.ToLower() == category.ToLower())?.FirstOrDefault()?.Id;
+            ViewBag.Brand = c.brands.Where(p=>p.Name.ToLower() == brand.ToLower())?.FirstOrDefault()?.Id;
             ViewBag.Order = order;
             //if (ViewBag.Brand == null) { ViewBag.Brand = ""; }
             //if (ViewBag.Category == null) { ViewBag.Category = ""; }

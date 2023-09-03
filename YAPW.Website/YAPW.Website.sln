@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAPW.Website", "YAPW.Website\YAPW.Website.csproj", "{F8949359-A7B1-44CB-AA67-DB7BF0D3F99A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAPW.Models", "..\YAPW.Models\YAPW.Models.csproj", "{C1D8614F-5D53-4E1A-AB3A-46D8B1A60A9D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{F8949359-A7B1-44CB-AA67-DB7BF0D3F99A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8949359-A7B1-44CB-AA67-DB7BF0D3F99A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8949359-A7B1-44CB-AA67-DB7BF0D3F99A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1D8614F-5D53-4E1A-AB3A-46D8B1A60A9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1D8614F-5D53-4E1A-AB3A-46D8B1A60A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1D8614F-5D53-4E1A-AB3A-46D8B1A60A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1D8614F-5D53-4E1A-AB3A-46D8B1A60A9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

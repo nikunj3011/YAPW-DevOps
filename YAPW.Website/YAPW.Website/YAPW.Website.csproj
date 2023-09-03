@@ -99,11 +99,10 @@
 		<Folder Include="Areas\Main\Data\" />
 		<Folder Include="Areas\Main\Models\" />
 		<Folder Include="Areas\Main\ViewModels\" />
+		<Folder Include="Models\Enums\" />
+		<Folder Include="Models\Interfaces\" />
+		<Folder Include="Models\ViewModels\" />
 		<Folder Include="ViewModels\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\..\YAPW.Models\YAPW.Models.csproj" />
 	</ItemGroup>
 
 </Project>

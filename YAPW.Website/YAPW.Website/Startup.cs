@@ -69,6 +69,7 @@ namespace Ditech.Portal.NET
             });
             services.AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
                     .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
+            services.AddMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -93,7 +94,6 @@ namespace Ditech.Portal.NET
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
-
             app.UseRouting();
 
             //app.UseAuthorization();
