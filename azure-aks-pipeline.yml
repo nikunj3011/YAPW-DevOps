@@ -26,8 +26,8 @@ steps:
     ensureBackend: true
     backendAzureRmResourceGroupName: 'terraform-resource-group'
     backendAzureRmResourceGroupLocation: 'eastus'
-    backendAzureRmStorageAccountName: 'aks-yapw-sa'
-    backendAzureRmContainerName: 'aks-yapw-container'
+    backendAzureRmStorageAccountName: 'aksyapwsa'
+    backendAzureRmContainerName: 'aksyapwcontainer'
     backendAzureRmKey: 'kubernetes-dev.tfstate'
     allowTelemetryCollection: true
 
