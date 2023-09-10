@@ -12,7 +12,7 @@ namespace YAPW.MainDb
     {
         public DataContext()
         {
-            
+
         }
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -96,19 +96,19 @@ namespace YAPW.MainDb
 
 
             ///mysql
-            var serverversion = new MySqlServerVersion(new Version(8,0,34)); 
+            var serverversion = new MySqlServerVersion(new Version(8,0,34));
             //optionsBuilder.UseMySql("Server=localhost;Database=YAPWDb;Uid=root;Pwd=root;", serverversion);
-			//Old Guids = true;
+            //Old Guids = true;
 
-			//optionsBuilder.UseSqlServer(connection, c => c.MigrationsAssembly("YAPW"));
-			//server=localhost\\SQLEXPRESS;Database=GameStoreDb;Integrated Security=true;MultipleActiveResultSets=true;
-			//optionsBuilder.EnableSensitiveDataLogging(true);
-			//optionsBuilder.EnableDetailedErrors(true);
-			//if (!optionsBuilder.IsConfigured)
-			////{Data Source=tcp:DEVSERVER,49189;Initial Catalog=ditechDev;Integrated Security=False;User ID=devUser;Password=6RmZcEgZD3b5engcgFGBgq7D;Connect Timeout=30;Encrypt=True;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
-			//{
-			//    optionsBuilder.UseSqlServer("Data Source=MSIDITECHPROG;Initial Catalog=DitechTestIdentity;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-			//}
-		}
+            //optionsBuilder.UseSqlServer(connection, c => c.MigrationsAssembly("YAPW"));
+            //server=localhost\\SQLEXPRESS;Database=GameStoreDb;Integrated Security=true;MultipleActiveResultSets=true;
+            //optionsBuilder.EnableSensitiveDataLogging(true);
+            //optionsBuilder.EnableDetailedErrors(true);
+            //if (!optionsBuilder.IsConfigured)
+            ////{Data Source=tcp:DEVSERVER,49189;Initial Catalog=ditechDev;Integrated Security=False;User ID=devUser;Password=6RmZcEgZD3b5engcgFGBgq7D;Connect Timeout=30;Encrypt=True;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
+            //{
+            //    optionsBuilder.UseSqlServer("Data Source=MSIDITECHPROG;Initial Catalog=DitechTestIdentity;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            //}
+        }
     }
 }

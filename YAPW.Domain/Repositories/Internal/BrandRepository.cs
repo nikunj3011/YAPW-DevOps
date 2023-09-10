@@ -50,7 +50,7 @@ public class BrandRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
                     t.Name,
                     t.VideoInfo.Cover.LinkId
                 }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
-                item.Logo.LinkId = videoImage?.FirstOrDefault().LinkId;
+                item.Logo.LinkId = videoImage?.FirstOrDefault()?.LinkId;
                 brands.Add(item.AsBrandDataModel());
             }
             //calling the server
@@ -82,7 +82,7 @@ public class BrandRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
                 t.Name,
                 t.VideoInfo.Cover.LinkId
             }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
-            item.Logo.LinkId = videoImage?.FirstOrDefault().LinkId;
+            item.Logo.LinkId = videoImage?.FirstOrDefault()?.LinkId;
             brands.Add(item.AsBrandDataModel());
         }
         return brands;

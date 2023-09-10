@@ -99,8 +99,8 @@ namespace YAPW.Controllers.Internal
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [HttpGet("Detailed/{name}")]
-        public async Task<VideoDataModel> GetByNameDetailed(string name) => await _repository.GetByNameDetailed(name);
+        [HttpGet("Detailed/{linkName}")]
+        public async Task<VideoDataModel> GetByNameDetailed(string linkName) => await _repository.GetByNameDetailed(linkName);
 
         /// <summary>
         /// Get Types by Name

@@ -23,3 +23,5 @@ Servicebrokers/YAPW.Service.Broker/obj
 .terraform
 YAPW.Website/YAPW.Website/bin
 YAPW.Website/YAPW.Website/obj
+azure_rsa.pub
+azure_rsa

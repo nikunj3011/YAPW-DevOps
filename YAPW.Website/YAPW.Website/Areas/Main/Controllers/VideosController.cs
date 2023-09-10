@@ -94,8 +94,7 @@ public class VideosController : BaseController
     {
         try
         {
-            name = name.Replace("-", " ");
-
+            //name = name.Replace("-", " ");
             var video = await ExecuteServiceRequest<VideoDataModel>(HttpMethod.Get, $"videos/detailed/" + name);
             video.VideoInfo.VideoUrl = $"https://r2.1hanime.com/{video.VideoInfo.VideoUrl}.mp4";
             //if next video is present add it

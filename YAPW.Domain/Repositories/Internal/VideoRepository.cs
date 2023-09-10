@@ -120,11 +120,11 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
         return videosOp;
     }
 
-    public async Task<VideoDataModel> GetByNameDetailed(string name)
+    public async Task<VideoDataModel> GetByNameDetailed(string linkName)
     {
         try
         {
-            var video = await FindSingleAsync(t => t.Name.ToLower() == name.ToLower(), _videoIncludes).ConfigureAwait(false);
+            var video = await FindSingleAsync(t => t.VideoInfo.VideoUrl.LinkId.ToLower() == linkName.ToLower(), _videoIncludes).ConfigureAwait(false);
             if(video != null)
             {
                 return video.AsVideoDataModel();
