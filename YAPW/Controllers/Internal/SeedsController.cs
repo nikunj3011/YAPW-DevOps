@@ -27,7 +27,7 @@ namespace YAPW.Controllers.Internal
     [ApiController]
     [Route("[controller]")]
     public class SeedsController : EntitiesControllerBase
-    { 
+    {
         private readonly NamedEntityServiceWorker<MainDb.DbModels.Actor, DataContext> _namedEntityServiceWorker;
         private readonly ServiceWorker<DataContext> _serviceWorker;
         private readonly ActorRepository<Actor, DataContext> _repository;
@@ -202,8 +202,8 @@ namespace YAPW.Controllers.Internal
             {
                 string jsonVideo = System.IO.File.ReadAllText("video.json");
                 var videos = JsonConvert.DeserializeObject<List<Videos>>(jsonVideo);
-                await _namedEntityServiceWorker.BeginTransaction();
-
+                //await _namedEntityServiceWorker.BeginTransaction();
+                var count = 0;
                 foreach (var item in videos)
                 {
                     var videoTitles = new List<VideoTitle>();
@@ -291,8 +291,10 @@ namespace YAPW.Controllers.Internal
 
                     _serviceWorker.VideoRepository.Update(newVideo);
                     await _serviceWorker.SaveAsync();
+                    count++;
                 }
-                await _namedEntityServiceWorker.CommitTransaction();
+                //await _namedEntityServiceWorker.CommitTransaction();
+                await _serviceWorker.SaveAsync();
 
                 return Ok();
             }
@@ -303,7 +305,7 @@ namespace YAPW.Controllers.Internal
             }
         }
 
-        [HttpPost("video4")]
+        [HttpPost("updateVideoDescription")]
         public async Task<ActionResult<IEnumerable<NameDataModel>>> AddVideo()
         {
             try
@@ -332,6 +334,11 @@ namespace YAPW.Controllers.Internal
             {
                 //string jsonVideo = System.IO.File.ReadAllText("video.json");
                 var videos = await _serviceWorker.VideoRepository.FindAsyncNoSelect(include: p=>p.Include(p=>p.VideoInfo.VideoUrl));
+                //var jsonVideos = JsonConvert.SerializeObject(videos.Item1);
+                //using (StreamWriter writetext = new StreamWriter("write.txt"))
+                //{
+                //    writetext.WriteLine(jsonVideos);
+                //}
                 var invalidCount = 0;
                 var validCount = 0;
                 Categories categories = new Categories();
@@ -355,6 +362,61 @@ namespace YAPW.Controllers.Internal
                     }
                 }
                 return Ok(invalidVideos);
+                //Client.
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message + "  " + ex.InnerException);
+            }
+        }
+
+        [HttpPost("checkLinks")]
+        public async Task<ActionResult<dynamic>> CheckLinks()
+        {
+            try
+            {
+                string jsonVideo = System.IO.File.ReadAllText("linksordered.json");
+                var links = JsonConvert.DeserializeObject<List<Link>>(jsonVideo);
+                var dbLinks = await _serviceWorker.LinkRepository.FindAsyncNoSelect(orderBy: p => p.OrderBy(p => p.LinkId));
+                var count = 0;
+                foreach (var item in dbLinks.Item1)
+                {
+                    var correctLink = links.ElementAt(count);
+                    if (item.LinkId != correctLink.LinkId)
+                    {
+                        item.LinkId = correctLink.LinkId;
+                        count++;
+                    }
+                    _serviceWorker.LinkRepository.Update(item);
+                    //count++;
+                }
+                await _serviceWorker.SaveAsync();
+                return Ok();
+                //Client.
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message + "  " + ex.InnerException);
+            }
+        }
+
+        [HttpPost("notWorkingVideosInacive")]
+        public async Task<ActionResult<dynamic>> NotWorkingVideosInacive()
+        {
+            try
+            {
+                string jsonVideo = System.IO.File.ReadAllText("notworkvid.json");
+                var videos = JsonConvert.DeserializeObject<List<string>>(jsonVideo);
+                var count = 0;
+                foreach (var item in videos)
+                {
+                    var dbVideo = await _serviceWorker.VideoRepository.FindSingleAsync(p=>p.Name == item, null);
+                    dbVideo.Active = false;
+                    _serviceWorker.VideoRepository.Update(dbVideo);
+                    //count++;
+                }
+                await _serviceWorker.SaveAsync();
+                return Ok();
                 //Client.
             }
             catch (Exception ex)
