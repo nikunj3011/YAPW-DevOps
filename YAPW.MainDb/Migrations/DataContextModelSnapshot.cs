@@ -709,7 +709,7 @@ namespace YAPW.MainDb.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("YAPW.MainDb.DbModels.Video", "Video")
+                    b.HasOne("YAPW.MainDb.DbModels.Video", null)
                         .WithOne("VideoInfo")
                         .HasForeignKey("YAPW.MainDb.DbModels.VideoInfo", "VideoId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -724,8 +724,6 @@ namespace YAPW.MainDb.Migrations
                     b.Navigation("Cover");
 
                     b.Navigation("Poster");
-
-                    b.Navigation("Video");
 
                     b.Navigation("VideoUrl");
                 });

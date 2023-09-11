@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace YAPW.MainDb.Migrations
 {
     /// <inheritdoc />
-    public partial class final : Migration
+    public partial class InitialDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,7 +47,7 @@ namespace YAPW.MainDb.Migrations
                         column: x => x.LinkId,
                         principalTable: "Links",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -72,7 +72,7 @@ namespace YAPW.MainDb.Migrations
                         column: x => x.LogoId,
                         principalTable: "Links",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Brands_Links_WebsiteId",
                         column: x => x.WebsiteId,
@@ -102,7 +102,7 @@ namespace YAPW.MainDb.Migrations
                         column: x => x.PhotoUrlId,
                         principalTable: "Links",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -126,7 +126,7 @@ namespace YAPW.MainDb.Migrations
                         column: x => x.BrandId,
                         principalTable: "Brands",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Photos_Links_LinkId",
                         column: x => x.LinkId,
@@ -155,7 +155,7 @@ namespace YAPW.MainDb.Migrations
                         column: x => x.BrandId,
                         principalTable: "Brands",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -177,7 +177,7 @@ namespace YAPW.MainDb.Migrations
                         column: x => x.ActorId,
                         principalTable: "Actors",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ActorPhotos_Photos_PhotoId",
                         column: x => x.PhotoId,
@@ -205,7 +205,7 @@ namespace YAPW.MainDb.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PhotoCategories_Photos_PhotoId",
                         column: x => x.PhotoId,
@@ -238,7 +238,7 @@ namespace YAPW.MainDb.Migrations
                         column: x => x.PhotoId,
                         principalTable: "Photos",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -260,7 +260,7 @@ namespace YAPW.MainDb.Migrations
                         column: x => x.ActorId,
                         principalTable: "Actors",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ActorVideos_Videos_VideoId",
                         column: x => x.VideoId,
@@ -288,7 +288,7 @@ namespace YAPW.MainDb.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_VideoCategories_Videos_VideoId",
                         column: x => x.VideoId,
@@ -325,7 +325,7 @@ namespace YAPW.MainDb.Migrations
                         column: x => x.CoverId,
                         principalTable: "Links",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_VideoInfos_Links_PosterId",
                         column: x => x.PosterId,
@@ -387,13 +387,13 @@ namespace YAPW.MainDb.Migrations
                         column: x => x.VideoInfoId,
                         principalTable: "VideoInfos",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_VideoInfoVideoTitles_VideoTitles_VideoTitleId",
                         column: x => x.VideoTitleId,
                         principalTable: "VideoTitles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

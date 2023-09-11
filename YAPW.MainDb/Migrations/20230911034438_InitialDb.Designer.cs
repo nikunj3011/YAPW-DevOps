@@ -12,8 +12,8 @@ using YAPW.MainDb;
 namespace YAPW.MainDb.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230822232824_final")]
-    partial class final
+    [Migration("20230911034438_InitialDb")]
+    partial class InitialDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -712,7 +712,7 @@ namespace YAPW.MainDb.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("YAPW.MainDb.DbModels.Video", "Video")
+                    b.HasOne("YAPW.MainDb.DbModels.Video", null)
                         .WithOne("VideoInfo")
                         .HasForeignKey("YAPW.MainDb.DbModels.VideoInfo", "VideoId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -727,8 +727,6 @@ namespace YAPW.MainDb.Migrations
                     b.Navigation("Cover");
 
                     b.Navigation("Poster");
-
-                    b.Navigation("Video");
 
                     b.Navigation("VideoUrl");
                 });
