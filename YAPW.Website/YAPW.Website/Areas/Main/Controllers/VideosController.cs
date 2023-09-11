@@ -48,7 +48,7 @@ public class VideosController : BaseController
                 Priority = CacheItemPriority.High,
                 SlidingExpiration = TimeSpan.FromHours(1)
             };
-            //setting cache entries
+            //setting cache  entries
             _memoryCache.Set(cacheKeyCategory, categories, cacheExpiryOptions);
         }
 
