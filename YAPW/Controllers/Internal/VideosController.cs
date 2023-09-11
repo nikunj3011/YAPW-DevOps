@@ -1,4 +1,6 @@
+using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Options;
 using YAPW.Controllers.Base;
 using YAPW.Domain.Interfaces.Services;
@@ -111,6 +113,39 @@ namespace YAPW.Controllers.Internal
         public async Task<ActionResult<MainDb.DbModels.Video>> SearchByName(string name, int take)
         {
             return Ok(await _namedEntityServiceWorker.TypeRepository.SearchTypes(name, take));
+        }
+
+        /// <summary>
+        /// Post Type
+        /// </summary>
+        /// <param name="namedEntityDataModel"></param>
+        /// <returns></returns>
+        [HttpPut("updateViews")]
+        public async Task<ActionResult<MainDb.DbModels.Video>> Post(Dictionary<string, int> videoViews, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _namedEntityServiceWorker.BeginTransaction();
+
+                foreach (var item in videoViews)
+                {
+                    var dbVideoInfo = await _serviceWorker.VideoInfoRepository.FindSingleAsync(p=>p.VideoUrl.LinkId.ToLower() == item.Key.ToLower(), null);
+                    Guard.Against.Null(dbVideoInfo);
+                    dbVideoInfo.Views = item.Value + dbVideoInfo.Views;
+                    _serviceWorker.VideoInfoRepository.Update(dbVideoInfo);
+                }
+                await _serviceWorker.SaveAsync();
+                await _namedEntityServiceWorker.CommitTransaction();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                //catch exeption in logs or retry or send email to admin or metrics server, grafana etc
+                await _namedEntityServiceWorker.RollBackTransaction();
+
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>

@@ -44,5 +44,18 @@ namespace YAPW.Website.Controllers
 
             return JsonConvert.DeserializeObject<T>(returnedContent);
         }
+
+        protected async Task<T> ExecutePutServiceRequest<T, TDataModel>(string endpoint, TDataModel dataModel) where T : class where TDataModel : class
+        {
+            var response = await Client.PutAsJsonAsync(endpoint, dataModel).ConfigureAwait(false);
+            var returnedContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new InvalidOperationException(JsonConvert.SerializeObject(new { StatusCode = (int)response.StatusCode, content = returnedContent }));
+            }
+
+            return JsonConvert.DeserializeObject<T>(returnedContent);
+        }
     }
 }

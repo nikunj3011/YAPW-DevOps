@@ -1,7 +1,6 @@
 ﻿using Ditech.Portal.NET.App_Base;
 using Ditech.Portal.NET.Attributes;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.CodeAnalysis;
@@ -25,6 +24,8 @@ public class VideosController : BaseController
     private readonly IHttpClientFactory _clientFactory;
     private readonly IMemoryCache _memoryCache;
 
+    private Dictionary<string, int> videoLikesList =
+                new Dictionary<string, int>();
     public VideosController(IHttpClientFactory clientFactory, IMemoryCache memoryCache) : base(clientFactory)
     {
         _memoryCache = memoryCache;
@@ -94,7 +95,6 @@ public class VideosController : BaseController
     {
         try
         {
-            //name = name.Replace("-", " ");
             var video = await ExecuteServiceRequest<VideoDataModel>(HttpMethod.Get, $"videos/detailed/" + name);
             video.VideoInfo.VideoUrl = $"https://r2.1hanime.com/{video.VideoInfo.VideoUrl}.mp4";
             //if next video is present add it
@@ -102,42 +102,95 @@ public class VideosController : BaseController
             ViewBag.VideosFeatured = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/featured/byViews/19");
             ViewBag.VideosRecentlyAdded = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/newReleases/19");
             ViewBag.VideosRandom = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/random/19");
-            ViewBag.VideosSameBrand = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/brand/19/"+video.Brand.Name.ToLower());
+            ViewBag.VideosSameBrand = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/brand/19/" + video.Brand.Name.ToLower());
+
+            //update likes, dislikes, views in api
+            //update when there is low user count
+            //use metrics servers to get data
+            //or get api metrics if low post to endpoint
+            var cacheKeyVideoLikesList = "videoLikesList";
+
+            if (!_memoryCache.TryGetValue(cacheKeyVideoLikesList, out Dictionary<string, int> cacheVideoLikesList))
+            {
+                cacheVideoLikesList = new Dictionary<string, int>();
+
+                //setting up cache options
+                var cacheExpiryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.Now.AddMinutes(30),
+                    Priority = CacheItemPriority.High,
+                    SlidingExpiration = TimeSpan.FromMinutes(30)
+                }.RegisterPostEvictionCallback(async (key, value, reason, substate) =>
+                {
+                    //before cache is removed update those values
+                    try
+                    {
+                        //todo later add these calls directly through servicebroker and also do this for likes and dislikes
+                        var updateViews = await ExecutePutServiceRequest<string, Dictionary<string, int>>($"videos/updateViews/", cacheVideoLikesList);
+                        cacheVideoLikesList = new Dictionary<string, int>();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("lol " + ex.Message);
+                    }
+                });
+                //setting cache entries
+
+                _memoryCache.Set(cacheKeyVideoLikesList, cacheVideoLikesList, cacheExpiryOptions);
+            }
+
+            if (!cacheVideoLikesList.ContainsKey(name))
+            {
+                cacheVideoLikesList.Add(name, 1);
+                videoLikesList.Add(name, 1);
+            }
+            else
+            {
+                var count = cacheVideoLikesList.GetValueOrDefault(name);
+                count++;
+                cacheVideoLikesList[name] = count;
+            }
+
 
             return PartialView("Video", video);
         }
         catch (Exception ex)
         {
+            if (ex.Message.Contains("lol"))
+            {
+                //retry policy etc
+                return BadRequest("Error occured" + ex.Message);
+            }
             return BadRequest("Error occured" + ex.Message);
         }
-	}
+    }
 
-	[AjaxOnly]
-	[HttpGet]
-	[Route("Search")]
+    [AjaxOnly]
+    [HttpGet]
+    [Route("Search")]
     [OutputCache(Duration = 7200)]
     public async Task<IActionResult> Search(string name, string brand = "", string category = "", Order order = Order.Descending)
-	{
-		try
-		{
-            var c = await CacheData();
-            ViewBag.Brands = c.brands;
-            ViewBag.Categories = c.categories;
+    {
+        try
+        {
+            var cache = await CacheData();
+            ViewBag.Brands = cache.brands;
+            ViewBag.Categories = cache.categories;
             ViewBag.Name = name;
 
-            ViewBag.Category = c.categories.Where(p => p.Name.ToLower() == category.ToLower())?.FirstOrDefault()?.Id;
-            ViewBag.Brand = c.brands.Where(p=>p.Name.ToLower() == brand.ToLower())?.FirstOrDefault()?.Id;
+            ViewBag.Category = cache.categories.Where(p => p.Name.ToLower() == category.ToLower())?.FirstOrDefault()?.Id;
+            ViewBag.Brand = cache.brands.Where(p => p.Name.ToLower() == brand.ToLower())?.FirstOrDefault()?.Id;
             ViewBag.Order = order;
             //if (ViewBag.Brand == null) { ViewBag.Brand = ""; }
             //if (ViewBag.Category == null) { ViewBag.Category = ""; }
             ViewData["BrandsSelectList"] = new SelectList(ViewBag.Brands, "Id", "Name", ViewBag.Brand);
             ViewData["CategoriesSelectList"] = new SelectList(ViewBag.Categories, "Id", "Name", ViewBag.Category);
             return PartialView();
-		}
-		catch (Exception ex)
-		{
-			return BadRequest("Error occured" + ex.Message);
-		}
+        }
+        catch (Exception ex)
+        {
+            return BadRequest("Error occured" + ex.Message);
+        }
     }
 
     [AjaxOnly]
@@ -176,22 +229,20 @@ public class VideosController : BaseController
         }
     }
 
-
     [HttpGet("Brands")]
     [AjaxOnly]
     public async Task<IActionResult> Brands()
     {
         try
         {
-            var videos = await ExecuteServiceRequest<List<BrandDataModel>>(HttpMethod.Get, $"brands/all/minimal");
-            return PartialView(videos);
+            var cache = await CacheData();
+            return PartialView(cache.brands);
         }
         catch (Exception ex)
         {
             return BadRequest("Error occured" + ex.Message);
         }
     }
-
 
     [HttpGet("Categories")]
     [AjaxOnly]
@@ -199,66 +250,12 @@ public class VideosController : BaseController
     {
         try
         {
-            var videos = await ExecuteServiceRequest<List<CategoryDataModel>>(HttpMethod.Get, $"categories/all/minimal");
-            return PartialView(videos);
+            var cache = await CacheData();
+            return PartialView(cache.categories);
         }
         catch (Exception ex)
         {
             return BadRequest("Error occured" + ex.Message);
         }
     }
-
-    //[HttpPost]
-    //[ValidateAntiForgeryToken]
-    //[AjaxOnly]
-    //public async Task<IActionResult> Actor(ActorGetModel ActorGetModel)
-    //{
-    //    try
-    //    {
-    //        if (!ModelState.IsValid)
-    //        {
-    //            return BadRequest(ModelState);
-    //        }
-    //        var ActorRequestResult = await appBase.GetElementFromApiAsync<ActorViewModel>($"operations/Actors/erp/compact/{ActorGetModel.ErpNumber}?typeId={ActorGetModel.ActorType}", _clientFactory);
-    //        if (ActorRequestResult.statusCode != HttpStatusCode.OK)
-    //        {
-    //            return BadRequest(ActorRequestResult.rawResponse);
-    //        }
-    //        var test = ActorRequestResult.returnedElement.Tanks.ActorBy(t => t.CurrentStatus);
-    //        var customer = await ExecuteServiceRequest<Customer>(HttpMethod.Get, "logistics/customer/" + ActorRequestResult.returnedElement.CustomerId);
-    //        ViewBag.CustomerAddress = customer.Addresses?.FirstOrDefault().Address.FullAddress;
-    //        var TankStatusList = new List<TankStatuses>();
-    //        if (ActorRequestResult.returnedElement.Tanks.Count() > 0)
-    //        {
-    //            TankStatusList.Add(new TankStatuses { TankCount = 0, status = ActorRequestResult.returnedElement.Tanks.FirstOrDefault().CurrentStatus });
-    //            foreach (var tank in test)
-    //            {
-    //                var tankCurentStatus = tank.CurrentStatus;
-    //                var exist = false;
-
-    //                foreach (var statusList in TankStatusList)
-    //                {
-    //                    if (statusList.status == tankCurentStatus)
-    //                    {
-    //                        exist = true;
-    //                        statusList.TankCount++;
-    //                    }
-    //                }
-    //                if (!exist)
-    //                {
-    //                    TankStatusList.Add(new TankStatuses { status = tankCurentStatus, TankCount = 1 });
-    //                }
-    //            }
-    //        }
-    //        ViewBag.Tanks = ActorRequestResult.returnedElement.Tanks.Count;
-    //        var Actor = ActorRequestResult.returnedElement;
-    //        Actor.TanksStatus = TankStatusList;
-
-    //        return View("Actor", Actor);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return BadRequest("Error occured" + ex.Message);
-    //    }
-    //}
 }
