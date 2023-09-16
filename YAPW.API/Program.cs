@@ -1,7 +1,14 @@
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Prometheus;
 using System;
+using System.Diagnostics;
 using System.Net;
 using YAPW.Extentions;
 using YAPW.Models.Models.Settings;
@@ -28,6 +35,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
         // ...
     });
 });
+Activity.DefaultIdFormat = ActivityIdFormat.W3C;
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -37,6 +45,83 @@ builder.Services.AddHttpClient("javaApi", c =>
     c.BaseAddress = new Uri("http://localhost:8083/");
     c.DefaultRequestHeaders.Add("Accept", "application/json");
 });
+
+//var metricServer = new MetricServer(port: 1234);
+//metricServer.Start();
+
+//var meters = new OtelMetrics();
+builder.Services.AddOpenTelemetry().WithMetrics(opts => opts
+     //.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("BookStore.WebApi"))
+    .AddConsoleExporter()
+    .AddAspNetCoreInstrumentation()
+    .AddHttpClientInstrumentation()
+    .AddPrometheusExporter(
+    opt =>
+    {
+        //opt.StartHttpListener = true;
+        //opt.s = new string[] { $"http://localhost:9184/" };
+        opt.ScrapeEndpointPath = $"https://localhost:5001/";
+    }
+    )
+    .AddMeter("Microsoft.AspNetCore.Hosting",
+                         "Microsoft.AspNetCore.Server.Kestrel")
+    .AddRuntimeInstrumentation()
+    );
+
+//builder.Services.AddOpenTelemetry().WithMetrics(opts => opts
+//    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("BookStore.WebApi"))
+//    .AddMeter(meters.MetricName)
+//    .AddAspNetCoreInstrumentation()
+//    .AddRuntimeInstrumentation()
+//    .AddProcessInstrumentation()
+//    .AddOtlpExporter(opts =>
+//    {
+//        opts.Endpoint = new Uri(builder.Configuration["Otlp:Endpoint"]);
+//    }));
+builder.Services.AddOpenTelemetry()
+    .WithTracing(builder => builder
+        .AddAspNetCoreInstrumentation()
+        .AddSqlClientInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddConsoleExporter()
+        .AddOtlpExporter()
+        //opt =>
+        //{
+        //    opt.Endpoint = new Uri("http://localhost:16686/");
+        //    opt.Protocol = OtlpExportProtocol.HttpProtobuf;
+        //})
+        .AddZipkinExporter()
+        .AddSource("YAPW.API.NET")
+        .SetResourceBuilder(
+            ResourceBuilder.CreateDefault()
+                .AddService(serviceName: "YAPW.API.NET")));
+
+builder.Services.AddLogging(logging => logging.AddOpenTelemetry(openTelemetryLoggerOptions =>
+{
+    openTelemetryLoggerOptions.SetResourceBuilder(
+        ResourceBuilder.CreateEmpty()
+            // Replace "GettingStarted" with the name of your application
+            .AddService("GettingStarted")
+            .AddAttributes(new Dictionary<string, object>
+            {
+                // Add any desired resource attributes here
+                ["deployment.environment"] = "development"
+            }));
+
+    // Some important options to improve data quality
+    openTelemetryLoggerOptions.IncludeScopes = true;
+    openTelemetryLoggerOptions.IncludeFormattedMessage = true;
+
+    openTelemetryLoggerOptions.AddOtlpExporter(exporter =>
+    {
+        // The full endpoint path is required here, when using
+        // the `HttpProtobuf` protocol option.
+        exporter.Endpoint = new Uri("http://localhost:5341/ingest/otlp/v1/logs");
+        exporter.Protocol = OtlpExportProtocol.HttpProtobuf;
+        // Optional `X-Seq-ApiKey` header for authentication, if required
+        exporter.Headers = "X-Seq-ApiKey=abcde12345";
+    });
+}));
 
 var appSettings = builder.Configuration.GetSection("GlobalConfig").Get<AppSetting>();
 var currentEnvironmentSettings = appSettings.Environments.SingleOrDefault(e => e.Name.ToLower() == builder.Environment.EnvironmentName.ToLower());
@@ -72,7 +157,8 @@ builder.Services.AddHttpContextAccessor();
 //builder.Services.AddScoped<ITypeService, TypeService>();
 var app = builder.Build();
 
-
+app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
+//app.MapPrometheusScrapingEndpoint("metrics");
 app.UseSwagger();
 app.UseSwaggerUI();
 // Configure the HTTP request pipeline.
