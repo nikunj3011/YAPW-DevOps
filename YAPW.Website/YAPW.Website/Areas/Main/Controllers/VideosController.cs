@@ -33,14 +33,14 @@ public class VideosController : BaseController
         CacheData();
     }
 
-    private async Task<(List<NamedEntityDataModel> categories, List<NamedEntityDataModel> brands)> CacheData()
+    private async Task<(List<CategoryDataModel> categories, List<BrandDataModel> brands)> CacheData()
     {
         //TO : DO add caching for these two
         var cacheKeyCategory = "categoryList";
         //checks if cache entries exists
-        if (!_memoryCache.TryGetValue(cacheKeyCategory, out List<NamedEntityDataModel> categories))
+        if (!_memoryCache.TryGetValue(cacheKeyCategory, out List<CategoryDataModel> categories))
         {
-            categories = await ExecuteServiceRequest<List<NamedEntityDataModel>>(HttpMethod.Get, $"categories/all/minimal");
+            categories = await ExecuteServiceRequest<List<CategoryDataModel>>(HttpMethod.Get, $"categories/all/minimal");
             //setting up cache options
             var cacheExpiryOptions = new MemoryCacheEntryOptions
             {
@@ -48,15 +48,15 @@ public class VideosController : BaseController
                 Priority = CacheItemPriority.High,
                 SlidingExpiration = TimeSpan.FromHours(1)
             };
-            //setting cache  entries
+            //setting cache entries
             _memoryCache.Set(cacheKeyCategory, categories, cacheExpiryOptions);
         }
 
         var cacheKeyBrand = "brandList";
         //checks if cache entries exists
-        if (!_memoryCache.TryGetValue(cacheKeyBrand, out List<NamedEntityDataModel> brands))
+        if (!_memoryCache.TryGetValue(cacheKeyBrand, out List<BrandDataModel> brands))
         {
-            brands = await ExecuteServiceRequest<List<NamedEntityDataModel>>(HttpMethod.Get, $"brands/all/minimal");
+            brands = await ExecuteServiceRequest<List<BrandDataModel>>(HttpMethod.Get, $"brands/all/minimal");
             //setting up cache options
             var cacheExpiryOptions = new MemoryCacheEntryOptions
             {

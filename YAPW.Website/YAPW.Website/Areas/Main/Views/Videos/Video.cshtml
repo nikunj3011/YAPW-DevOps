@@ -9,6 +9,64 @@
 }
 <head>
     <style>
+
+        /* :active, :hover, :focus {
+            outline: 0 !important;
+            outline-offset: 0;
+        }
+
+        ::before,
+        ::after {
+            position: absolute;
+            content: "";
+        }
+
+        .btnTag {
+          position: relative;
+          display: inline-block;
+          width: auto; height: auto;
+          background-color: transparent;
+          border: none;
+          cursor: pointer;
+          margin: 0px 25px 15px;
+          min-width: 150px;
+        }
+
+            .btnTag span {
+            position: relative;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            top: 0; left: 0;
+            width: 100%;
+            padding: 15px 20px;
+            transition: 0.3s;
+          }
+
+        .btn-1::before {
+          background-color: rgb(28, 31, 30);
+          transition: 0.3s ease-out;
+        }
+        .btn-1 span {
+          color: rgb(255,255,255);
+          border: 1px solid rgb(28, 31, 30);
+          transition: 0.2s 0.1s;
+        }
+        .btn-1 span:hover {
+          color: rgb(28, 31, 30);
+          transition: 0.2s 0.1s;
+        }
+
+
+        .btn.hover-filled-slide-right::before {
+          top:0; bottom: 0; right: 0;
+          height: 100%; width: 100%;
+        }
+        .btn.hover-filled-slide-right:hover::before {
+          width: 0%;
+        } */
         figure.snip1466 {
             position: relative;
             overflow: hidden;
@@ -601,7 +659,7 @@
                                     <i class="fa-solid fa-tags"></i>
                                     @foreach (var category in Model.Categories)
                                     {
-                                        <a style="color:#BD421B;" href="Main/Videos/Search?category=@category.Name" class="ajaxLoad">@category.Name</a>
+                                        <a style="color:#BD421B;" href="Main/Videos/Search?category=@category.Name" class="ajaxLoad btnTag btn-1 hover-filled-slide-right">@category.Name</a>
                                     }
                                 </b>
                             </div>
