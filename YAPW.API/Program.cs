@@ -87,8 +87,8 @@ builder.Services.AddOpenTelemetry()
         .AddOtlpExporter()
         //opt =>
         //{
-        //    opt.Endpoint = new Uri("http://localhost:16686/");
-        //    opt.Protocol = OtlpExportProtocol.HttpProtobuf;
+        //   opt.Endpoint = new Uri("http://localhost:16686/");
+        //   opt.Protocol = OtlpExportProtocol.HttpProtobuf;
         //})
         .AddZipkinExporter()
         .AddSource("YAPW.API.NET")
