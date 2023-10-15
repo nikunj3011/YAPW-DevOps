@@ -1,6 +1,8 @@
 ﻿using Azure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using NetTopologySuite.Index.HPRtree;
+using Newtonsoft.Json;
 using System.Linq;
 using YAPW.Domain.Interfaces;
 using YAPW.Domain.Repositories.Generic;
@@ -29,7 +31,7 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
 
     public async Task<IEnumerable<VideoDataModel>> GetLimited(int take)
     {
-        var videos = await FindAsyncNoSelect(take: take, include: _videoIncludes).ConfigureAwait(false);
+        var videos = await FindAsyncNoSelect(take: take, include: _videoIncludes, orderBy: p=>p.OrderByDescending(p=>p.VideoInfo.CreatedDate)).ConfigureAwait(false);
         var videosOp = new List<VideoDataModel>();
         foreach (var item in videos.Item1)
         {
@@ -111,7 +113,7 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
 
     public async Task<IEnumerable<VideoDataModel>> GetRandomLimitedByBrand(string brandName, int take)
     {
-        var videos = await FindRandomAsyncNoSelect(filter: p=>p.Brand.Name.ToLower() == brandName.ToLower(),take: take, include: _videoIncludes).ConfigureAwait(false);
+        var videos = await FindRandomAsyncNoSelect(filter: p=> p.Brand.Name.ToLower() == brandName.ToLower(), take: take, include: _videoIncludes).ConfigureAwait(false);
         var videosOp = new List<VideoDataModel>();
         foreach (var item in videos)
         {
@@ -146,14 +148,103 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
         }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
     }
 
-    //public async Task<IEnumerable<VideoDataModel>> AddVideo(string name, int take)
-    //{
-    //	return await FindAsync(filter: v => v.Name.ToLower().Contains(name.ToLower()), take: take, select: t => new
-    //	{
-    //		t.Id,
-    //		t.Name
-    //	}, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
-    //}
+    public async Task AddVideo(AddVideoDataModel item)
+    {
+        try
+        {
+            var videoTitles = new List<VideoTitle>();
+            foreach (var videoTitle in item.Titles)
+            {
+                var newVideoTitle = new VideoTitle
+                {
+                    Name = videoTitle,
+                    Description = ""
+                };
+                videoTitles.Add(newVideoTitle);
+                _serviceWorker.VideoTitleRepository.Add(newVideoTitle);
+            }
+
+            var posterLink = new Link
+            {
+                LinkId = item.PosterUrl
+            };
+            _serviceWorker.LinkRepository.Add(posterLink);
+
+            var coverLink = new Link
+            {
+                LinkId = item.CoverUrl
+            };
+            _serviceWorker.LinkRepository.Add(coverLink);
+
+            var videoLink = new Link
+            {
+                LinkId = item.Slug
+            };
+            _serviceWorker.LinkRepository.Add(videoLink);
+
+            DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            DateTime createdDate = start.AddSeconds(item.CreatedAt).ToLocalTime();
+
+            long realeaseDate = item.ReleasedAt;
+            start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            DateTime releaseDate = start.AddSeconds(item.ReleasedAt).ToLocalTime();
+            var brand = await _serviceWorker.BrandRepository.FindSingleAsync(p => string.Equals(p.Name, item.Brand, StringComparison.OrdinalIgnoreCase), null);
+            ArgumentNullException.ThrowIfNull(brand);
+            var newVideo = new Video
+            {
+                Name = item.Name,
+                Description = item.Description,
+                BrandId = brand.Id,
+                VideoCategories = new List<VideoCategory>(),
+                //Link = videoLink,
+                //Photo = null
+                //VideoInfo = new VideoInfo(),
+            };
+            _serviceWorker.VideoRepository.Add(newVideo);
+
+            var newVideoInfo = new VideoInfo
+            {
+                Views = 0,
+                VideoTitles = videoTitles,
+                VideoUrlId = videoLink.Id,
+                PosterId = posterLink.Id,
+                CoverId = coverLink.Id,
+                VideoLength = 0,
+                IsCensored = item.IsCensored,
+                CreatedDate = createdDate,
+                ReleaseDate = releaseDate,
+                VideoId = newVideo.Id
+            };
+            _serviceWorker.VideoInfoRepository.Add(newVideoInfo);
+
+            var videoCateogries = new List<VideoCategory>();
+            foreach (var tag in item.Tags)
+            {
+                var category = await _serviceWorker.CategoryRepository.FindSingleAsync(p => string.Equals(p.Name, tag, StringComparison.OrdinalIgnoreCase), null);
+                ArgumentNullException.ThrowIfNull(category);
+                var newVideoCategory = new VideoCategory
+                {
+                    CategoryId = category.Id,
+                    //Category = category,
+                    VideoId = newVideo.Id
+                };
+                _serviceWorker.VideoCategoryRepository.Add(newVideoCategory);
+                await _serviceWorker.SaveAsync();
+
+                videoCateogries.Add(newVideoCategory);
+            }
+            newVideo.VideoCategories = videoCateogries;
+            newVideo.VideoInfo = newVideoInfo;
+
+            _serviceWorker.VideoRepository.Update(newVideo);
+            await _serviceWorker.SaveAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
     #region Helpers
     public Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> GetIncludes()
     {

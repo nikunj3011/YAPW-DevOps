@@ -158,38 +158,34 @@ namespace YAPW.Controllers.Internal
         {
             try
             {
+                return BadRequest("Not supported");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
+        /// <summary>
+        /// Post Type
+        /// </summary>
+        /// <param name="namedEntityDataModel"></param>
+        /// <returns></returns>
+        [HttpPost("addExternal")]
+        public async Task<ActionResult<MainDb.DbModels.Video>> PostVideo(AddVideoDataModel namedEntityDataModel, CancellationToken cancellationToken)
+        {
+            try
+            {
                 await _namedEntityServiceWorker.BeginTransaction();
-
-                var video = new Video
-				{
-					Name = namedEntityDataModel?.Name,
-					Description = namedEntityDataModel?.Description,
-					BrandId = namedEntityDataModel.BrandId,
-					//Link = new Link
-     //               {
-     //                   LinkId = namedEntityDataModel?.LinkDataModel?.LinkId
-     //               },
-					//Photo = new Photo
-     //               {
-     //                   Name = namedEntityDataModel?.PhotoDataModel?.Name,
-     //                   Description = namedEntityDataModel?.PhotoDataModel?.Description,
-     //                   BrandId = namedEntityDataModel.PhotoDataModel.BrandId,
-					//	Link = new Link
-					//	{
-					//		LinkId = namedEntityDataModel?.PhotoDataModel?.LinkDataModel?.LinkId
-					//	},
-					//}
-				};
-				await _serviceWorker.VideoRepository.AddAsync(video);
-				await _serviceWorker.SaveAsync();
+                await _serviceWorker.VideoRepository.AddVideo(namedEntityDataModel);
                 await _namedEntityServiceWorker.CommitTransaction();
-
-                return Ok(video);
+                return Ok();
             }
             catch (Exception ex)
             {
                 await _namedEntityServiceWorker.RollBackTransaction();
-
                 return BadRequest(ex.Message);
             }
         }
