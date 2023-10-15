@@ -17,8 +17,8 @@
     @*/* border-color: #202020;*/*@
     <div id="mainWrapper" class="wrapper">
 
-        <partial name="AdminLTE/_TopNavigation" />
 
+        <partial name="AdminLTE/_TopNavigation" />
         @* <partial name="AdminLTE/_MainNavigation" /> *@
 
         <!-- Content Wrapper. Contains page content -->
@@ -59,6 +59,8 @@
             LoadAjaxPage('GET',currentUrl,false);
         }
         $(document).ready(function () {
+            $('.bottom').toggleClass('active');
+
             let menu = document.querySelector('#menu-icon');
             let navList = document.querySelector('.nav-list');
 

@@ -1,0 +1,298 @@
+﻿<style>
+    @@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500&display=swap");
+   /*  * {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", sans-serif;
+      box-sizing: border-box;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      min-height: 100vh;
+      transition: 0.5s;
+      background-color: crimson;
+      margin-top: -30px;
+    } */
+    /* .navigation2 {
+      position: relative;
+      width: 350px;
+      height: 70px;
+      border-radius: 40px;
+      background-color: #fff;
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .navigation2 ul {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+    }
+    .navigation2 ul li {
+      position: relative;
+      list2-style: none;
+      width: 70px;
+      height: 70px;
+      z-index: 1;
+    }
+    .navigation2 ul li a {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      text-align: center;
+      color: #333;
+      font-weight: 500;
+    }
+    .navigation2 ul li a .icon {
+      position: relative;
+      display: block;
+      line-height: 75px;
+      text-align: center;
+      transition: 0.5s;
+    }
+    .navigation2 ul li.active a .icon {
+      color: #fff;
+    }
+    .navigation2 ul li a .icon i {
+      font-size: 20px;
+    }
+    .navigation2 ul li a .title {
+      position: absolute;
+      top: -70px;
+      left: 50%;
+      transform: translate(-50%, 15%);
+      width: auto;
+      background: #fff;
+      padding: 5px 10px;
+      border-radius: 7px;
+      transition: 0.5s;
+      opacity: 0;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      visibility: hidden;
+    }
+    .navigation2 ul li:hover a .title {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, 50%);
+    }
+    .navigation2 ul li a .title::before {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background-color: #fff;
+      bottom: -8px;
+      left: 48%;
+      transform: rotate(45deg) translateX(-50%);
+      border-radius: 2px;
+    }
+    .navigation2 ul .indicator {
+      position: absolute;
+      left: 0;
+      width: 70px;
+      height: 70px;
+      transition: all 0.5s;
+    }
+    .navigation2 ul .indicator::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #333;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      transition: 0.5s;
+    }
+    .navigation2 ul li:nth-child(1).active ~ .indicator {
+      transform: translateX(calc(70px * 0));
+    }
+    .navigation2 ul li:nth-child(2).active ~ .indicator {
+      transform: translateX(calc(70px * 1));
+    }
+    .navigation2 ul li:nth-child(3).active ~ .indicator {
+      transform: translateX(calc(70px * 2));
+    }
+    .navigation2 ul li:nth-child(4).active ~ .indicator {
+      transform: translateX(calc(70px * 3));
+    }
+    .navigation2 ul li:nth-child(5).active ~ .indicator {
+      transform: translateX(calc(70px * 4));
+    }
+
+    .navigation2 ul li:nth-child(1).active ~ .indicator::before {
+      background-color: crimson;
+    }
+    .navigation2 ul li:nth-child(2).active ~ .indicator::before {
+      background-color: #3c40c6;
+    }
+    .navigation2 ul li:nth-child(3).active ~ .indicator::before {
+      background-color: #05c46b;
+    }
+    .navigation2 ul li:nth-child(4).active ~ .indicator::before {
+      background-color: #0fbcf9;
+    }
+    .navigation2 ul li:nth-child(5).active ~ .indicator::before {
+      background-color: #ffa801;
+    } */
+    nav {
+        position: fixed;
+        background-color: #222;
+        -webkit-transition: .5s;
+        -moz-transition: .5s;
+        -o-transition: .5s;
+        transition: .5s;
+        z-index: 10000;
+        text-align: center;
+        transform: translateX(50%);
+        width: 50%;
+    }
+
+        nav ul {
+            margin: 0;
+            padding: 0;
+        }
+
+            nav ul li {
+                list-style-type: none;
+            }
+
+                nav ul li a {
+                    text-decoration: none;
+                    color: #fff;
+                    display: block;
+                    padding: 5px 10px;
+                    text-align: center;
+                    font-size: 20px;
+                }
+
+
+
+
+        nav.bottom {
+            height: 60px;
+            width: 50%;
+        }
+
+        nav.bottom {
+            bottom: -6
+            
+            0px;
+            left: 0;
+        }
+
+            nav.bottom.active {
+                bottom: 0;
+            }
+
+            nav.bottom ul {
+                text-align: center;
+            }
+
+                nav.bottom ul li {
+                    display: inline-block;
+                    padding: 20px 25px;
+                }
+
+
+</style>
+<nav class="bottom">
+    @* <a asp-area="Main" asp-controller="Videos" asp-action="Index" class="logo ajaxLoad">
+        @* <i class="fa-solid fa-tags"></i>
+        yapw
+    </a> *@
+    @* <div id="">
+    </div> *@
+    @* <a class="" data-widget="navbar-search" href="#" role="button">
+        <i class="fas fa-search"></i>
+    </a> *@
+    @* <div class="navbar-search-block">
+        <form class="form-inline">
+            <div class="input-group input-group">
+                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-navbar" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div> *@
+
+    <ul>
+
+        <li class="list2 active" data-color="#dc143c">
+            <a asp-area="Main" asp-controller="Videos" asp-action="Index" class="ajaxLoad">
+                @* <i class="fa-solid fa-tags"></i> by category by year views asc desc brands*@
+                @* <span class="icon"><i class="far fa-home"></i></span> *@
+                <span class="title">YAPW</span>
+            </a>
+        </li>
+        <li class="list2 active" data-color="#dc143c">
+            <a asp-area="Main" asp-controller="Videos" asp-action="Search" class="ajaxLoad">
+                @* <i class="fa-solid fa-tags"></i> by category by year views asc desc brands*@
+                @* <span class="icon"><i class="far fa-home"></i></span> *@
+                <span class="title">Search</span>
+            </a>
+        </li>
+        <li>
+            <a asp-area="Main" asp-controller="Videos" asp-action="Categories" class="ajaxLoad">
+                @* <i class="fa-solid fa-tags"></i> *@
+                @* <span class="icon"><i class="far fa-info"></i></span> *@
+                <span class="title">Categories</span>
+            </a>
+        </li>
+
+        <li>
+            <a asp-area="Main" asp-controller="Videos" asp-action="Brands" class="ajaxLoad">
+                @* <i class="fa-solid fa-building"></i> *@
+                @* <span class="icon"><i class="far fa-cog"></i></span> *@
+                <span class="title">Brands</span>
+            </a>
+        </li>
+
+        @* <li>
+            <a asp-area="Main" asp-controller="Videos" asp-action="Unsensored" class="nav-link ajaxLoad">
+                <i class="fas fa-solid fa-clone nav-icon"></i>
+                <p>Unsensored</p>
+            </a>
+        </li> *@
+    </ul>
+
+    @* <a class="" data-widget="fullscreen" href="#" role="button">
+        <i class="fas fa-expand-arrows-alt"></i>
+    </a>
+    <i id="menu-icon" class="fa-solid fa-bars"></i> *@
+
+</nav>
+
+<script>
+    // let list2 = document.querySelectorAll(".list2");
+    // for (let i = 0; i < list2.length; i++) {
+    //     list2[i].onclick = (e) => {
+    //         let j = 0;
+    //         while (j < list2.length) {
+    //             list2[j++].className = "list2";
+    //         }
+    //         list2[i].className = "list2 active";
+    //     };
+    // }
+
+    // list2.forEach((elements) => {
+    //     elements.addEventlist2ener("click", function (event) {
+    //         let bg = document.querySelector("body");
+    //         let color = event.target.getAttribute("data-color");
+    //         console.log(event.target)
+    //         bg.style.backgroundColor = color;
+    //     });
+    // });
+</script>

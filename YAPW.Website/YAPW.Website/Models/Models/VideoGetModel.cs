@@ -14,6 +14,6 @@ namespace YAPW.Models
 
     public enum Order
     {
-        Descending, Ascending, MostViews, LeastViews
+        Descending, Ascending/*, MostViews, LeastViews*/
     }
 }

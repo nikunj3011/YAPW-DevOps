@@ -1,227 +1,57 @@
-﻿<style>
-    * {
-        margin: 0;
-        padding: 0;
-        text-decoration: none;
-        list-style: none;
-    }
-
-    nav {
-        position: fixed;
-        width: 100%;
-        top: 0;
-        right: 0;
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 30px 15%;
-        background: transparent;
-        transition: all 0.50s ease;
-    }
-
-    .logo {
-        color: #FFF;
-        font-size: 35px;
-        font-weight: 700;
-        cursor: pointer;
-    }
-
-    .nav-list {
-        display: flex;
-    }
-
-    .nav-list a {
-        margin: 0 5px;
-        padding: 5px 10px;
-        color: #FFF;
-        font-size: 17px;
-        font-weight: 500;
-        transition: all 0.50s ease;
-    }
-
-    .nav-list a:hover {
-        color: #A33A19;
-    }
-
-    .btn {
-        display: inline-block;
-        padding: 12px 30px;
-        color: #FFF;
-        background: #A33A19;
-        border-radius: 30px;
-        font-size: 15px;
-        border: 2px solid transparent;
-        transition: all 0.40s ease;
-    }
-
-    .btn:hover {
-        border: 2px solid #A33A19;
-        background: transparent;
-        color: #A33A19;
-    }
-
-    #menu-icon {
-        color: #FFF;
-        font-size: 38px;
-        z-index: 10001;
-        cursor: pointer;
-        display: none;
-    }
-
-    section {
-        padding: 0 15%;
-    }
-
-    .hero {
-        height: 100vh;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
-
-    .m-text h1 {
-        font-size: 90px;
-        font-weight: 800;
-        mask-border: 5px;
-    }
-
-    .m-text p {
-        font-size: 30px;
-        font-weight: 600;
-    }
-
-    @@media (max-width:1350px) {
-        nav {
-            padding: 20px 5%;
-        }
-
-        section {
-            padding: 0 5%;
-        }
-    }
-
-    @@media (max-width:950px) {
-        .m-text h1 {
-            font-size: 70px;
-        }
-
-        .m-text p {
-            font-size: 22px;
-        }
-
-        .logo {
-            font-size: 30px;
-        }
-
-        .btn {
-            padding: 9px 27px;
-        }
-    }
-
-    @@media (max-width:860px) {
-        #menu-icon {
-            display: block;
-        }
-
-        .nav-list {
-            position: absolute;
-            top: -800px;
-            left: 0;
-            right: 0;
-            display: flex;
-            flex-direction: column;
-            background: #A33A19;
-            text-align: left;
-            transition: all 0.50s ease;
-        }
-
-        .nav-list a {
-            color: #FFF;
-            padding: 1rem;
-            margin: 1rem;
-            border-left: 2px solid #FFF;
-            display: block;
-        }
-
-        .nav-list a:hover {
-            background: #FFF;
-            color: #A33A19;
-        }
-
-        .nav-list.open {
-            top: 100%;
-        }
-    }
-
-    @@media (max-width:750px) {
-        .m-text h1 {
-            font-size: 50px;
-        }
-    }
-</style>
-<nav style="border-width : 0; padding:10px 7% 10px 7%; background-color:#070708">
-    <a asp-area="Main" asp-controller="Videos" asp-action="Index" class="logo ajaxLoad">
+﻿<nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#070708; text-align:center;padding-left:200px;padding-right:200px;position: fixed;z-index:100;font-size:25px">
+    @* <a class="navbar-brand" href="#">Navbar</a> *@
+    <a asp-area="Main" asp-controller="Videos" asp-action="Index" class="nav-link logo ajaxLoad">
         @* <i class="fa-solid fa-tags"></i> *@
-        yapw
+        yapw <span class="sr-only">(current)</span>
     </a>
-    @* <div id="">
-    </div> *@
-    @* <a class="" data-widget="navbar-search" href="#" role="button">
-        <i class="fas fa-search"></i>
-    </a> *@
-    @* <div class="navbar-search-block">
-        <form class="form-inline">
-            <div class="input-group input-group">
-                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-navbar" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                        <i class="fas fa-times"></i>
-                    </button>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a asp-area="Main" asp-controller="Videos" asp-action="Index" class="nav-link logo ajaxLoad">
+                    @* <i class="fa-solid fa-tags"></i> *@
+                    Home <span class="sr-only">(current)</span>
+                </a>
+                @* <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a> *@
+            </li>
+            <li class="nav-item">
+                <a asp-area="Main" asp-controller="Videos" asp-action="Search" class="nav-link ajaxLoad">
+                    @* <i class="fa-solid fa-building"></i> *@
+                    Search
+                </a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="Main" asp-controller="Videos" asp-action="Categories" class="nav-link ajaxLoad">
+                    @* <i class="fa-solid fa-building"></i> *@
+                    Categories
+                </a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="Main" asp-controller="Videos" asp-action="Brands" class="nav-link ajaxLoad">
+                    @* <i class="fa-solid fa-building"></i> *@
+                    Brands
+                </a>
+            </li>
+           @*  <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Something else here</a>
                 </div>
+            </li> *@
+        </ul>
+        @* <form class="form-inline my-2 my-lg-0 col-md-4">
+            <div style="position: relative;">
+                <input class="custom_search form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <span class="search_span"></span>
             </div>
-        </form>
-    </div> *@
-
-    <ul class="nav-list" style="text-align:right; padding-top:1%">
-
-        <li>
-            <a asp-area="Main" asp-controller="Videos" asp-action="Search" class="ajaxLoad">
-                @* <i class="fa-solid fa-tags"></i> by category by year views asc desc brands*@
-                Search
-            </a>
-        </li>
-
-        <li>
-            <a asp-area="Main" asp-controller="Videos" asp-action="Categories" class="ajaxLoad">
-                @* <i class="fa-solid fa-tags"></i> *@
-                Categories
-            </a>
-        </li>
-
-        <li>
-            <a asp-area="Main" asp-controller="Videos" asp-action="Brands" class="ajaxLoad">
-                @* <i class="fa-solid fa-building"></i> *@
-                Brands
-            </a>
-        </li>
-
-        @* <li>
-            <a asp-area="Main" asp-controller="Videos" asp-action="Unsensored" class="nav-link ajaxLoad">
-                <i class="fas fa-solid fa-clone nav-icon"></i>
-                <p>Unsensored</p>
-            </a>
-        </li> *@
-    </ul>
-
-    <a class="" data-widget="fullscreen" href="#" role="button">
-        <i class="fas fa-expand-arrows-alt"></i>
-    </a>
-    <i id="menu-icon" class="fa-solid fa-bars"></i>
-
+            <button class="ml-lg-3 btn btn-success my-2 my-sm-0 search_button tx--white" type="button" ripple="ripple">Search</button>
+        </form> *@
+    </div>
 </nav>

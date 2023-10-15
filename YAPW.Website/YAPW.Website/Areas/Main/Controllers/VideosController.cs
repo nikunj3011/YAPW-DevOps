@@ -23,19 +23,25 @@ public class VideosController : BaseController
     public AppBase appBase = new AppBase();
     private readonly IHttpClientFactory _clientFactory;
     private readonly IMemoryCache _memoryCache;
-
+    private (List<CategoryDataModel> categories, List<BrandDataModel> brands, List<VideoDataModel> latestVideos, List<VideoDataModel> trendingVideos) cache;
     private Dictionary<string, int> videoLikesList =
                 new Dictionary<string, int>();
+    //public Task Initialization { get; private set; }
     public VideosController(IHttpClientFactory clientFactory, IMemoryCache memoryCache) : base(clientFactory)
     {
         _memoryCache = memoryCache;
         _clientFactory = clientFactory;
-        CacheData();
+        //cache = CacheData();
+        //Initialization = InitializeAsync();
     }
 
-    private async Task<(List<CategoryDataModel> categories, List<BrandDataModel> brands)> CacheData()
+    //private async Task<VideosController> InitializeAsync()
+    //{
+    //    cache = await CacheData();
+    //    return this;
+    //}
+    private async Task<(List<CategoryDataModel> categories, List<BrandDataModel> brands, List<VideoDataModel> latestVideos, List<VideoDataModel> trendingVideos)> CacheData()
     {
-        //TO : DO add caching for these two
         var cacheKeyCategory = "categoryList";
         //checks if cache entries exists
         if (!_memoryCache.TryGetValue(cacheKeyCategory, out List<CategoryDataModel> categories))
@@ -67,7 +73,34 @@ public class VideosController : BaseController
             //setting cache entries
             _memoryCache.Set(cacheKeyBrand, brands, cacheExpiryOptions);
         }
-        return (categories, brands);
+
+        var cacheKeylatestVideos = "latestVideoList";
+        if (!_memoryCache.TryGetValue(cacheKeylatestVideos, out List<VideoDataModel> latestVideos))
+        {
+            latestVideos = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/newReleases/20");
+            var cacheExpiryOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = DateTime.Now.AddHours(1),
+                Priority = CacheItemPriority.High,
+                SlidingExpiration = TimeSpan.FromHours(1)
+            };
+            _memoryCache.Set(cacheKeylatestVideos, latestVideos, cacheExpiryOptions);
+        }
+
+        var cacheKeyTrendingVideos = "trendingVideoList";
+        if (!_memoryCache.TryGetValue(cacheKeyTrendingVideos, out List<VideoDataModel> trendingVideos))
+        {
+            trendingVideos = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/take/20");
+            var cacheExpiryOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = DateTime.Now.AddHours(1),
+                Priority = CacheItemPriority.High,
+                SlidingExpiration = TimeSpan.FromHours(1)
+            };
+            _memoryCache.Set(cacheKeyTrendingVideos, trendingVideos, cacheExpiryOptions);
+        }
+
+        return (categories, brands, latestVideos, trendingVideos);
     }
 
     [HttpGet("Index")]
@@ -76,7 +109,12 @@ public class VideosController : BaseController
     {
         try
         {
-            var videos = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/take/20");
+            if(cache.categories == null)
+            {
+                cache = await CacheData();
+            }
+            var videos = cache.latestVideos;
+            ViewBag.VideosTrending = cache.trendingVideos;
             ViewBag.VideosRandom = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/random/20");
             ViewBag.Categories = await ExecuteServiceRequest<List<CategoryDataModel>>(HttpMethod.Get, $"categories/random/20");
             ViewBag.Brands = await ExecuteServiceRequest<List<BrandDataModel>>(HttpMethod.Get, $"brands/random/20");
@@ -173,7 +211,10 @@ public class VideosController : BaseController
     {
         try
         {
-            var cache = await CacheData();
+            if (cache.categories == null)
+            {
+                cache = await CacheData();
+            }
             ViewBag.Brands = cache.brands;
             ViewBag.Categories = cache.categories;
             ViewBag.Name = name;
@@ -235,7 +276,10 @@ public class VideosController : BaseController
     {
         try
         {
-            var cache = await CacheData();
+            if (cache.categories == null)
+            {
+                cache = await CacheData();
+            }
             return PartialView(cache.brands);
         }
         catch (Exception ex)
@@ -250,7 +294,10 @@ public class VideosController : BaseController
     {
         try
         {
-            var cache = await CacheData();
+            if (cache.categories == null)
+            {
+                cache = await CacheData();
+            }
             return PartialView(cache.categories);
         }
         catch (Exception ex)

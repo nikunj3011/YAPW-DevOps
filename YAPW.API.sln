@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAPWEntities.API", "YAPWEnt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAPW.API", "YAPW.API\YAPW.API.csproj", "{5C68530D-FAFC-4ABB-97D9-7B0D3F60FBC6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAPW.API.Tests", "YAPW.API.Tests\YAPW.API.Tests.csproj", "{3E180568-AAAB-4C9D-B71D-B1D0C1802450}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAPW.LoadTesting", "YAPW.LoadTesting\YAPW.LoadTesting.csproj", "{5AF97430-BB86-4CA7-817C-B8941C54EEB6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{5C68530D-FAFC-4ABB-97D9-7B0D3F60FBC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C68530D-FAFC-4ABB-97D9-7B0D3F60FBC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C68530D-FAFC-4ABB-97D9-7B0D3F60FBC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E180568-AAAB-4C9D-B71D-B1D0C1802450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E180568-AAAB-4C9D-B71D-B1D0C1802450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E180568-AAAB-4C9D-B71D-B1D0C1802450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E180568-AAAB-4C9D-B71D-B1D0C1802450}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AF97430-BB86-4CA7-817C-B8941C54EEB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AF97430-BB86-4CA7-817C-B8941C54EEB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AF97430-BB86-4CA7-817C-B8941C54EEB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AF97430-BB86-4CA7-817C-B8941C54EEB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
