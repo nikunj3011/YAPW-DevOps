@@ -24,14 +24,14 @@ stages:
     - task: Docker@2
       inputs:
         containerRegistry: 'nikunj3011-docker-hub'
-        repository: 'nikunj3011/yapwapi:$(tag)'
+        repository: 'nikunj3011/yapwapi'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: '$(tag)'
     - task: Docker@2
       inputs:
         containerRegistry: 'nikunj3011-docker-hub'
-        repository: 'nikunj3011/yapwwebsite:$(tag)'
+        repository: 'nikunj3011/yapwwebsite'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: '$(tag)'
@@ -65,11 +65,11 @@ stages:
         kubernetesServiceConnection: 'azure-kubernetes-connection'
         namespace: 'default'
         manifests: '$(System.ArtifactsDirectory)/K8S/yapw-depl.yaml'
-        containers: 'nikunj3011/yapw:$(tag)'
+        containers: 'nikunj3011/yapwapi:$(tag)'
     - task: KubernetesManifest@0
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'azure-kubernetes-connection'
         namespace: 'default'
         manifests: '$(System.ArtifactsDirectory)/K8S/yapw-website-depl.yaml'
-        containers: 'nikunj3011/yapw.website:$(tag)'
+        containers: 'nikunj3011/yapwwebsite:$(tag)'
