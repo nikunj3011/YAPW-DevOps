@@ -8,17 +8,17 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet restore "./YAPW/YAPW.csproj"
+RUN dotnet restore "./YAPW.API/YAPW.API.csproj"
 WORKDIR "/src/YAPW"
-RUN dotnet build "YAPW.csproj" -c Release -o /app
+RUN dotnet build "YAPW.API.csproj" -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish "YAPW.csproj" -c Release -o /app
+RUN dotnet publish "YAPW.API.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "YAPW.dll"]
+ENTRYPOINT ["dotnet", "YAPW.API.dll"]
 
 #docker run -p 5001:80 -d yapw
 #docker run -p 5000:80 -p 5001:443 -e https://localhost:7024;http://localhost:5206
