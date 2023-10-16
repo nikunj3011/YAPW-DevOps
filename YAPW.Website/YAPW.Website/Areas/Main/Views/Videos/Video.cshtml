@@ -5,7 +5,8 @@
     var VideosFeatured = ViewBag.VideosFeatured as List<VideoDataModel>;
 	var VideosRecentlyAdded = ViewBag.VideosRecentlyAdded as List<VideoDataModel>;
     var VideosRandom = ViewBag.VideosRandom as List<VideoDataModel>;
-    var VideosSameBrand = ViewBag.VideosSameBrand as List<VideoDataModel>;
+	var VideosSameBrand = ViewBag.VideosSameBrand as List<VideoDataModel>;
+	var VideosSameSeries = ViewBag.VideosSameSeries as List<VideoDataModel>;
 }
 <head>
 
@@ -97,10 +98,10 @@
 		}
 
 		.tabs {
-			width: 80%;
-			height: 100px;
+			/* width: 80%; */
+			/* height: 100px; */
 			margin: auto;
-			margin-top: 50px;
+			margin-top: 20px;
 			display: flex;
 			align-items: center;
 			overflow: hidden;
@@ -445,7 +446,7 @@
 
 		@@media screen and (max-width: 2160px) {
 			.setMinHeight {
-				min-height: 700px;
+				min-height: 620px;
 			}
 
 			#videoInfoMain {
@@ -454,7 +455,7 @@
 		}
 		@@media screen and (max-width: 1080px) {
 			.setMinHeight {
-				min-height: 700px;
+				min-height: 620px;
 			}
 
 			#videoInfoMain {
@@ -464,7 +465,7 @@
 
 		@@media screen and (max-width: 768px) {
 			.setMinHeight {
-				min-height: 300px;
+				min-height: 500px;
 			}
 
 			#videoInfoMain {
@@ -1916,43 +1917,62 @@
 
         <div class="card" style="width:auto; height:auto;background-color:#0C0B0D;border-radius:10px; padding:10px">
             <div class="row">
-				<div class="col-lg-3 col-md-3 col-sm-12 col-12 setMinHeight" style="padding:4%;">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-12" style="padding-top:12%;text-align:center;">
-                            <h3 style="font-weight:800; opacity:0.8"><i>@Model.Brand.Name 's</i></h3>
-
-                            <p style="font-size:30px;color:white; ">
-                                @*font-family: 'Londrina Outline', cursive;/*max-height:120px; overflow-x:scroll;overflow-y:hidden*/*@
-                                <b>@Model.Name</b>
-                            </p>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div style="text-align:right; font-size:30px; color:#EA2E2E"><i class="fa-solid fa-star"></i> 7.8 </div>
-                            <div><i class="fa-regular fa-calendar"></i> @Model.VideoInfo.ReleaseDate.Month @Model.VideoInfo.ReleaseDate.Year</div>
-                            <div><i class="fa-regular fa-clock"></i> @Model.VideoInfo.VideoLength</div>
-                            <div><i class="fa-regular fa-eye"></i> @Model.VideoInfo.Views</div>
-                            <div>
-                                <b>
-                                    <i class="fa-solid fa-tags"></i>
-                                    @foreach (var category in Model.Categories)
-                                    {
-                                        <a style="color:#BD421B;" href="Main/Videos/Search?category=@category.Name" class="ajaxLoad btnTag btn-1 hover-filled-slide-right">@category.Name</a>
-                                    }
-                                </b>
-                            </div>
-							<div id="description" style="opacity:0.9;max-height:150px; overflow:scroll;overflow-x: hidden;">
-								@Model.Description
-							</div>
-                        </div>
-                    </div>
-				</div>
-				<div class="col-lg-9 col-md-9 col-sm-12 col-12 setMinHeight" id="videoDiv" style="padding:4%;">
+				<div class="col-lg-7 col-md-7 col-sm-12 col-12 setMinHeight" id="videoDiv">
 					@*/*background-size: 110% 135%;*/*@
 					@* <video src="@Model.VideoInfo.VideoUrl" class="videoCustom" poster="@Model.VideoInfo.Cover" id="blurred" data-setup='{"fluid": true}'></video> *@
-					<video id="my-video" class="video-js" controls preload="auto" poster="@Model.VideoInfo.Poster" data-setup='{"fluid": true}' loop>
-						<source src="@Model.VideoInfo.VideoUrl" type='video/mp4'>
-					</video>
+					<div style="padding:1%;">
+						<video id="my-video" class="video-js" controls preload="auto" poster="@Model.VideoInfo.Poster" data-setup='{"fluid": true}' loop>
+							<source src="@Model.VideoInfo.VideoUrl" type='video/mp4'>
+						</video>
+					</div>
 				</div>
+
+				<div class="col-lg-3 col-md-3 col-sm-12 col-12 setMinHeight" style="padding:1%;">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-12" style="text-align:center;">
+							<h3 style="font-weight:800; opacity:0.8"><i>@Model.Brand.Name 's</i></h3>
+
+							<p style="font-size:30px;color:white; ">
+								@*font-family: 'Londrina Outline', cursive;/*max-height:120px; overflow-x:scroll;overflow-y:hidden*/*@
+								<b>@Model.Name</b>
+							</p>
+						</div>
+						<div class="col-lg-12 col-md-12 col-sm-12 col-12">
+							<div style="text-align:right; font-size:30px; color:#EA2E2E"><i class="fa-solid fa-star"></i> 7.8 </div>
+							<div><i class="fa-regular fa-calendar"></i> @Model.VideoInfo.ReleaseDate.Month @Model.VideoInfo.ReleaseDate.Year</div>
+							<div><i class="fa-regular fa-clock"></i> @Model.VideoInfo.VideoLength</div>
+							<div><i class="fa-regular fa-eye"></i> @Model.VideoInfo.Views</div>
+							<div>
+								<b>
+									<i class="fa-solid fa-tags"></i>
+									@foreach (var category in Model.Categories)
+									{
+										<a style="color:#BD421B;" href="Main/Videos/Search?category=@category.Name" class="ajaxLoad btnTag btn-1 hover-filled-slide-right">@category.Name</a>
+									}
+								</b>
+							</div>
+							<div id="description" style="opacity:0.9;max-height:250px; overflow:scroll;overflow-x: hidden;">
+								@Model.Description
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-12 col-12 setMinHeight" style="padding:1%;opacity:0.9;max-height:150px; overflow:scroll;overflow-x: hidden;">
+					<div class="row">
+						<h4><b>Next Up:</b></h4>
+						@foreach (var item in VideosSameSeries)
+						{
+							<div class="col-12" style="text-align:center; opacity:0.9;max-height:650px; overflow:scroll;overflow-x: hidden;">
+								<figure class="snip1466">
+									<img src=@item.VideoInfo.Poster alt="sample52" />
+									<a href="Main/Videos/Name/@item.VideoInfo.VideoUrl" class="nav-link ajaxLoad" style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+									<p style="font-size:large"> <span>@item.Name</span></p>
+								</figure>
+							</div>
+						}
+					</div>
+				</div>
+
 				<div>
 					@*ad*@
 					<div class=" row">
@@ -1964,7 +1984,7 @@
 						</div>
 					</div>
 				</div>
-                <div class="col-lg-12 col-md-12 col-sm-12 col-12 " style="padding-top:4%">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12 " style="padding-top:0%">
                     @*<h3 style="font-weight:800; opacity:0.8"><i>Recommendations</i></h3>*@
 
                     <ul class="tabs">

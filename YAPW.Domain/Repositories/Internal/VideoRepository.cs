@@ -139,13 +139,15 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
         }
     }
 
-    public async Task<IEnumerable<VideoDataModel>> SearchTypes(string name, int take)
+    public async Task<IEnumerable<VideoDataModel>> SearchVideos(string name)
     {
-        return await FindAsync(filter: v => v.Name.ToLower().Contains(name.ToLower()), take: take, select: t => new VideoDataModel
+        var videos = await FindAsyncNoSelect(filter: v => v.Name.ToLower().Contains(name.ToLower()), take:500, orderBy: p=>p.OrderBy(p=>p.Name), include: _videoIncludes).ConfigureAwait(false);
+        var videosOp = new List<VideoDataModel>();
+        foreach (var item in videos.Item1)
         {
-            Id = t.Id,
-            Name = t.Name,
-        }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
+            videosOp.Add(item.AsVideoDataModel());
+        }
+        return videosOp;
     }
 
     public async Task AddVideo(AddVideoDataModel item)

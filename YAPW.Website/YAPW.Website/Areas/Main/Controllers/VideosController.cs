@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using YAPW.Models;
 using YAPW.Models.DataModels;
@@ -141,6 +142,16 @@ public class VideosController : BaseController
             ViewBag.VideosRecentlyAdded = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/newReleases/19");
             ViewBag.VideosRandom = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/random/19");
             ViewBag.VideosSameBrand = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/brand/19/" + video.Brand.Name.ToLower());
+
+            //if other parts exists show next or previous button
+            string pattern = @"\d+$";
+            string replacement = "";
+            Regex rgx = new Regex(pattern);
+            string trimmedName = rgx.Replace(name.Trim(), replacement);
+            trimmedName = trimmedName.Replace("-", " ");
+
+            ViewBag.VideosSameSeries = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/SearchByName/" + trimmedName);
+
 
             //update likes, dislikes, views in api
             //update when there is low user count

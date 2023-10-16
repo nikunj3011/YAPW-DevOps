@@ -110,9 +110,9 @@ namespace YAPW.Controllers.Internal
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("SearchByName/{name}")]
-        public async Task<ActionResult<MainDb.DbModels.Video>> SearchByName(string name, int take)
+        public async Task<ActionResult<MainDb.DbModels.Video>> SearchByName(string name)
         {
-            return Ok(await _namedEntityServiceWorker.TypeRepository.SearchTypes(name, take));
+            return Ok(await _repository.SearchVideos(name));
         }
 
         /// <summary>

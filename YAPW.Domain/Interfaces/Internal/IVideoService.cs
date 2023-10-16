@@ -10,6 +10,6 @@ namespace YAPW.Domain.Interfaces
     public interface IVideoService
     {
         Task<IEnumerable<VideoDataModel>> GetLimited(int take);
-        Task<IEnumerable<VideoDataModel>> SearchTypes(string name, int take);
+        Task<IEnumerable<VideoDataModel>> SearchVideos(string name);
     }
 }

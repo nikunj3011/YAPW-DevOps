@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "YAPW.LoadTesting": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:62281;http://localhost:62282"
+    }
+  }
+}

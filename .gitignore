@@ -27,3 +27,7 @@ azure_rsa.pub
 azure_rsa
 YAPW.API/bin
 YAPW.API/obj
+YAPW.API.Tests/bin
+YAPW.API.Tests/obj
+azurecli.txt
+YAPW.LoadTesting/obj
