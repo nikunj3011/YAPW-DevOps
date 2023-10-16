@@ -1,7 +1,7 @@
-resource "azurerm_resource_group" "resource_group" {
-  name     = "${var.resource_group}_${var.environment}"
-  location = var.location
-}
+# resource "azurerm_resource_group" "resource_group" {
+#   name     = "${var.resource_group}_${var.environment}"
+#   location = var.location
+# }
 
 provider "azurerm" {
   //version = "~>2.0.0"
@@ -27,6 +27,7 @@ resource "azurerm_kubernetes_cluster" "terraform-k8s" {
     name            = "agentpool"
     node_count      = var.node_count
     vm_size         = "standard_b2s"
+    # vm_size         = "standard_b2ps_v2" # deploy
     # vm_size         = "standard_b2pls_v2" #testing
     # vm_size         = "standard_b2ps_v2" # deploy
     # vm_size         = "standard_b2s_v2" # scale after
