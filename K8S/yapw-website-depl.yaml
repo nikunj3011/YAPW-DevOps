@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
       - name: frontend-yapw
-        image: nikunj3011/yapw.website:latest
-        imagePullPolicy: Never
+        image: nikunj3011/yapw-website:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 81
           
