@@ -24,14 +24,14 @@ stages:
     - task: Docker@2
       inputs:
         containerRegistry: 'nikunj3011-docker-hub'
-        repository: 'nikunj3011/yapwapi'
+        repository: 'nikunj3011/yapwapi:$(tag)'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: '$(tag)'
     - task: Docker@2
       inputs:
         containerRegistry: 'nikunj3011-docker-hub'
-        repository: 'nikunj3011/yapwwebsite'
+        repository: 'nikunj3011/yapwwebsite:$(tag)'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: '$(tag)'
