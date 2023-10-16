@@ -20,6 +20,15 @@ steps:
   inputs:
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-azure-iaac/terraform-modules/users'
+    # commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publickey.secureFilePath)'
+    backendType: 'azurerm'
+    backendServiceArm: 'azure-resource-manager-sc'
+    ensureBackend: false
+    backendAzureRmResourceGroupName: 'terraform-resource-group'
+    backendAzureRmResourceGroupLocation: 'eastus'
+    backendAzureRmStorageAccountName: 'aksyapwsa'
+    backendAzureRmContainerName: 'aksyapwcontainer'
+    backendAzureRmKey: 'kubernetes-dev.tfstate'
     allowTelemetryCollection: true
 
 - task: TerraformCLI@0
