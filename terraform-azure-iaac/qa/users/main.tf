@@ -1,4 +1,4 @@
-module "user_module" {
-    source = "../../terraform-modules/users"
-    environment = "qa"
-}
+# module "user_module" {
+#     source = "../../terraform-modules/users"
+#     environment = "qa"
+# }

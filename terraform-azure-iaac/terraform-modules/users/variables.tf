@@ -3,7 +3,7 @@ variable client_secret {}
 variable ssh_public_key {}
 
 variable environment {
-    default = "dev"
+    default = "production"
 }
 
 variable location {
@@ -11,19 +11,17 @@ variable location {
 }
 
 variable node_count {
-  default = 4
+  default = 2
 }
 
-
-
 variable dns_prefix {
-  default = "k8stest"
+  default = "yapwdns"
 }
 
 variable cluster_name {
-  default = "k8stest"
+  default = "yapwcluster"
 }
 
 variable resource_group {
-  default = "kubernetes"
+  default = "yapw"
 }
