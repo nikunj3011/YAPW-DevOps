@@ -23,7 +23,7 @@ steps:
     # commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publickey.secureFilePath)'
     backendType: 'azurerm'
     backendServiceArm: 'azure-resource-manager-sc'
-    ensureBackend: true
+    ensureBackend: false
     backendAzureRmResourceGroupName: 'terraform-resource-group'
     backendAzureRmResourceGroupLocation: 'eastus'
     backendAzureRmStorageAccountName: 'aksyapwsa'
