@@ -14,20 +14,20 @@ namespace YAPW.Service.Broker.Watchers
     /// <summary>
     ///
     /// </summary>
-    public class VideosWatcher
+    public class VideoInfosWatcher
     {
         #region Fields
 
         private static string _connectionString;
         private static string _connectionId;
-        private static string _tableName = "Videos";
-        private SqlTableDependency<Video> sqlTableDependency;
+        private static string _tableName = "VideoInfos";
+        private SqlTableDependency<VideoInfo> sqlTableDependency;
 
         #endregion
 
         #region Properties
 
-        private IHubContext<VideoHub> Hub { get; set; }
+        private IHubContext<VideoInfoHub> Hub { get; set; }
 
         private SettingsData SettingsData { get; set; }
 
@@ -35,7 +35,7 @@ namespace YAPW.Service.Broker.Watchers
 
         #region Constructors
 
-        public VideosWatcher(IHubContext<VideoHub> hub, IOptions<AppSettings> settings, IWebHostEnvironment hostingEnv)
+        public VideoInfosWatcher(IHubContext<VideoInfoHub> hub, IOptions<AppSettings> settings, IWebHostEnvironment hostingEnv)
         {
             if (settings is not null)
             {
@@ -55,14 +55,14 @@ namespace YAPW.Service.Broker.Watchers
 
         private void OnStatusChanged(object sender, StatusChangedEventArgs e) => Hub.Clients.Client(_connectionId).SendAsync("monitoringStarted", e.Database, e.Server, e.Status.ToString());
 
-        private void OnNotificationReceived(object sender, RecordChangedEventArgs<Video> e)
+        private void OnNotificationReceived(object sender, RecordChangedEventArgs<VideoInfo> e)
         {
-            if (e.EntityOldValues.Name.ToLower() != e.Entity.Name.ToLower())
+            if (e.EntityOldValues.Views != e.Entity.Views)
             {
                 {
-                    _ = (e.Entity.Name.ToLower() switch
+                    _ = (e.Entity.Views switch
                     {
-                        var entity when entity.Equals("created", System.StringComparison.OrdinalIgnoreCase) => Hub.Clients.All.SendAsync("VideoStatus",
+                        var entity when entity.Equals("created", System.StringComparison.OrdinalIgnoreCase) => Hub.Clients.All.SendAsync("VideoInfoStatus",
                                                                                                                              e.Entity.Name,
                                                                                                                              e.Entity.Id,
                                                                                                                              e.Entity.BrandId),
@@ -83,7 +83,7 @@ namespace YAPW.Service.Broker.Watchers
 
         public void UnregisterOnChangeEvent() => sqlTableDependency.OnChanged -= OnNotificationReceived;
 
-        private void InitiateTableDependency() => sqlTableDependency ??= new SqlTableDependency<Video>(_connectionString, _tableName, includeOldValues: true);
+        private void InitiateTableDependency() => sqlTableDependency ??= new SqlTableDependency<VideoInfo>(_connectionString, _tableName, includeOldValues: true);
 
         public void RegisterSqlDependencyEvents(string connectionId)
         {

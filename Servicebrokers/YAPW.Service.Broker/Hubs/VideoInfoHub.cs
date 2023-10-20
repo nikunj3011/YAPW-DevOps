@@ -6,11 +6,11 @@ using YAPW.Service.Broker.Watchers;
 
 namespace YAPW.Service.Broker.Hubs
 {
-    public class VideoHub : Hub<IVIdeoHub>
+    public class VideoInfoHub : Hub<IVideoInfoHub>
     {
-        private readonly VideosWatcher _tripEventsWatcher;
+        private readonly VideoInfosWatcher _tripEventsWatcher;
 
-        public VideoHub(VideosWatcher tripEventsWatcher)
+        public VideoInfoHub(VideoInfosWatcher tripEventsWatcher)
         {
             _tripEventsWatcher = tripEventsWatcher;
         }
