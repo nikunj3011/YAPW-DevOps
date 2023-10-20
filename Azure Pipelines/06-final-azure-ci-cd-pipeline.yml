@@ -33,7 +33,7 @@ stages:
         containerRegistry: 'nikunj3011-docker-hub'
         repository: 'nikunj3011/yapwwebsite'
         command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: '**/YAPW.Website/Dockerfile'
         tags: '$(tag)'
     - task: CopyFiles@2
       inputs:
