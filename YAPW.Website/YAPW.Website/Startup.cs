@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -16,9 +18,17 @@ namespace Ditech.Portal.NET
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private string apiUrl;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder();
+            builder.AddAzureKeyVault(
+	            new Uri($"https://yapw-keyvault.vault.azure.net/"),
+	            new DefaultAzureCredential());
+			var client = new SecretClient(new Uri($"https://yapw-keyvault.vault.azure.net/"), new DefaultAzureCredential());
+			var secret = client.GetSecret("APIUrl");
+			apiUrl = secret.Value.Value;
+			Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -34,7 +44,7 @@ namespace Ditech.Portal.NET
 
             services.AddHttpClient("api", c =>
             {
-                c.BaseAddress = new Uri("https://localhost:5001/");
+                c.BaseAddress = new Uri(apiUrl);
                 c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
             }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
             {
@@ -75,7 +85,7 @@ namespace Ditech.Portal.NET
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSerilogRequestLogging();
+			app.UseSerilogRequestLogging();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
