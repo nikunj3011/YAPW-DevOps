@@ -11,24 +11,24 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using YAPW.Models.Models.Settings;
 
 namespace Ditech.Portal.NET
 {
     public class Startup
     {
-        private string apiUrl;
         public Startup(IConfiguration configuration)
         {
-   //         var builder = new ConfigurationBuilder();
-   //         builder.AddAzureKeyVault(
-	  //          new Uri($"https://yapw-keyvault.vault.azure.net/"),
-	  //          new DefaultAzureCredential());
-			//var client = new SecretClient(new Uri($"https://yapw-keyvault.vault.azure.net/"), new DefaultAzureCredential());
-			//var secret = client.GetSecret("APIUrl");
-			//apiUrl = secret.Value.Value;
-			apiUrl = "http://52.249.212.96/";
+            var builder = new ConfigurationBuilder();
+            //         builder.AddAzureKeyVault(
+            //          new Uri($"https://yapw-keyvault.vault.azure.net/"),
+            //          new DefaultAzureCredential());
+            //var client = new SecretClient(new Uri($"https://yapw-keyvault.vault.azure.net/"), new DefaultAzureCredential());
+            //var secret = client.GetSecret("APIUrl");
+            //apiUrl = secret.Value.Value;
 			Configuration = configuration;
         }
 
@@ -43,9 +43,13 @@ namespace Ditech.Portal.NET
             })
             .AddCookie();
 
-            services.AddHttpClient("api", c =>
+			var appSettings = Configuration.GetSection("GlobalConfig").Get<AppSetting>();
+			var currentEnvironmentSettings = appSettings.Environments.SingleOrDefault(e => string.Equals(e.Name, System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), StringComparison.OrdinalIgnoreCase));
+			var connectionString = currentEnvironmentSettings.SettingsData.ConnectionString;
+
+			services.AddHttpClient("api", c =>
             {
-                c.BaseAddress = new Uri(apiUrl);
+                c.BaseAddress = new Uri(connectionString);
 				//c.BaseAddress = new Uri("https://localhost:5001/");
 
 				c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");

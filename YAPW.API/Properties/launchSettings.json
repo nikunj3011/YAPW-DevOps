@@ -11,7 +11,8 @@
       "dotnetRunMessages": true,
       "applicationUrl": ""
     },
-    "https": {
+
+    "YAPW-API-Dev": {
       "commandName": "Project",
       "launchUrl": "swagger",
       "environmentVariables": {
@@ -22,6 +23,19 @@
       "dotnetRunMessages": true,
       "applicationUrl": ""
     },
+
+    "YAPW-API-Prod": {
+      "commandName": "Project",
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "VaultUri": "https://yapw-keyvault.vault.azure.net/",
+        "AZURE_USERNAME": "nikunjrathod3011@gmail.com"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": ""
+    },
+
     "IIS Express": {
       "commandName": "IISExpress",
       "launchUrl": "swagger",
