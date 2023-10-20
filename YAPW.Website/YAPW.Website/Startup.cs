@@ -27,7 +27,8 @@ namespace Ditech.Portal.NET
 	            new DefaultAzureCredential());
 			var client = new SecretClient(new Uri($"https://yapw-keyvault.vault.azure.net/"), new DefaultAzureCredential());
 			var secret = client.GetSecret("APIUrl");
-			apiUrl = secret.Value.Value;
+			//apiUrl = secret.Value.Value;
+			apiUrl = "http://52.249.212.96/";
 			Configuration = configuration;
         }
 
@@ -45,7 +46,9 @@ namespace Ditech.Portal.NET
             services.AddHttpClient("api", c =>
             {
                 c.BaseAddress = new Uri(apiUrl);
-                c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
+				//c.BaseAddress = new Uri("https://localhost:5001/");
+
+				c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
             }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
             {
                 ClientCertificateOptions = ClientCertificateOption.Manual,
