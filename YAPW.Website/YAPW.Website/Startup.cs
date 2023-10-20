@@ -19,14 +19,14 @@ namespace Ditech.Portal.NET
     public class Startup
     {
         private string apiUrl;
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder();
-            builder.AddAzureKeyVault(
-	            new Uri($"https://yapw-keyvault.vault.azure.net/"),
-	            new DefaultAzureCredential());
-			var client = new SecretClient(new Uri($"https://yapw-keyvault.vault.azure.net/"), new DefaultAzureCredential());
-			var secret = client.GetSecret("APIUrl");
+   //         var builder = new ConfigurationBuilder();
+   //         builder.AddAzureKeyVault(
+	  //          new Uri($"https://yapw-keyvault.vault.azure.net/"),
+	  //          new DefaultAzureCredential());
+			//var client = new SecretClient(new Uri($"https://yapw-keyvault.vault.azure.net/"), new DefaultAzureCredential());
+			//var secret = client.GetSecret("APIUrl");
 			//apiUrl = secret.Value.Value;
 			apiUrl = "http://52.249.212.96/";
 			Configuration = configuration;
