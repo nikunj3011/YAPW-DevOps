@@ -19,7 +19,7 @@ spec:
         image: nikunj3011/yapwwebsite
         imagePullPolicy: Always
         ports:
-        - containerPort: 81
+        - containerPort: 80
           
 ---
 apiVersion: v1
@@ -32,8 +32,8 @@ spec:
     app: frontend-yapw
   ports:
     - protocol: TCP
-      port: 81
-      targetPort: 81
+      port: 80
+      targetPort: 80
 
 ---
 apiVersion: v1
@@ -46,8 +46,8 @@ spec:
     app: frontend-yapw
   ports:
     - protocol: TCP
-      port: 81
-      targetPort: 81
+      port: 80
+      targetPort: 80
       nodePort: 30080
 
 # http://localhost/swagger/index.html
