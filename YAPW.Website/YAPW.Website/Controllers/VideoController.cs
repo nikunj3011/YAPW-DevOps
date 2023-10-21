@@ -243,7 +243,7 @@ public class VideoController : BaseController
 
     //[AjaxOnly]
     [HttpPost]
-    [Route("SearchVideo")]
+    //[Route("SearchVideo")]
     public async Task<IActionResult> SearchVideo(VideoGetModel videoGetModel)
     {
         try
