@@ -49,7 +49,7 @@ namespace Ditech.Portal.NET
 
 			services.AddHttpClient("api", c =>
             {
-                c.BaseAddress = new Uri(connectionString);
+                c.BaseAddress = new Uri("http://52.249.212.96/");
 				//c.BaseAddress = new Uri("https://localhost:5001/");
 
 				c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
