@@ -43,9 +43,9 @@ namespace Ditech.Portal.NET
             })
             .AddCookie();
 
-			var appSettings = Configuration.GetSection("GlobalConfig").Get<AppSetting>();
-			var currentEnvironmentSettings = appSettings.Environments.SingleOrDefault(e => string.Equals(e.Name, System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), StringComparison.OrdinalIgnoreCase));
-			var connectionString = currentEnvironmentSettings.SettingsData.ConnectionString;
+			//var appSettings = Configuration.GetSection("GlobalConfig").Get<AppSetting>();
+			//var currentEnvironmentSettings = appSettings.Environments.SingleOrDefault(e => string.Equals(e.Name, System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), StringComparison.OrdinalIgnoreCase));
+			//var connectionString = currentEnvironmentSettings?.SettingsData?.ConnectionString;
 
 			services.AddHttpClient("api", c =>
             {
