@@ -119,13 +119,9 @@ namespace Ditech.Portal.NET
 
             app.UseMvc(routes =>
             {
-                routes.MapAreaRoute(
-                   name: "mainsArea",
-                   areaName: "Main",
-                   template: "{area:exists}/{controller=stats}/{action=Index}/{id?}");
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Dashboard}/{action=Index}/{id?}");
+                    template: "{controller=Video}/{action=Index}/{id?}");
             });
         }
     }

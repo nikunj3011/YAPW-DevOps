@@ -17,9 +17,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="Views\Dashboard\Index.cshtml" />
-		<None Include="Views\Dashboard\Indexx.cshtml" />
-		<None Include="Views\Dashboard\Privacy.cshtml" />
 		<None Include="wwwroot\js\site.js" />
 		<None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
 		<None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
@@ -50,10 +47,6 @@
 
 	<ItemGroup>
 		<Content Update="Views\Shared\Error.cshtml">
-			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		</Content>
-		<Content Update="Views\Shared\_ValidationScriptsPartial.cshtml">
 			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</Content>

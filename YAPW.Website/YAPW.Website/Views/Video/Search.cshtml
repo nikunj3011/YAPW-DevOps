@@ -1,7 +1,7 @@
 ﻿@using YAPW.Models;
 @model VideoGetModel
 @{
-    Layout = null;
+    Layout = "_Layout";
     var BrandTypes = ViewData["BrandsSelectList"] as SelectList;
     var CategoriesTypes = ViewData["CategoriesSelectList"] as SelectList;
     Guid? brand = ViewBag.Brand;
@@ -107,7 +107,7 @@
                 $('.btnRefreshOrders').trigger('click');
             }
         });
-        PrepareAndPostFormWithoutRefreshNew('#addReasonForm', "#errorMessage", "#btnSubmitReason", "main/videos/Post", '#addReasonModal', '', ".OrderListContainer", ".overlay", ".tableOverlayContainer");
+        PrepareAndPostFormWithoutRefreshNew('#addReasonForm', "#errorMessage", "#btnSubmitReason", "SearchVideo", '#addReasonModal', '', ".OrderListContainer", ".overlay", ".tableOverlayContainer");
         console.log("h")
 
         if("@brand" == ""){
@@ -175,7 +175,7 @@
                         //    `<div class="col-lg-3 col-md-3 col-sm-6 col-6" style="text-align:center">
                         //                    <figure class="snip1466">
                         //                        <img src=item.VideoInfo.Cover alt="sample52" />
-                        //                        <a href="Main/Videos/Name/item.VideoInfo.VideoUrl" class="nav-link ajaxLoad" style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                        //                        <a href="Video/Name?id=item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
                         //                        <p style="font-size:large"> <span>item.Name</span></p>
                         //                    </figure>
                         //                </div>`

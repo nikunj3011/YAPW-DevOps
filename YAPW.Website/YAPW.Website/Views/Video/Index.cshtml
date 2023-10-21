@@ -1,7 +1,7 @@
 ﻿@using YAPW.Models;
 @model List<VideoDataModel>
 @{
-    Layout = null;
+    Layout = "_Layout";
     var videosRandom = ViewBag.VideosRandom as List<VideoDataModel>;
     var videosTrending = ViewBag.VideosTrending as List<VideoDataModel>;
     //var a = DateTime.Now.Year.ToString("MM YYYY");
@@ -239,7 +239,7 @@
                                                             <i class="fa-solid fa-tags"></i>
                                                             @foreach (var category in item.Categories)
                                                             {
-                                                                <a id="mainVideoViewsCategory" style="color:#BD421B;" href="Main/Videos/Search?category=@category.Name" class="ajaxLoad">@category.Name</a>
+                                                                <a id="mainVideoViewsCategory" style="color:#BD421B;" href="Video/Search?category=@category.Name" class="">@category.Name</a>
                                                             }
                                                         </b>
                                                     </div>
@@ -249,7 +249,7 @@
                                                         @*<i class="fa-solid fa-star"></i>*@
                                                         <figure class="snip1466">
                                                             <img src=@item.VideoInfo.Cover alt="sample52" height="394" width="268" />
-                                                            <a href="Main/Videos/Name/@item.VideoInfo.VideoUrl" class="nav-link ajaxLoad" style="padding-top:100px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7) )">
+                                                            <a href="Video/Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:100px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7) )">
                                                                 <i class="fa-solid fa-circle-play"></i>
                                                             </a>
                                                         </figure>
@@ -279,7 +279,7 @@
                             {
                                 <figure class="snip1466">
                                     <img src=@item.VideoInfo.Cover alt="sample52" />
-                                    <a href="Main/Videos/Name/@item.VideoInfo.VideoUrl" class="nav-link ajaxLoad" style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <a href="Video/Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
                                     <p style="font-size:large"> <span>@item.Name</span></p>
                                 </figure>
                             }
@@ -306,7 +306,7 @@
                     @if (Model?.Count > 0)
                     {
                         <h2 style="text-align:center">
-                            <a asp-area="Main" asp-controller="Videos" asp-action="Categories" class="ajaxLoad">
+                            <a asp-controller="Video" asp-action="Categories" class="">
                                 @* <i class="fa-solid fa-building"></i> *@
                                 Categories
                             </a>
@@ -316,7 +316,7 @@
                             {
                                 <figure class="snip1466">
                                     <img src=@item.PhotoLink alt="sample52" />
-                                    <a href="Main/Videos/Search?category=@item.Name" class="nav-link ajaxLoad" style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <a href="Video/Search?category=@item.Name" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
                                     <p style="font-size:large"> <span>@item.Name</span></p>
                                 </figure>
                             }
@@ -336,7 +336,7 @@
                     @if (Model?.Count > 0)
                     {
                         <h2 style="text-align:center">
-                            <a asp-area="Main" asp-controller="Videos" asp-action="Random" class="ajaxLoad">
+                            <a asp-controller="Video" asp-action="Random" class="">
                                 @* <i class="fa-solid fa-building"></i> *@
                                 Random
                             </a>
@@ -346,7 +346,7 @@
                             {
                                 <figure class="snip1466">
                                     <img src=@item.VideoInfo.Cover alt="sample52" />
-                                    <a href="Main/Videos/Name/@item.VideoInfo.VideoUrl" class="nav-link ajaxLoad" style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <a href="Video/Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
                                     <p style="font-size:large"> <span>@item.Name</span></p>
                                 </figure>
                             }
@@ -374,7 +374,7 @@
                     @if (Model?.Count > 0)
                     {
                         <h2 style="text-align:center">
-                            <a asp-area="Main" asp-controller="Videos" asp-action="Brands" class="ajaxLoad">
+                            <a asp-controller="Video" asp-action="Brands" class="">
                                 Brands
                             </a>
                         </h2>
@@ -383,7 +383,7 @@
                             {
                                 <figure class="snip1466">
                                     <img src=@item.PhotoLink alt="sample52" />
-                                    <a href="Main/Videos/Search?brand=@item.Name" class="nav-link ajaxLoad" style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <a href="Video/Search?brand=@item.Name" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
                                     <p style="font-size:large"> <span>@item.Name</span></p>
                                 </figure>
                             }
@@ -394,9 +394,6 @@
                     </button>*@
                     }
                 </div>
-            </div>
-            <div class="card-body OrderListContainer">
-
             </div>
         </div>
     </div>
@@ -451,7 +448,7 @@ src="https://a.pemsrv.com/fp-interstitial.js"></script> *@
                 items: 1,
                 margin: 10,
                 loop: true,
-                autoplay: false,
+                autoplay: true,
                 nav: true
             });
 

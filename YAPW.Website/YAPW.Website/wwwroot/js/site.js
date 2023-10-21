@@ -148,20 +148,20 @@ async function InitialPageLoad() {
     //alert(currentUrl);
     if (currentUrl !== "") {
         CancelAllAjaxRequest();
-        window.history.pushState(currentUrl, null, "#" + currentUrl);
+        window.history.pushState(currentUrl, null, "" + currentUrl);
         await LoadAjaxPage('GET', currentUrl);
         //$('#mainContentArea').load(currentUrl);
     }
 }
 
-$(document).on('click', '.ajaxLoad', async function (e) {
+$(document).on('click', '.', async function (e) {
     e.preventDefault();
     await LoadAjaxPage('GET', $(this).attr('href'), true);
 });
 
 function UpdateBrowserHistory(requestUrl) {
-    var pageUrl = requestUrl.split('#')[0];
-    var hashUrl = pageUrl.length > 1 ? '#' + pageUrl.substring(1) : "";
+    var pageUrl = requestUrl.split('')[0];
+    var hashUrl = pageUrl.length > 1 ? '' + pageUrl.substring(1) : "";
 
     if (!IsNullOrEmptyOrWhiteSpace(hashUrl)) {
         window.history.pushState(pageUrl, null, hashUrl);

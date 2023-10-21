@@ -17,9 +17,7 @@ using YAPW.Website.Controllers;
 
 namespace YAPW.Website.Areas.Main.Controllers;
 
-[Route("[area]/[controller]")]
-[Area("Main")]
-public class VideosController : BaseController
+public class VideoController : BaseController
 {
     public AppBase appBase = new AppBase();
     private readonly IHttpClientFactory _clientFactory;
@@ -28,7 +26,7 @@ public class VideosController : BaseController
     private Dictionary<string, int> videoLikesList =
                 new Dictionary<string, int>();
     //public Task Initialization { get; private set; }
-    public VideosController(IHttpClientFactory clientFactory, IMemoryCache memoryCache) : base(clientFactory)
+    public VideoController(IHttpClientFactory clientFactory, IMemoryCache memoryCache) : base(clientFactory)
     {
         _memoryCache = memoryCache;
         _clientFactory = clientFactory;
@@ -78,7 +76,7 @@ public class VideosController : BaseController
         var cacheKeylatestVideos = "latestVideoList";
         if (!_memoryCache.TryGetValue(cacheKeylatestVideos, out List<VideoDataModel> latestVideos))
         {
-            latestVideos = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/newReleases/20");
+            latestVideos = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/newReleases/20");
             var cacheExpiryOptions = new MemoryCacheEntryOptions
             {
                 AbsoluteExpiration = DateTime.Now.AddHours(1),
@@ -91,7 +89,7 @@ public class VideosController : BaseController
         var cacheKeyTrendingVideos = "trendingVideoList";
         if (!_memoryCache.TryGetValue(cacheKeyTrendingVideos, out List<VideoDataModel> trendingVideos))
         {
-            trendingVideos = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/take/20");
+            trendingVideos = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/take/20");
             var cacheExpiryOptions = new MemoryCacheEntryOptions
             {
                 AbsoluteExpiration = DateTime.Now.AddHours(1),
@@ -104,8 +102,7 @@ public class VideosController : BaseController
         return (categories, brands, latestVideos, trendingVideos);
     }
 
-    [HttpGet("Index")]
-    [AjaxOnly]
+    //[AjaxOnly]
     public async Task<IActionResult> Index()
     {
         try
@@ -116,10 +113,10 @@ public class VideosController : BaseController
             }
             var videos = cache.latestVideos;
             ViewBag.VideosTrending = cache.trendingVideos;
-            ViewBag.VideosRandom = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/random/20");
+            ViewBag.VideosRandom = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/random/20");
             ViewBag.Categories = await ExecuteServiceRequest<List<CategoryDataModel>>(HttpMethod.Get, $"categories/random/20");
             ViewBag.Brands = await ExecuteServiceRequest<List<BrandDataModel>>(HttpMethod.Get, $"brands/random/20");
-            return PartialView(videos);
+            return View(videos);
         }
         catch (Exception ex)
         {
@@ -127,30 +124,29 @@ public class VideosController : BaseController
         }
     }
 
-    [AjaxOnly]
-    [HttpGet]
-    [Route("Name/{name}")]
-    public async Task<IActionResult> Video(string name)
+    //[AjaxOnly]
+    //[HttpGet("Name/{name}")]
+    public async Task<IActionResult> Name(string id)
     {
         try
         {
-            var video = await ExecuteServiceRequest<VideoDataModel>(HttpMethod.Get, $"videos/detailed/" + name);
+            var video = await ExecuteServiceRequest<VideoDataModel>(HttpMethod.Get, $"Videos/detailed/" + id);
             video.VideoInfo.VideoUrl = $"https://r2.1hanime.com/{video.VideoInfo.VideoUrl}.mp4";
             //if next video is present add it
             //featured, recently addded, random, same brand
-            ViewBag.VideosFeatured = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/featured/byViews/19");
-            ViewBag.VideosRecentlyAdded = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/newReleases/19");
-            ViewBag.VideosRandom = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/random/19");
-            ViewBag.VideosSameBrand = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/brand/19/" + video.Brand.Name.ToLower());
+            ViewBag.VideosFeatured = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/featured/byViews/19");
+            ViewBag.VideosRecentlyAdded = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/newReleases/19");
+            ViewBag.VideosRandom = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/random/19");
+            ViewBag.VideosSameBrand = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/brand/19/" + video.Brand.Name.ToLower());
 
             //if other parts exists show next or previous button
             string pattern = @"\d+$";
             string replacement = "";
             Regex rgx = new Regex(pattern);
-            string trimmedName = rgx.Replace(name.Trim(), replacement);
+            string trimmedName = rgx.Replace(id.Trim(), replacement);
             trimmedName = trimmedName.Replace("-", " ");
 
-            ViewBag.VideosSameSeries = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/SearchByName/" + trimmedName);
+            ViewBag.VideosSameSeries = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/SearchByName/" + trimmedName);
 
 
             //update likes, dislikes, views in api
@@ -175,7 +171,7 @@ public class VideosController : BaseController
                     try
                     {
                         //todo later add these calls directly through servicebroker and also do this for likes and dislikes
-                        var updateViews = await ExecutePutServiceRequest<string, Dictionary<string, int>>($"videos/updateViews/", cacheVideoLikesList);
+                        var updateViews = await ExecutePutServiceRequest<string, Dictionary<string, int>>($"Videos/updateViews/", cacheVideoLikesList);
                         cacheVideoLikesList = new Dictionary<string, int>();
                     }
                     catch (Exception ex)
@@ -188,16 +184,16 @@ public class VideosController : BaseController
                 _memoryCache.Set(cacheKeyVideoLikesList, cacheVideoLikesList, cacheExpiryOptions);
             }
 
-            if (!cacheVideoLikesList.ContainsKey(name))
+            if (!cacheVideoLikesList.ContainsKey(id))
             {
-                cacheVideoLikesList.Add(name, 1);
-                videoLikesList.Add(name, 1);
+                cacheVideoLikesList.Add(id, 1);
+                videoLikesList.Add(id, 1);
             }
             else
             {
-                var count = cacheVideoLikesList.GetValueOrDefault(name);
+                var count = cacheVideoLikesList.GetValueOrDefault(id);
                 count++;
-                cacheVideoLikesList[name] = count;
+                cacheVideoLikesList[id] = count;
             }
 
 
@@ -214,9 +210,9 @@ public class VideosController : BaseController
         }
     }
 
-    [AjaxOnly]
-    [HttpGet]
-    [Route("Search")]
+    //[AjaxOnly]
+    //[HttpGet]
+    //[Route("Search")]
     [OutputCache(Duration = 7200)]
     public async Task<IActionResult> Search(string name, string brand = "", string category = "", Order order = Order.Descending)
     {
@@ -245,10 +241,10 @@ public class VideosController : BaseController
         }
     }
 
-    [AjaxOnly]
+    //[AjaxOnly]
     [HttpPost]
-    [Route("Post")]
-    public async Task<IActionResult> SearchResult(VideoGetModel videoGetModel)
+    [Route("SearchVideo")]
+    public async Task<IActionResult> SearchVideo(VideoGetModel videoGetModel)
     {
         try
         {
@@ -258,7 +254,7 @@ public class VideosController : BaseController
             //ViewBag.Categories = await ExecuteServiceRequest<List<NamedEntityDataModel>>(HttpMethod.Get, $"categories/all/minimal");
             //ViewData["BrandsSelectList"] = new SelectList(ViewBag.Brands, "Id", "Name");
             //ViewData["CategoriesSelectList"] = new SelectList(ViewBag.Categories, "Id", "Name");
-            return View(await ExecutePostServiceRequest<VideoSearchResponse, VideoGetModel>("videos/search", videoGetModel));
+            return PartialView(await ExecutePostServiceRequest<VideoSearchResponse, VideoGetModel>("Videos/search", videoGetModel));
         }
         catch (Exception ex)
         {
@@ -266,13 +262,13 @@ public class VideosController : BaseController
         }
     }
 
-    [HttpGet("Random")]
-    [AjaxOnly]
+    //[HttpGet("Random")]
+    //[AjaxOnly]
     public async Task<IActionResult> Random()
     {
         try
         {
-            var videos = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"videos/random/20");
+            var videos = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/random/20");
             return PartialView(videos);
         }
         catch (Exception ex)
@@ -281,8 +277,8 @@ public class VideosController : BaseController
         }
     }
 
-    [HttpGet("Brands")]
-    [AjaxOnly]
+    //[HttpGet("Brands")]
+    //[AjaxOnly]
     public async Task<IActionResult> Brands()
     {
         try
@@ -299,8 +295,8 @@ public class VideosController : BaseController
         }
     }
 
-    [HttpGet("Categories")]
-    [AjaxOnly]
+    //[HttpGet("Categories")]
+    //[AjaxOnly]
     public async Task<IActionResult> Categories()
     {
         try

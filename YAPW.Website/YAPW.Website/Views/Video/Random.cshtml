@@ -1,7 +1,7 @@
 ﻿@using YAPW.Models;
 @model List<VideoDataModel>
 @{
-    Layout = null;
+    Layout = "_Layout";
 }
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -118,7 +118,7 @@
                     <i class="fas fa-2x fa-sync-alt fa-spin"></i>
                 </div>
                 <h2 style="text-align:center">
-                    <a asp-area="Main" asp-controller="Videos" asp-action="Random" class="ajaxLoad">
+                    <a asp-controller="Video" asp-action="Random" class="">
                         @* <i class="fa-solid fa-building"></i> *@
                         Random
                     </a>
@@ -132,7 +132,7 @@
                             <div id="col-lg-4 col-md-4 col-sm-6 col-6 ">
                                 <figure class="snip1466">
                                     <img src=@item.VideoInfo.Cover alt="sample52" style="width:268px;height:394px;" />
-                                    <a href="Main/Videos/Name/@item.VideoInfo.VideoUrl" class="nav-link ajaxLoad" style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <a href="Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
                                     <p style="font-size:large"> <span>@item.Name</span></p>
                                 </figure>
                             </div>
