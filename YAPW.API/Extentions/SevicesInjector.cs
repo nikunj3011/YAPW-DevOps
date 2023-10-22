@@ -21,6 +21,7 @@ public static class SevicesInjector
         services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Type, DataContext>>();
         services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.Video, DataContext>>();
         services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.VideoTitle, DataContext>>();
+        services.AddTransient<NamedEntityServiceWorker<YAPW.MainDb.DbModels.View, DataContext>>();
         services.AddTransient<INameService, NameService>();
     }
 

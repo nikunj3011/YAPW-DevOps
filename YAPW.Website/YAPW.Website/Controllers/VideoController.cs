@@ -116,7 +116,39 @@ public class VideoController : BaseController
             ViewBag.VideosRandom = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/random/20");
             ViewBag.Categories = await ExecuteServiceRequest<List<CategoryDataModel>>(HttpMethod.Get, $"categories/random/20");
             ViewBag.Brands = await ExecuteServiceRequest<List<BrandDataModel>>(HttpMethod.Get, $"brands/random/20");
-            return View(videos);
+
+			var cacheKeyVideoLikesList = "totalViewsList";
+
+			if (!_memoryCache.TryGetValue(cacheKeyVideoLikesList, out List<int> cacheVideoLikesList))
+			{
+				cacheVideoLikesList = new List<int>();
+				//setting up cache options
+				var cacheExpiryOptions = new MemoryCacheEntryOptions
+				{
+					AbsoluteExpiration = DateTime.Now.AddMinutes(30),
+					Priority = CacheItemPriority.High,
+					SlidingExpiration = TimeSpan.FromMinutes(30)
+				}.RegisterPostEvictionCallback(async (key, value, reason, substate) =>
+				{
+					//before cache is removed update those values
+					try
+					{
+						//todo later add these calls directly through servicebroker and also do this for likes and dislikes
+						var updateViews = await ExecuteServiceRequest<string>(HttpMethod.Get, $"Views/put?name=Main Page View&count=" + cacheVideoLikesList.Count());
+						cacheVideoLikesList.Clear();
+					}
+					catch (Exception ex)
+					{
+						throw new Exception("lol " + ex.Message);
+					}
+				});
+				//setting cache entries
+
+				_memoryCache.Set(cacheKeyVideoLikesList, cacheVideoLikesList, cacheExpiryOptions);
+			}
+			cacheVideoLikesList.Add(0);
+
+			return View(videos);
         }
         catch (Exception ex)
         {

@@ -37,6 +37,7 @@ namespace YAPW.MainDb
         public virtual DbSet<VideoCategory> VideoCategories { get; set; }
         public virtual DbSet<VideoInfo> VideoInfos { get; set; }
         public virtual DbSet<VideoTitle> VideoTitles { get; set; }
+        public virtual DbSet<View> Views { get; set; }
         public virtual DbSet<VideoInfoVideoTitle> VideoInfoVideoTitles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

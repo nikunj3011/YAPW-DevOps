@@ -51,6 +51,7 @@ namespace YAPW.Domain.Services.Generic
         private TagRepository<Tag, TContext> tagRepository;
         private TypeRepository<MainDb.DbModels.Type, TContext> typeRepository;
         private VideoRepository<Video, TContext> videoRepository;
+        private ViewRepository<View, TContext> viewRepository;
 
         #endregion Known Entities
 
@@ -90,6 +91,7 @@ namespace YAPW.Domain.Services.Generic
         public TagRepository<Tag, TContext> TagRepository => tagRepository ??= new TagRepository<Tag, TContext>(_context);
         public TypeRepository<MainDb.DbModels.Type, TContext> TypeRepository => typeRepository ??= new TypeRepository<MainDb.DbModels.Type, TContext>(_context);
         public VideoRepository<Video, TContext> VideoRepository => videoRepository ??= new VideoRepository<Video, TContext>(_context);
+        public ViewRepository<View, TContext> ViewRepository => viewRepository ??= new ViewRepository<View, TContext>(_context);
         #endregion Known Entities
 
         #endregion Properties
