@@ -200,7 +200,7 @@ namespace YAPW.Controllers.Internal
         {
             try
             {
-                string jsonVideo = System.IO.File.ReadAllText("video.json");
+                string jsonVideo = System.IO.File.ReadAllText("newvideo.json");
                 var videos = JsonConvert.DeserializeObject<List<Videos>>(jsonVideo);
                 //await _namedEntityServiceWorker.BeginTransaction();
                 var count = 0;

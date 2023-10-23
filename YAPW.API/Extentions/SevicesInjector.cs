@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using YAPW.Domain.Interfaces.External;
+using YAPW.Domain.Interfaces.Shared.Microsoft365;
+using YAPW.Domain.Repositories.Shared.Microsoft365;
 using YAPW.Domain.Services.Generic;
 using YAPW.Domain.Services.Internal;
 using YAPW.MainDb;
@@ -38,13 +40,23 @@ public static class SevicesInjector
         services.AddScoped<ServiceWorker<DataContext>>();
         services.AddGenericNamedEntityServices();
         services.AddGenericEntityServices();
+        services.AddMicrosoft365ServiceWorkers();
     }
 
-    #endregion Service workers
+	#endregion Service workers
 
-    #region Databases Services
+	#region Microsoft365 Services
 
-    public static void AddDatabases(this IServiceCollection services, string connectionString, bool isMySql = false)
+	public static void AddMicrosoft365ServiceWorkers(this IServiceCollection services)
+	{
+		services.AddTransient<IEmailService, EmailRepository>();
+	}
+
+	#endregion Microsoft365 Services
+
+	#region Databases Services
+
+	public static void AddDatabases(this IServiceCollection services, string connectionString, bool isMySql = false)
     {
         if (string.IsNullOrWhiteSpace(connectionString))
         {
