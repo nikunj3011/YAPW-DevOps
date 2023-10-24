@@ -190,7 +190,7 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
             long realeaseDate = item.ReleasedAt;
             start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             DateTime releaseDate = start.AddSeconds(item.ReleasedAt).ToLocalTime();
-            var brand = await _serviceWorker.BrandRepository.FindSingleAsync(p => string.Equals(p.Name, item.Brand, StringComparison.OrdinalIgnoreCase), null);
+            var brand = await _serviceWorker.BrandRepository.FindSingleAsync(p => p.Name.ToLower() == item.Brand.ToLower(), null);
             ArgumentNullException.ThrowIfNull(brand);
             var newVideo = new Video
             {
@@ -222,7 +222,7 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
             var videoCateogries = new List<VideoCategory>();
             foreach (var tag in item.Tags)
             {
-                var category = await _serviceWorker.CategoryRepository.FindSingleAsync(p => string.Equals(p.Name, tag, StringComparison.OrdinalIgnoreCase), null);
+                var category = await _serviceWorker.CategoryRepository.FindSingleAsync(p => p.Name.ToLower() == tag.ToLower(), null);
                 ArgumentNullException.ThrowIfNull(category);
                 var newVideoCategory = new VideoCategory
                 {
