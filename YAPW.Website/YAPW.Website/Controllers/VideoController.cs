@@ -114,8 +114,11 @@ public class VideoController : BaseController
             var videos = cache.latestVideos;
             ViewBag.VideosTrending = cache.trendingVideos;
             ViewBag.VideosRandom = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/random/20");
-            ViewBag.Categories = await ExecuteServiceRequest<List<CategoryDataModel>>(HttpMethod.Get, $"categories/random/20");
-            ViewBag.Brands = await ExecuteServiceRequest<List<BrandDataModel>>(HttpMethod.Get, $"brands/random/20");
+            Random rnd = new Random();
+            ViewBag.Categories = cache.categories.OrderBy(x => rnd.Next()).Take(20).ToList();
+            ViewBag.Brands = cache.brands.OrderBy(x => rnd.Next()).Take(20).ToList();
+            //ViewBag.Categories = await ExecuteServiceRequest<List<CategoryDataModel>>(HttpMethod.Get, $"categories/random/20");
+            //ViewBag.Brands = await ExecuteServiceRequest<List<BrandDataModel>>(HttpMethod.Get, $"brands/random/20");
 
 			var cacheKeyVideoLikesList = "totalViewsList";
 
@@ -162,12 +165,21 @@ public class VideoController : BaseController
     {
         try
         {
+            if (cache.categories == null)
+            {
+                cache = await CacheData();
+            }
+            var videos = cache.latestVideos;
+            ViewBag.VideosTrending = cache.trendingVideos;
+
             var video = await ExecuteServiceRequest<VideoDataModel>(HttpMethod.Get, $"Videos/detailed/" + id);
             video.VideoInfo.VideoUrl = $"https://r2.1hanime.com/{video.VideoInfo.VideoUrl}.mp4";
             //if next video is present add it
             //featured, recently addded, random, same brand
-            ViewBag.VideosFeatured = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/featured/byViews/19");
-            ViewBag.VideosRecentlyAdded = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/newReleases/19");
+            //ViewBag.VideosFeatured = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/featured/byViews/19");
+            ViewBag.VideosFeatured = cache.trendingVideos.Take(19).ToList();
+            //ViewBag.VideosRecentlyAdded = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/newReleases/19");
+            ViewBag.VideosRecentlyAdded = cache.latestVideos.Take(19).ToList();
             ViewBag.VideosRandom = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/random/19");
             ViewBag.VideosSameBrand = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/brand/19/" + video.Brand.Name.ToLower());
 
