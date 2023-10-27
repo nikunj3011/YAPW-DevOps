@@ -2118,8 +2118,16 @@
 		src="https://a.pemsrv.com/fp-interstitial.js"></script>
 <script>
 	$(document).ready(async function () {
-		console.log("s");
 		'use strict';
+		$.ajax({
+			method: "GET",
+			url: "UpdateVideoViews?id={@ViewBag.Id}",
+			// data: { param1: value1, param2: value2 },
+			cache: false,
+			success: function (result) {
+			}
+		});
+
 		const tabs = document.querySelectorAll('[data-id]');
 		const contents = document.querySelectorAll('[data-content]');
 		let id = 0;
