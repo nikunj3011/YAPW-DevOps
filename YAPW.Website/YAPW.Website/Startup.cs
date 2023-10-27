@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,6 +16,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using YAPW.Models.Models.Settings;
+using YAPW.Website.Policies;
 
 namespace Ditech.Portal.NET
 {
@@ -61,6 +63,13 @@ namespace Ditech.Portal.NET
             {
                 return true;
             }
+            });
+
+            services.AddOutputCache(options =>
+            {
+                options.AddBasePolicy(builder => builder.With(c => c.HttpContext.Request.Path.StartsWithSegments("/videos")).Tag("Videos_Tag"));
+                options.AddBasePolicy(builder => builder.Cache());
+                options.AddPolicy("VideosPolicy", AuthorizeCachePolicy.Instance);
             });
 
             // Add folders to search when looking for views
@@ -113,6 +122,7 @@ namespace Ditech.Portal.NET
             app.UseStaticFiles();
             app.UseRouting();
 
+            app.UseOutputCache();
             //app.UseAuthorization();
             app.UseAuthentication();
             //app.UseMiddleware<SerilogRequestLogger>();

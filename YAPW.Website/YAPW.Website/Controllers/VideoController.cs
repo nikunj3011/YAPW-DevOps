@@ -161,6 +161,7 @@ public class VideoController : BaseController
 
     //[AjaxOnly]
     //[HttpGet("Name/{name}")]
+    [OutputCache(Duration = 3600, PolicyName = "VideosPolicy")]
     public async Task<IActionResult> Name(string id)
     {
         try
