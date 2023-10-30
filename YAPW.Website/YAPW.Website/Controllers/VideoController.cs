@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using YAPW.Models;
 using YAPW.Models.DataModels;
 using YAPW.Website.Controllers;
+using YAPW.Website.Models.DataModels;
 
 namespace YAPW.Website.Areas.Main.Controllers;
 
@@ -103,6 +104,62 @@ public class VideoController : BaseController
     }
 
     //[AjaxOnly]
+    public async Task<IActionResult> UpdateMainPageView()
+    {
+        try
+        {
+            //update likes, dislikes, views in api
+            //update when there is low user count
+            //use metrics servers to get data
+            //or get api metrics if low post to endpoint
+            var cacheKeyVideoLikesList = "mainVideoLikesList";
+
+            if (!_memoryCache.TryGetValue(cacheKeyVideoLikesList, out List<bool> cacheVideoLikesList))
+            {
+                cacheVideoLikesList = new List<bool>();
+
+                //setting up cache options
+                var cacheExpiryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.Now.AddMinutes(1),
+                    Priority = CacheItemPriority.High,
+                    SlidingExpiration = TimeSpan.FromMinutes(1)
+                }.RegisterPostEvictionCallback(async (key, value, reason, substate) =>
+                {
+                    //before cache is removed update those values
+                    try
+                    {
+                        //todo later add these calls directly through servicebroker and also do this for likes and dislikes
+                        var mainViewType = await ExecuteServiceRequest<NamedEntityDataModel>(HttpMethod.Get, $"Types/ByName/Main%20Page%20View");
+                        var viewModel = new AddViewDataModel
+                        {
+                            Name = DateTime.Now.ToString("dd MMMM yyyy"),
+                            Description = "update",
+                            TotalViews = cacheVideoLikesList.Count(),
+                            TypeId = mainViewType.Id
+                        };
+                        var updateViews = await ExecutePutServiceRequest<string, AddViewDataModel>($"Views/addOrUpdateView/", viewModel);
+                        //var updateViews = await ExecutePutServiceRequest<string, addview>(HttpMethod.Get, $"Views/put?name=Main Page View&count=" + cacheVideoLikesList.Count());
+                        cacheVideoLikesList.Clear();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("lol " + ex.Message);
+                    }
+                });
+                //setting cache entries
+
+                _memoryCache.Set(cacheKeyVideoLikesList, cacheVideoLikesList, cacheExpiryOptions);
+            }
+            cacheVideoLikesList.Add(true);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     public async Task<IActionResult> Index()
     {
         try
@@ -117,39 +174,6 @@ public class VideoController : BaseController
             Random rnd = new Random();
             ViewBag.Categories = cache.categories.OrderBy(x => rnd.Next()).Take(20).ToList();
             ViewBag.Brands = cache.brands.OrderBy(x => rnd.Next()).Take(20).ToList();
-            //ViewBag.Categories = await ExecuteServiceRequest<List<CategoryDataModel>>(HttpMethod.Get, $"categories/random/20");
-            //ViewBag.Brands = await ExecuteServiceRequest<List<BrandDataModel>>(HttpMethod.Get, $"brands/random/20");
-
-			var cacheKeyVideoLikesList = "totalViewsList";
-
-			if (!_memoryCache.TryGetValue(cacheKeyVideoLikesList, out List<int> cacheVideoLikesList))
-			{
-				cacheVideoLikesList = new List<int>();
-				//setting up cache options
-				var cacheExpiryOptions = new MemoryCacheEntryOptions
-				{
-					AbsoluteExpiration = DateTime.Now.AddMinutes(30),
-					Priority = CacheItemPriority.High,
-					SlidingExpiration = TimeSpan.FromMinutes(30)
-				}.RegisterPostEvictionCallback(async (key, value, reason, substate) =>
-				{
-					//before cache is removed update those values
-					try
-					{
-						//todo later add these calls directly through servicebroker and also do this for likes and dislikes
-						var updateViews = await ExecuteServiceRequest<string>(HttpMethod.Get, $"Views/put?name=Main Page View&count=" + cacheVideoLikesList.Count());
-						cacheVideoLikesList.Clear();
-					}
-					catch (Exception ex)
-					{
-						throw new Exception("lol " + ex.Message);
-					}
-				});
-				//setting cache entries
-
-				_memoryCache.Set(cacheKeyVideoLikesList, cacheVideoLikesList, cacheExpiryOptions);
-			}
-			cacheVideoLikesList.Add(0);
 
 			return View(videos);
         }
@@ -264,6 +288,7 @@ public class VideoController : BaseController
         }
         return Ok();
     }
+
     //[AjaxOnly]
     //[HttpGet]
     //[Route("Search")]

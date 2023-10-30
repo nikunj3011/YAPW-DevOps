@@ -11,6 +11,7 @@ using YAPW.MainDb;
 using YAPW.MainDb.DbModels;
 using YAPW.MainDb.Interfaces;
 using YAPW.Models;
+using YAPW.Models.DataModels;
 
 namespace YAPW.Domain.Repositories.Main;
 
@@ -27,14 +28,29 @@ public class ViewRepository<TEntity, TContext> : NamedEntityRepository<TEntity, 
         _serviceWorker = new ServiceWorker<TContext>(_context);
     }
 
-	public async Task UpdateView(string name, int count)
+	public async Task<string> UpdateView(AddViewDataModel addViewDataModel)
     {
         try
         {
-            var viewPage = await _serviceWorker.ViewRepository.FindSingleAsync(p => p.Name == name, null);
-            viewPage.TotalViews = viewPage.TotalViews + count;
-            _serviceWorker.ViewRepository.Update(viewPage);
-            await _serviceWorker.SaveAsync();
+            var view = await _serviceWorker.ViewRepository.FindSingleAsync(p => p.Name == addViewDataModel.Name, null);
+            if (view == null)
+            {
+                await _serviceWorker.ViewRepository.AddAsync(new View
+                {
+                    Name = addViewDataModel.Name,
+                    Description = addViewDataModel.Description,
+                    TotalViews = addViewDataModel.TotalViews,
+                    TypeId = addViewDataModel.TypeId
+                });
+                await _serviceWorker.SaveAsync();
+            }
+            else
+            {
+                view.TotalViews += addViewDataModel.TotalViews;
+                _serviceWorker.ViewRepository.Update(view);
+                await _serviceWorker.SaveAsync();
+            }
+            return "";
         }
         catch (Exception ex)
         {

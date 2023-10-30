@@ -32,7 +32,7 @@ namespace YAPW.MainDb
         public virtual DbSet<PhotoCategory> PhotoCategories { get; set; }
         public virtual DbSet<PhotoInfo> PhotoInfos { get; set; }
         //public virtual DbSet<Tag> Tags { get; set; }
-        //public virtual DbSet<DbModels.Type> Types { get; set; }
+        public virtual DbSet<DbModels.Type> Types { get; set; }
         public virtual DbSet<Video> Videos { get; set; }
         public virtual DbSet<VideoCategory> VideoCategories { get; set; }
         public virtual DbSet<VideoInfo> VideoInfos { get; set; }
@@ -94,7 +94,7 @@ namespace YAPW.MainDb
 
             ///sql server
             //optionsBuilder.UseSqlServer("Data Source=JR-PROG\\SQLEXPRESS;Initial Catalog=YAPWDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False", c => c.MigrationsAssembly("YAPW.MainDb"));
-            //optionsBuilder.UseSqlServer("Server=tcp:yapw.database.windows.net,1433;Initial Catalog=yapw;Persist Security Info=False;User ID=yapw;Password=lol;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;", c => c.MigrationsAssembly("YAPW.MainDb"));
+            optionsBuilder.UseSqlServer("Server=tcp:yapw-sqlserver.database.windows.net,1433;Initial Catalog=HentaiTitties;Persist Security Info=False;User ID=4dm1n157r470r;Password=SuperSecretPassword!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;", c => c.MigrationsAssembly("YAPW.MainDb"));
 
 
             ///mysql

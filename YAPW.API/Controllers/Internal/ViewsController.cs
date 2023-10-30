@@ -66,25 +66,16 @@ namespace YAPW.Controllers.Internal
         /// </summary>
         /// <param name="namedEntityDataModel"></param>
         /// <returns></returns>
-        [HttpPost]
-        public override async Task<ActionResult<MainDb.DbModels.View>> Post(NamedEntityDataModel namedEntityDataModel, CancellationToken cancellationToken)
-            => await base.Post(namedEntityDataModel, cancellationToken);
+        [HttpPut("addOrUpdateView")]
+        public async Task<string> Post(AddViewDataModel addViewDataModel, CancellationToken cancellationToken)
+            => await _repository.UpdateView(addViewDataModel);
 
-		/// <summary>
-		/// Update View
-		/// </summary>
-		/// <param name="namedEntityDataModel"></param>
-		/// <returns></returns>
-		[HttpGet("put")]
-		public async Task Put(string name, int count, CancellationToken cancellationToken)
-			=> await _repository.UpdateView(name, count);
-
-		/// <summary>
-		/// Delete View
-		/// </summary>
-		/// <param name="id">View Id</param>
-		/// <returns></returns>
-		[HttpDelete("{id}")]
+        /// <summary>
+        /// Delete View
+        /// </summary>
+        /// <param name="id">View Id</param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
         public override async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken) => await base.Delete(id, cancellationToken);
     }
 }

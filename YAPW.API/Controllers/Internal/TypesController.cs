@@ -13,7 +13,6 @@ namespace YAPW.Controllers.Internal
     //quartz.net
     [ApiController]
     [Route("[controller]")]
-    [Obsolete]
     public class TypesController : GenericNamedEntitiesControllerBase<MainDb.DbModels.Type, DataContext, NamedEntityServiceWorker<MainDb.DbModels.Type, DataContext>, NamedEntityDataModel>
     {
         private readonly NamedEntityServiceWorker<MainDb.DbModels.Type, DataContext> _namedEntityServiceWorker;

@@ -445,7 +445,14 @@
 <script>
 
     $(document).ready(function () {
-
+        $.ajax({
+            method: "GET",
+            url: "Video/UpdateMainPageView",
+            // data: { param1: value1, param2: value2 },
+            cache: false,
+            success: function (result) {
+            }
+        });
         $(function () {
             // Owl Carousel
             var owlMain = $("#Main-carousel");
