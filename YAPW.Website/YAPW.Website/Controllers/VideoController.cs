@@ -121,9 +121,9 @@ public class VideoController : BaseController
                 //setting up cache options
                 var cacheExpiryOptions = new MemoryCacheEntryOptions
                 {
-                    AbsoluteExpiration = DateTime.Now.AddMinutes(1),
+                    AbsoluteExpiration = DateTime.Now.AddMinutes(15),
                     Priority = CacheItemPriority.High,
-                    SlidingExpiration = TimeSpan.FromMinutes(1)
+                    SlidingExpiration = TimeSpan.FromMinutes(15)
                 }.RegisterPostEvictionCallback(async (key, value, reason, substate) =>
                 {
                     //before cache is removed update those values
