@@ -154,10 +154,10 @@ async function InitialPageLoad() {
     }
 }
 
-$(document).on('click', '.', async function (e) {
-    e.preventDefault();
-    await LoadAjaxPage('GET', $(this).attr('href'), true);
-});
+//$(document).on('click', '.', async function (e) {
+//    e.preventDefault();
+//    await LoadAjaxPage('GET', $(this).attr('href'), true);
+//});
 
 function UpdateBrowserHistory(requestUrl) {
     var pageUrl = requestUrl.split('')[0];

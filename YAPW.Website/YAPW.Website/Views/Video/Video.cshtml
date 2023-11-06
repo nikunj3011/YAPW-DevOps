@@ -1910,7 +1910,7 @@
 		Customize https://plyr.io
 
 		*/
-    </style>
+	</style>
 </head>
 <div class="row " id="videoInfoMain">
     <div class="col-lg-12 ">
@@ -1921,9 +1921,28 @@
 					@*/*background-size: 110% 135%;*/*@
 					@* <video src="@Model.VideoInfo.VideoUrl" class="videoCustom" poster="@Model.VideoInfo.Cover" id="blurred" data-setup='{"fluid": true}'></video> *@
 					<div style="padding:1%;">
-						<video id="my-video" class="video-js" controls preload="auto" poster="@Model.VideoInfo.Poster" data-setup='{"fluid": true}' loop>
+						@* <video id="my-video" class="video-js" controls preload="auto" poster="@Model.VideoInfo.Poster" data-setup='{"fluid": true}' loop>
 							<source src="@Model.VideoInfo.VideoUrl" type='video/mp4'>
+						</video> *@
+
+
+						<video id="vid1" class="video-js vjs-fluid vjs-default-skin vjs-big-play-centered" controls poster="@Model.VideoInfo.Poster"
+							   data-setup='{
+									"plugins": {
+											"vastClient": {
+											"adTagUrl": "https://s.magsrv.com/splash.php?idzone=5120470",
+											"adsCancelTimeout": 3000,
+											"adsEnabled": true,
+											"preferredTech":"html5",
+											"vpaidFlashLoaderPath": "//github.com/MailOnline/videojs-vast-vpaid/blob/RELEASE/bin/VPAIDFlash.swf?raw=true"
+										}
+									}}'
+							   data-viblast-key="N8FjNTQ3NDdhZqZhNGI5NWU5ZTI=">
+							<source src="@Model.VideoInfo.VideoUrl">
 						</video>
+
+
+
 					</div>
 				</div>
 
@@ -2081,7 +2100,6 @@
   gtag('config', 'G-M4ZRQQE7S0');
 </script>
 
-<script src="https://vjs.zencdn.net/5.4.6/video.js"></script>
 <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
 <script>(AdProvider = window.AdProvider || []).push({ "serve": {} });</script>
 <ins class="eas6a97888e" data-zoneid="5108472"></ins>
@@ -2116,6 +2134,7 @@
 		data-browser_settings="1"
 		data-ad_trigger_method="3"
 		src="https://a.pemsrv.com/fp-interstitial.js"></script>
+
 <script>
 	$(document).ready(async function () {
 		'use strict';
@@ -2146,7 +2165,7 @@
 				});
 			});
 		});
-		  });
+	});
 </script>
 
 
