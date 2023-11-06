@@ -129,7 +129,9 @@ namespace YAPW.Controllers.Internal
 
                 foreach (var item in videoViews)
                 {
-                    var dbVideoInfo = await _serviceWorker.VideoInfoRepository.FindSingleAsync(p=>p.VideoUrl.LinkId.ToLower() == item.Key.ToLower(), null);
+                    var videoId = item.Key.Replace("{", "");
+                    videoId = videoId.Replace("}", "");
+					var dbVideoInfo = await _serviceWorker.VideoInfoRepository.FindSingleAsync(p=>p.VideoUrl.LinkId.ToLower() == videoId.ToLower(), null);
                     Guard.Against.Null(dbVideoInfo);
                     dbVideoInfo.Views = item.Value + dbVideoInfo.Views;
                     _serviceWorker.VideoInfoRepository.Update(dbVideoInfo);
