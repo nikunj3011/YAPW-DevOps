@@ -343,6 +343,7 @@ public class VideoController : BaseController
 
     //[HttpGet("Random")]
     //[AjaxOnly]
+    [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
     public async Task<IActionResult> Random()
     {
         try

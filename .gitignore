@@ -31,3 +31,5 @@ YAPW.API.Tests/bin
 YAPW.API.Tests/obj
 azurecli.txt
 YAPW.LoadTesting/obj
+data
+ssh keys

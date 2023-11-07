@@ -1,6 +1,7 @@
 using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using YAPW.Controllers.Base;
 using YAPW.Domain.Interfaces.Services;
@@ -22,13 +23,15 @@ namespace YAPW.Controllers.Internal
         private readonly NamedEntityServiceWorker<MainDb.DbModels.Video, DataContext> _namedEntityServiceWorker;
         private readonly ServiceWorker<DataContext> _serviceWorker;
         private readonly VideoRepository<Video, DataContext> _repository;
+		private readonly IMemoryCache _memoryCache;
 
-        public VideosController(ServiceWorker<DataContext> serviceWorker,
+		public VideosController(ServiceWorker<DataContext> serviceWorker,
         NamedEntityServiceWorker<MainDb.DbModels.Video, DataContext> namedEntityServiceWorker,
         IHttpContextAccessor httpContextAccessor,
         IWebHostEnvironment hostingEnvironment,
-        IOptions<AppSetting> settings
-        ) : base(
+        IOptions<AppSetting> settings,
+		IMemoryCache memoryCache
+		) : base(
             namedEntityServiceWorker,
             httpContextAccessor,
             hostingEnvironment, settings)
@@ -36,9 +39,31 @@ namespace YAPW.Controllers.Internal
             _serviceWorker = serviceWorker;
             _namedEntityServiceWorker = namedEntityServiceWorker;
             _repository = namedEntityServiceWorker.VideoRepository;
+            _memoryCache = memoryCache;
+		}
+
+        private async Task<IEnumerable<VideoDataModel>> CacheData()
+        {
+            var cacheKeyVideo = "videosList";
+            //checks if cache entries exists
+            if (!_memoryCache.TryGetValue(cacheKeyVideo, out IEnumerable<VideoDataModel> videos))
+            {
+                IEnumerable<VideoDataModel> video = new List<VideoDataModel>();
+				videos = await _repository.GetLimited(20000, video);
+                //setting up cache options
+                var cacheExpiryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.Now.AddHours(1),
+                    Priority = CacheItemPriority.High,
+                    SlidingExpiration = TimeSpan.FromHours(1)
+                };
+                //setting cache entries
+                _memoryCache.Set(cacheKeyVideo, videos, cacheExpiryOptions);
+            }
+            return videos;
         }
 
-        [HttpGet]
+		[HttpGet]
         public override async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> Get()
         {
             throw new Exception("Blocking to view videos for now");
@@ -47,37 +72,37 @@ namespace YAPW.Controllers.Internal
         [HttpGet("take/{take}")]
         public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> Get(int take)
         {
-            return Ok(await _repository.GetLimited(take));
+			return Ok(await _repository.GetLimited(take, await CacheData()));
         }
 
         [HttpGet("random/{take}")]
         public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> GetRandom(int take)
         {
-            return Ok(await _repository.GetRandomLimited(take));
+            return Ok(await _repository.GetRandomLimited(take, await CacheData()));
         }
 
         [HttpGet("brand/{take}/{brandName}")]
         public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> GetRandomByBrand(string brandName, int take)
         {
-            return Ok(await _repository.GetRandomLimitedByBrand(brandName, take));
+            return Ok(await _repository.GetRandomLimitedByBrand(brandName, take, await CacheData()));
         }
 
         [HttpGet("newReleases/{take}")]
         public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> GetByReleaseDate(int take)
         {
-            return Ok(await _repository.GetLimitedByReleaseDate(take));
+            return Ok(await _repository.GetLimitedByReleaseDate(take, await CacheData()));
         }
 
         [HttpPost("search")]
         public async Task<ActionResult<IEnumerable<dynamic>>> SearchWithPagination(VideoGetModel videoGetModel)
         {
-            return Ok(await _repository.SearchWithPagination(videoGetModel));
+            return Ok(await _repository.SearchWithPagination(videoGetModel, await CacheData()));
         }
 
         [HttpGet("featured/byViews/{take}")]
         public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> GetByViews(int take)
         {
-            return Ok(await _repository.GetLimitedByViews(take));
+            return Ok(await _repository.GetLimitedByViews(take, await CacheData()));
         }
 
         /// <summary>
@@ -102,7 +127,7 @@ namespace YAPW.Controllers.Internal
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("Detailed/{linkName}")]
-        public async Task<VideoDataModel> GetByNameDetailed(string linkName) => await _repository.GetByNameDetailed(linkName);
+        public async Task<VideoDataModel> GetByNameDetailed(string linkName) => await _repository.GetByNameDetailed(linkName, await CacheData());
 
         /// <summary>
         /// Get Types by Name
@@ -112,7 +137,7 @@ namespace YAPW.Controllers.Internal
         [HttpGet("SearchByName/{name}")]
         public async Task<ActionResult<MainDb.DbModels.Video>> SearchByName(string name)
         {
-            return Ok(await _repository.SearchVideos(name));
+            return Ok(await _repository.SearchVideos(name, await CacheData()));
         }
 
         /// <summary>

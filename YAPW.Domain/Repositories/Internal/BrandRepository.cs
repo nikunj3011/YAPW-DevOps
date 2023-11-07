@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using NetTopologySuite.Index.HPRtree;
 using YAPW.Domain.Interfaces;
 using YAPW.Domain.Repositories.Generic;
 using YAPW.Domain.Services.Generic;
@@ -42,14 +43,16 @@ public class BrandRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
 
             var brandsDb = await FindAsync(include: p => p.Include(p => p.Logo)).ConfigureAwait(false);
             var brands = new List<BrandDataModel>();
+            var videos = await _serviceWorker.VideoRepository.FindAsync(orderBy: t => t.OrderBy(t => t.Name), 
+                include:p=>p.Include(p=>p.Brand).Include(p=>p.VideoInfo.Cover)).ConfigureAwait(false);
             foreach (var item in brandsDb)
             {
-                var videoImage = await _serviceWorker.VideoRepository.FindAsync(filter: v => v.Brand.Name.ToLower() == item.Name.ToLower(), select: t => new
+                var videoImage = videos.Where(v => v.Brand.Name.ToLower() == item.Name.ToLower()).Select(t => new
                 {
                     t.Id,
                     t.Name,
                     t.VideoInfo.Cover.LinkId
-                }, orderBy: t => t.OrderBy(t => t.Name)).ConfigureAwait(false);
+                }).Take(1).OrderBy(t => t.Name);
                 item.Logo.LinkId = videoImage?.FirstOrDefault()?.LinkId;
                 brands.Add(item.AsBrandDataModel());
             }

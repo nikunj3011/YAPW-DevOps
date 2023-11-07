@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Caching.Memory;
 using NetTopologySuite.Index.HPRtree;
 using Newtonsoft.Json;
 using System.Linq;
@@ -11,6 +12,7 @@ using YAPW.MainDb;
 using YAPW.MainDb.DbModels;
 using YAPW.MainDb.Interfaces;
 using YAPW.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace YAPW.Domain.Repositories.Main;
 
@@ -21,6 +23,7 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
     private readonly TContext _context;
     private readonly ServiceWorker<TContext> _serviceWorker;
     private readonly Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> _videoIncludes;
+    private readonly IMemoryCache _memoryCache;
 
     public VideoRepository(TContext context) : base(context)
     {
@@ -29,58 +32,97 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
         _videoIncludes = GetIncludes();
     }
 
-    public async Task<IEnumerable<VideoDataModel>> GetLimited(int take)
+	public async Task<IEnumerable<VideoDataModel>> GetLimited(int take, IEnumerable<VideoDataModel> cacheVideos)
     {
-        var videos = await FindAsyncNoSelect(take: take, include: _videoIncludes, orderBy: p=>p.OrderByDescending(p=>p.VideoInfo.CreatedDate)).ConfigureAwait(false);
-        var videosOp = new List<VideoDataModel>();
-        foreach (var item in videos.Item1)
+        if(cacheVideos.Count() == 0)
         {
-            videosOp.Add(item.AsVideoDataModel());
-        }
-        return videosOp;
+			var videos = await FindAsyncNoSelect(take: take, include: _videoIncludes, orderBy: p => p.OrderByDescending(p => p.VideoInfo.CreatedDate)).ConfigureAwait(false);
+			var videosOp = new List<VideoDataModel>();
+			foreach (var item in videos.Item1)
+			{
+				videosOp.Add(item.AsVideoDataModel());
+			}
+			return videosOp;
+		}
+        else
+        {
+			return cacheVideos.Take(take);
+		}
     }
 
-    public async Task<IEnumerable<VideoDataModel>> GetLimitedByReleaseDate(int take)
+    public async Task<IEnumerable<VideoDataModel>> GetLimitedByReleaseDate(int take, IEnumerable<VideoDataModel> cacheVideos)
     {
-        var videos = await FindAsyncNoSelect(orderBy:p=>p.OrderByDescending(p=>p.VideoInfo.ReleaseDate) ,take: take, include: _videoIncludes).ConfigureAwait(false);
-        var videosOp = new List<VideoDataModel>();
-        foreach (var item in videos.Item1)
+		if (cacheVideos.Count() == 0)
         {
-            videosOp.Add(item.AsVideoDataModel());
-        }
-        return videosOp;
+			var videos = await FindAsyncNoSelect(orderBy: p => p.OrderByDescending(p => p.VideoInfo.ReleaseDate), take: take, include: _videoIncludes).ConfigureAwait(false);
+			var videosOp = new List<VideoDataModel>();
+			foreach (var item in videos.Item1)
+			{
+				videosOp.Add(item.AsVideoDataModel());
+			}
+			return videosOp;
+		}
+        else
+        {
+			return cacheVideos.OrderByDescending(p=>p.VideoInfo.ReleaseDate).Take(take);
+		}
     }
 
-    public async Task<VideoSearchResponse> SearchWithPagination(VideoGetModel videoGetModel)
+    public async Task<VideoSearchResponse> SearchWithPagination(VideoGetModel videoGetModel, IEnumerable<VideoDataModel> cacheVideos)
     {
         (IEnumerable<TEntity>, int) videos = (new List<TEntity>(), 0);
 
         decimal pageResult = 20;
         var pageCountAndSkip = FindPageCountAndSkip(pageResult, videoGetModel.Page);
-        if (videoGetModel.Order == Order.Ascending)
+		var videosOp = new List<VideoDataModel>();
+        if (cacheVideos.Count() >= 0)
         {
-            videos = await FindAsyncNoSelect(take: (int)pageResult, skip: pageCountAndSkip.skip, filter: p => p.Name.ToLower().Contains(videoGetModel.Search)
-                                                                                                 && p.BrandId.ToString().Contains(videoGetModel.BrandId == null ? "" : videoGetModel.BrandId.ToString())
-                                                                                                 && p.VideoCategories.Any(l => l.CategoryId.ToString().Contains(videoGetModel.CategoryId == null ? "" : videoGetModel.CategoryId.ToString())), orderBy: p => p.OrderBy(p => p.VideoInfo.ReleaseDate), include: _videoIncludes).ConfigureAwait(false);
-        }
-        else if (videoGetModel.Order == Order.Descending)
+            if (videoGetModel.Order == Order.Ascending)
+            {
+                videos = await FindAsyncNoSelect(take: (int)pageResult, skip: pageCountAndSkip.skip, filter: p => p.Name.ToLower().Contains(videoGetModel.Search)
+                                                                                                     && p.BrandId.ToString().Contains(videoGetModel.BrandId == null ? "" : videoGetModel.BrandId.ToString())
+                                                                                                     && p.VideoCategories.Any(l => l.CategoryId.ToString().Contains(videoGetModel.CategoryId == null ? "" : videoGetModel.CategoryId.ToString())), orderBy: p => p.OrderBy(p => p.VideoInfo.ReleaseDate), include: _videoIncludes).ConfigureAwait(false);
+            }
+            else if (videoGetModel.Order == Order.Descending)
+            {
+                videos = await FindAsyncNoSelect(take: (int)pageResult, skip: pageCountAndSkip.skip, filter: p => p.Name.ToLower().Contains(videoGetModel.Search)
+                                                                                                     && p.BrandId.ToString().Contains(videoGetModel.BrandId == null ? "" : videoGetModel.BrandId.ToString())
+                                                                                                     && p.VideoCategories.Any(l => l.CategoryId.ToString().Contains(videoGetModel.CategoryId == null ? "" : videoGetModel.CategoryId.ToString())), orderBy: p => p.OrderByDescending(p => p.VideoInfo.ReleaseDate), include: _videoIncludes).ConfigureAwait(false);
+            }
+            foreach (var item in videos.Item1)
+            {
+                videosOp.Add(item.AsVideoDataModel());
+			}
+			var response = new VideoSearchResponse
+			{
+				Videos = videosOp,
+				CurrentPage = videoGetModel.Page,
+				Pages = (int)videos.Item2 / (int)pageResult,
+			};
+			return response;
+		}
+        else
         {
-            videos = await FindAsyncNoSelect(take: (int)pageResult, skip: pageCountAndSkip.skip, filter: p => p.Name.ToLower().Contains(videoGetModel.Search)
-                                                                                                 && p.BrandId.ToString().Contains(videoGetModel.BrandId == null ? "" : videoGetModel.BrandId.ToString())
-                                                                                                 && p.VideoCategories.Any(l => l.CategoryId.ToString().Contains(videoGetModel.CategoryId == null ? "" : videoGetModel.CategoryId.ToString())), orderBy: p => p.OrderByDescending(p => p.VideoInfo.ReleaseDate), include: _videoIncludes).ConfigureAwait(false);
-        }
-        var videosOp = new List<VideoDataModel>();
-        foreach (var item in videos.Item1)
-        {
-            videosOp.Add(item.AsVideoDataModel());
-        }
-        var responce =  new VideoSearchResponse
-        {
-            Videos = videosOp,
-            CurrentPage = videoGetModel.Page,
-            Pages = (int)videos.Item2/(int)pageResult,
-        };
-        return responce;
+            if (videoGetModel.Order == Order.Ascending)
+            {
+                videosOp = cacheVideos.Skip(pageCountAndSkip.skip).Take((int)pageResult).Where(p=>p.Name.ToLower().Contains(videoGetModel.Search)
+					                                                            && p.BrandId.ToString().Contains(videoGetModel.BrandId == null ? "" : videoGetModel.BrandId.ToString())
+																				&& p.Categories.Any(l => l.Id.ToString().Contains(videoGetModel.CategoryId == null ? "" : videoGetModel.CategoryId.ToString()))).OrderBy(p => p.VideoInfo.ReleaseDate).ToList();
+            }
+            else if (videoGetModel.Order == Order.Descending)
+            {
+				videosOp = cacheVideos.Skip(pageCountAndSkip.skip).Take((int)pageResult).Where(p => p.Name.ToLower().Contains(videoGetModel.Search)
+																				&& p.BrandId.ToString().Contains(videoGetModel.BrandId == null ? "" : videoGetModel.BrandId.ToString())
+																				&& p.Categories.Any(l => l.Id.ToString().Contains(videoGetModel.CategoryId == null ? "" : videoGetModel.CategoryId.ToString()))).OrderBy(p=>p.VideoInfo.ReleaseDate).ToList();
+			}
+			var response = new VideoSearchResponse
+			{
+				Videos = videosOp,
+				CurrentPage = videoGetModel.Page,
+				Pages = (int)videos.Item2 / (int)pageResult,
+			};
+			return response;
+		}
         (decimal pageCount, int skip) FindPageCountAndSkip(decimal pageResult, int page)
         {
             var pageCount = Math.Ceiling(FindCount() / pageResult);
@@ -89,47 +131,80 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
         }
     }
 
-    public async Task<IEnumerable<VideoDataModel>> GetLimitedByViews(int take)
+    public async Task<IEnumerable<VideoDataModel>> GetLimitedByViews(int take, IEnumerable<VideoDataModel> cacheVideos)
     {
-        var videos = await FindAsyncNoSelect(orderBy: p => p.OrderByDescending(p => p.VideoInfo.Views).ThenByDescending(p=>p.VideoInfo.ReleaseDate), take: take, include: _videoIncludes).ConfigureAwait(false);
-        var videosOp = new List<VideoDataModel>();
-        foreach (var item in videos.Item1)
+		if (cacheVideos.Count() == 0)
         {
-            videosOp.Add(item.AsVideoDataModel());
-        }
-        return videosOp;
+			var videos = await FindAsyncNoSelect(orderBy: p => p.OrderByDescending(p => p.VideoInfo.Views).ThenByDescending(p => p.VideoInfo.ReleaseDate), take: take, include: _videoIncludes).ConfigureAwait(false);
+			var videosOp = new List<VideoDataModel>();
+			foreach (var item in videos.Item1)
+			{
+				videosOp.Add(item.AsVideoDataModel());
+			}
+			return videosOp;
+		}
+        else
+        {
+            return cacheVideos.OrderByDescending(p => p.VideoInfo.Views).ThenByDescending(p => p.VideoInfo.ReleaseDate).Take(take);
+
+		}
     }
 
-    public async Task<IEnumerable<VideoDataModel>> GetRandomLimited(int take)
+    public async Task<IEnumerable<VideoDataModel>> GetRandomLimited(int take, IEnumerable<VideoDataModel> cacheVideos)
     {
-        var videos = await FindRandomAsyncNoSelect(take: take, include: _videoIncludes).ConfigureAwait(false);
-        var videosOp = new List<VideoDataModel>();
-        foreach (var item in videos)
+        if (cacheVideos.Count() == 0)
         {
-            videosOp.Add(item.AsVideoDataModel());
+            var videos = await FindRandomAsyncNoSelect(take: take, include: _videoIncludes).ConfigureAwait(false);
+            var videosOp = new List<VideoDataModel>();
+            foreach (var item in videos)
+            {
+                videosOp.Add(item.AsVideoDataModel());
+            }
+			return videosOp;
+		}
+        else
+        {
+			Random rand = new Random();
+			int skipper = rand.Next(0, cacheVideos.Count());
+			return cacheVideos.OrderBy(p => Guid.NewGuid()).Skip(skipper).Take(take);
         }
-        return videosOp;
     }
 
-    public async Task<IEnumerable<VideoDataModel>> GetRandomLimitedByBrand(string brandName, int take)
+    public async Task<IEnumerable<VideoDataModel>> GetRandomLimitedByBrand(string brandName, int take, IEnumerable<VideoDataModel> cacheVideos)
     {
-        var videos = await FindRandomAsyncNoSelect(filter: p=> p.Brand.Name.ToLower() == brandName.ToLower(), take: take, include: _videoIncludes).ConfigureAwait(false);
-        var videosOp = new List<VideoDataModel>();
-        foreach (var item in videos)
+        if (cacheVideos.Count() == 0)
         {
-            videosOp.Add(item.AsVideoDataModel());
+            var videos = await FindRandomAsyncNoSelect(filter: p => p.Brand.Name.ToLower() == brandName.ToLower(), take: take, include: _videoIncludes).ConfigureAwait(false);
+            var videosOp = new List<VideoDataModel>();
+            foreach (var item in videos)
+            {
+                videosOp.Add(item.AsVideoDataModel());
+            }
+            return videosOp;
         }
-        return videosOp;
+        else
+		{
+			Random rand = new Random();
+			int skipper = rand.Next(0, cacheVideos.Count());
+			return cacheVideos.Where(p=>p.Brand.Name.ToLower() == brandName.ToLower()).OrderBy(p => Guid.NewGuid()).Skip(skipper).Take(take);
+		}
     }
 
-    public async Task<VideoDataModel> GetByNameDetailed(string linkName)
+    public async Task<VideoDataModel> GetByNameDetailed(string linkName, IEnumerable<VideoDataModel> cacheVideos)
     {
         try
         {
-            var video = await FindSingleAsync(t => t.VideoInfo.VideoUrl.LinkId.ToLower() == linkName.ToLower(), _videoIncludes).ConfigureAwait(false);
-            if(video != null)
+            if (cacheVideos.Count() == 0)
             {
-                return video.AsVideoDataModel();
+                var video = await FindSingleAsync(t => t.VideoInfo.VideoUrl.LinkId.ToLower() == linkName.ToLower(), _videoIncludes).ConfigureAwait(false);
+                if (video != null)
+                {
+                    return video.AsVideoDataModel();
+                }
+            }
+            else
+            {
+                return cacheVideos.Where(p => p.VideoInfo.VideoUrl.ToLower() == linkName.ToLower())?.FirstOrDefault();
             }
             throw new Exception("No video found");
         }
@@ -139,15 +214,22 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
         }
     }
 
-    public async Task<IEnumerable<VideoDataModel>> SearchVideos(string name)
-    {
-        var videos = await FindAsyncNoSelect(filter: v => v.Name.ToLower().Contains(name.ToLower()), take:500, orderBy: p=>p.OrderBy(p=>p.Name), include: _videoIncludes).ConfigureAwait(false);
-        var videosOp = new List<VideoDataModel>();
-        foreach (var item in videos.Item1)
+    public async Task<IEnumerable<VideoDataModel>> SearchVideos(string name, IEnumerable<VideoDataModel> cacheVideos)
+	{
+        if (cacheVideos.Count() == 0)
         {
-            videosOp.Add(item.AsVideoDataModel());
+            var videos = await FindAsyncNoSelect(filter: v => v.Name.ToLower().Contains(name.ToLower()), take: 500, orderBy: p => p.OrderBy(p => p.Name), include: _videoIncludes).ConfigureAwait(false);
+            var videosOp = new List<VideoDataModel>();
+            foreach (var item in videos.Item1)
+            {
+                videosOp.Add(item.AsVideoDataModel());
+            }
+            return videosOp;
         }
-        return videosOp;
+        else
+        {
+            return cacheVideos.Where(p=>p.Name.ToLower().Contains(name.ToLower())).Take(500).OrderBy(p=>p.Name);
+        }
     }
 
     public async Task AddVideo(AddVideoDataModel item)
