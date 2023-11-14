@@ -183,9 +183,17 @@ public class VideoController : BaseController
         }
     }
 
-    public async Task<(VideoDataModel video, List<VideoDataModel> videosRandom, List<VideoDataModel> videosSameBrand, List<VideoDataModel> videosSameSeries)> GetVideoInfo(string id)
+    public async Task<(VideoDataModel video, List<VideoDataModel> videosRandom, List<VideoDataModel> videosSameBrand, List<VideoDataModel> videosSameSeries)> GetVideoInfo(string id = null)
     {
-        var video = await ExecuteServiceRequest<VideoDataModel>(HttpMethod.Get, $"Videos/detailed/" + id);
+        var video = new VideoDataModel();
+        if (id != null)
+        {
+            video = await ExecuteServiceRequest<VideoDataModel>(HttpMethod.Get, $"Videos/detailed/" + id);
+        }
+        else
+        {
+            video = await ExecuteServiceRequest<VideoDataModel>(HttpMethod.Get, $"Videos/VideoOfTheDay/");
+        }
         video.VideoInfo.VideoUrl = $"https://r2.1hanime.com/{video.VideoInfo.VideoUrl}.mp4";
         //if next video is present add it
         //featured, recently addded, random, same brand
@@ -198,7 +206,7 @@ public class VideoController : BaseController
         string pattern = @"\d+$";
         string replacement = "";
         Regex rgx = new Regex(pattern);
-        string trimmedName = rgx.Replace(id.Trim(), replacement);
+        string trimmedName = rgx.Replace(video.Name, replacement);
         trimmedName = trimmedName.Replace("-", " ");
 
         var videosSameSeries = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/SearchByName/" + trimmedName);
@@ -221,6 +229,37 @@ public class VideoController : BaseController
             ViewBag.VideosRecentlyAdded = cache.latestVideos.Take(19).ToList();
             ViewBag.Id = id;
             var video = await GetVideoInfo(id);
+
+            ViewBag.VideosRandom = video.videosRandom;
+            ViewBag.VideosSameBrand = video.videosSameBrand;
+            ViewBag.VideosSameSeries = video.videosSameSeries;
+            return PartialView("Video", video.video);
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message.Contains("lol"))
+            {
+                //retry policy etc
+                return BadRequest("Error occured" + ex.Message);
+            }
+            return BadRequest("Error occured" + ex.Message);
+        }
+    }
+
+    [OutputCache(Duration = 86400, PolicyName = "VideosPolicy")]
+    public async Task<IActionResult> VideoOfTheDay()
+    {
+        try
+        {
+            if (cache.categories == null)
+            {
+                cache = await CacheData();
+            }
+            ViewBag.VideosTrending = cache.trendingVideos;
+            ViewBag.VideosFeatured = cache.trendingVideos.Take(19).ToList();
+            ViewBag.VideosRecentlyAdded = cache.latestVideos.Take(19).ToList();
+            var video = await GetVideoInfo();
+            ViewBag.Id = video.video.VideoInfo.VideoUrl;
 
             ViewBag.VideosRandom = video.videosRandom;
             ViewBag.VideosSameBrand = video.videosSameBrand;

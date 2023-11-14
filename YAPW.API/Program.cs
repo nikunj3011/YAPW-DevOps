@@ -176,7 +176,7 @@ app.UseSwaggerUI();
 //app.UseKestrel(options => { options.Listen(IPAddress.Any, 1234); });
 
 app.UseHttpsRedirection();
-app.UseOutputCache();
+//app.UseOutputCache();
 app.UseAuthorization();
 app.UseAuthentication();
 

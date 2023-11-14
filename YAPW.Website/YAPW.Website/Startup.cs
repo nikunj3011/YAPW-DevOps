@@ -123,7 +123,7 @@ namespace Ditech.Portal.NET
             app.UseStaticFiles();
             app.UseRouting();
             app.UseResponseCaching();
-            //app.UseOutputCache();
+            app.UseOutputCache();
             //app.UseAuthorization();
             app.UseAuthentication();
             //app.UseMiddleware<SerilogRequestLogger>();
