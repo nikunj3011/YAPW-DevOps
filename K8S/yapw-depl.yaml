@@ -24,17 +24,25 @@ spec:
       - name: backend-yapw
         image: nikunj3011/yapwapi
         imagePullPolicy: Always
-        readinessProbe:
+        livenessProbe:
           httpGet:
-            path: Videos/take/1
+            path: /Video/take/1
+            port: 8080
+          timeoutSeconds: 5
+          initialDelaySeconds: 60
+          periodSeconds: 1800
+        readinessProbe:
+          initialDelaySeconds: 10
+          httpGet:
+            path: /Videos/take/1
             port: 80
         resources:
           limits:
             # cpu: "0.3"
-            memory: 400Mi
+            memory: 300Mi
           requests:
             # cpu: "0.3"
-            memory: 400Mi
+            memory: 300Mi
         ports:
         - containerPort: 80
           
