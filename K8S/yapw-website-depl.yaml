@@ -24,14 +24,14 @@ spec:
         image: nikunj3011/yapwwebsite
         imagePullPolicy: Always
         httpGet:
-            path: /
+            path: /Video/Index
             port: 80
         resources:
           limits:
-            cpu: "0.50"
+            cpu: "0.40"
             memory: 300Mi
           requests:
-            cpu: "0.50"
+            cpu: "0.40"
             memory: 300Mi
         ports:
         - containerPort: 80
