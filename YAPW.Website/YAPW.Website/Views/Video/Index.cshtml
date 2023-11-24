@@ -3,6 +3,7 @@
 @{
     Layout = "_Layout";
     var videosRandom = ViewBag.VideosRandom as List<VideoDataModel>;
+    var videoOfTheDay = ViewBag.VideoOfTheDay as VideoDataModel;
     var videosTrending = ViewBag.VideosTrending as List<VideoDataModel>;
     //var a = DateTime.Now.Year.ToString("MM YYYY");
     //var releaseDate = M;
@@ -207,67 +208,85 @@
                     <i class="fas fa-2x fa-sync-alt fa-spin"></i>
                 </div>
                 <div>
+                    @*Editors favourite video of the day*@
+                    <h2 style="text-align:center">Editor's choice of the day</h2>
+                    <div class="card" style="width:auto; height:auto;background-color:#0C0B0D;border-radius:10px; padding:10px;color:white">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-12 backgroundImage" style="background-image:linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.5) ),url('@videoOfTheDay.VideoInfo.Poster');background-repeat:no-repeat;">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-12" style="padding-top:3%;text-align:center;">
+                                        <h3 style="font-weight:800; opacity:0.8" id="mainH3BrandName"><i>@videoOfTheDay.Brand.Name 's</i></h3>
+
+                                        <p id="mainPBrandName" style="color:white; ">
+                                            @*font-family: 'Londrina Outline', cursive;/*max-height:120px; overflow-x:scroll;overflow-y:hidden*/*@
+                                            <b>@videoOfTheDay.Name</b>
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-10 col-md-10 col-sm-12 col-12">
+                                        <div id="descriptionMain" style="opacity:0.9;max-height:150px; overflow:scroll;overflow-x: hidden;">
+                                            @videoOfTheDay.Description
+                                        </div>
+
+                                        <div id="mainReleaseMain"><i class="fa-regular fa-calendar"></i> @videoOfTheDay.VideoInfo.ReleaseDate.Month @videoOfTheDay.VideoInfo.ReleaseDate.Year</div>
+                                        <div id="mainVideoLengthMain"><i class="fa-regular fa-clock"></i> @videoOfTheDay.VideoInfo.VideoLength</div>
+                                        <div id="mainVideoViewsMain"><i class="fa-regular fa-eye"></i> @videoOfTheDay.VideoInfo.Views</div>
+                                        <div>
+                                            <b>
+                                                <i class="fa-solid fa-tags"></i>
+                                                @foreach (var category in videoOfTheDay.Categories)
+                                                {
+                                                    <a id="mainVideoViewsCategory" style="color:#BD421B;" href="Video/Search?category=@category.Name" class="">@category.Name</a>
+                                                }
+                                            </b>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-12 col-12">
+                                        <div style="text-align:right; color:#EA2E2E;border-width:50px;">
+                                            @*<i class="fa-solid fa-star"></i>*@
+                                            <figure class="snip1466">
+                                                <img src=@videoOfTheDay.VideoInfo.Cover alt="sample52" height="394" width="268" />
+                                                <a href="Video/Name?id=@videoOfTheDay.VideoInfo.VideoUrl" class="nav-link " style="padding-top:100px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7) )">
+                                                    <i class="fa-solid fa-circle-play"></i>
+                                                </a>
+                                            </figure>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-2 col-md-2 col-sm-12 col-12">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 style="text-align:center">Latest</h2>
                     @*Latest Releases*@
                     @if (Model?.Count > 0)
                     {
                         <div id="Main-carousel" class="owl-carousel owl-theme">
                             @foreach (var item in Model)
                             {
-                                <div class="card" style="width:auto; height:auto;background-color:#0C0B0D;border-radius:10px; padding:10px;color:white">
-                                    <div class="row" >
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-12 backgroundImage" style="background-image:linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.5) ),url('@item.VideoInfo.Poster');background-repeat:no-repeat;">
-
-                                            <div class="row">
-                                                <div class="col-lg-12 col-md-12 col-sm-12 col-12" style="padding-top:3%;text-align:center;">
-                                                    <h3 style="font-weight:800; opacity:0.8" id="mainH3BrandName"><i>@item.Brand.Name 's</i></h3>
-
-                                                    <p id="mainPBrandName" style="color:white; ">
-                                                        @*font-family: 'Londrina Outline', cursive;/*max-height:120px; overflow-x:scroll;overflow-y:hidden*/*@
-                                                        <b>@item.Name</b>
-                                                    </p>
-                                                </div>
-                                                <div class="col-lg-10 col-md-10 col-sm-12 col-12">
-                                                    <div id="descriptionMain" style="opacity:0.9;max-height:150px; overflow:scroll;overflow-x: hidden;">
-                                                        @item.Description
-                                                    </div>
-
-                                                    <div id="mainReleaseMain"><i class="fa-regular fa-calendar"></i> @item.VideoInfo.ReleaseDate.Month @item.VideoInfo.ReleaseDate.Year</div>
-                                                    <div id="mainVideoLengthMain"><i class="fa-regular fa-clock"></i> @item.VideoInfo.VideoLength</div>
-                                                    <div id="mainVideoViewsMain"><i class="fa-regular fa-eye"></i> @item.VideoInfo.Views</div>
-                                                    <div>
-                                                        <b>
-                                                            <i class="fa-solid fa-tags"></i>
-                                                            @foreach (var category in item.Categories)
-                                                            {
-                                                                <a id="mainVideoViewsCategory" style="color:#BD421B;" href="Video/Search?category=@category.Name" class="">@category.Name</a>
-                                                            }
-                                                        </b>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-2 col-md-2 col-sm-12 col-12">
-                                                    <div style="text-align:right; color:#EA2E2E;border-width:50px;">
-                                                        @*<i class="fa-solid fa-star"></i>*@
-                                                        <figure class="snip1466">
-                                                            <img src=@item.VideoInfo.Cover alt="sample52" height="394" width="268" />
-                                                            <a href="Video/Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:100px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7) )">
-                                                                <i class="fa-solid fa-circle-play"></i>
-                                                            </a>
-                                                        </figure>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-lg-2 col-md-2 col-sm-12 col-12">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <figure class="snip1466">
+                                    <img src=@item.VideoInfo.Cover alt="sample52" />
+                                    <a href="Video/Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <p style="font-size:large"> <span>@item.Name</span></p>
+                                </figure>
                             }
                         </div>
                     }
                 </div>
                 <div>
                     @*ad*@
+                    <div class=" row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                            <ins class="eas6a97888e" data-zoneid="5108200"></ins>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                            <ins class="eas6a97888e" data-zoneid="5108200"></ins>
+                        </div>
+                    </div>
                 </div>
                 <div class="row ">
                     @*Trending*@
@@ -330,6 +349,14 @@
                 </div>
                 <div>
                     @*ad*@
+                    <div class=" row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                            <ins class="eas6a97888e" data-zoneid="5108200"></ins>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                            <ins class="eas6a97888e" data-zoneid="5108200"></ins>
+                        </div>
+                    </div>
                 </div>
                 <div class="row ">
                     @*Random*@
@@ -394,6 +421,18 @@
                     </button>*@
                     }
                 </div>
+
+                <div>
+                    @*ad*@
+                    <div class=" row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                            <ins class="eas6a97888e" data-zoneid="5108200"></ins>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                            <ins class="eas6a97888e" data-zoneid="5108200"></ins>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -455,13 +494,34 @@
         });
         $(function () {
             // Owl Carousel
+            // var owlMain = $("#Main-carousel");
+            // owlMain.owlCarousel({
+            //     items: 1,
+            //     margin: 10,
+            //     loop: true,
+            //     autoplay: false,
+            //     nav: true
+            // });
+
             var owlMain = $("#Main-carousel");
             owlMain.owlCarousel({
-                items: 1,
-                margin: 10,
+                items: 6,
+                margin: 15,
                 loop: true,
-                autoplay: false,
-                nav: true
+                nav: true,
+                responsive: {
+                    0: {
+                        items: 2
+                    },
+                    600: {
+                        items: 3,
+                        merge: true,
+
+                    },
+                    1000: {
+                        items: 6
+                    }
+                }
             });
 
             var owl = $("#sub-carousel1");

@@ -168,6 +168,8 @@ public class VideoController : BaseController
             {
                 cache = await CacheData();
             }
+            ViewBag.VideoOfTheDay = await ExecuteServiceRequest<VideoDataModel>(HttpMethod.Get, $"Videos/VideoOfTheDay/");
+
             var videos = cache.latestVideos;
             ViewBag.VideosTrending = cache.trendingVideos;
             ViewBag.VideosRandom = await ExecuteServiceRequest<List<VideoDataModel>>(HttpMethod.Get, $"Videos/random/20");
