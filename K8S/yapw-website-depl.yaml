@@ -28,10 +28,10 @@ spec:
             port: 80
         resources:
           limits:
-            cpu: "0.25"
+            cpu: "0.50"
             memory: 300Mi
           requests:
-            cpu: "0.25"
+            cpu: "0.50"
             memory: 300Mi
         ports:
         - containerPort: 80
