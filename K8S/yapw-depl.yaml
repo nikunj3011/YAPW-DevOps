@@ -11,7 +11,7 @@ spec:
       app: backend-yapw
   strategy:
     rollingUpdate:
-      maxSurge: 50%
+      maxSurge: 100%
       maxUnavailable: 50%
     type: RollingUpdate
 
