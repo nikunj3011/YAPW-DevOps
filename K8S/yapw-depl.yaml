@@ -26,7 +26,7 @@ spec:
         imagePullPolicy: Always
         readinessProbe:
           httpGet:
-            path: /Videos/take/1
+            path: Videos/take/1
             port: 80
         resources:
           limits:

@@ -23,8 +23,9 @@ spec:
       - name: frontend-yapw
         image: nikunj3011/yapwwebsite
         imagePullPolicy: Always
-        httpGet:
-            path: /Video/Index
+        readinessProbe:
+          httpGet:
+            path: Video/Index
             port: 80
         resources:
           limits:
