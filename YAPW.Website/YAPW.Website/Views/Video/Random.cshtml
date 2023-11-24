@@ -3,6 +3,8 @@
 @{
     Layout = "_Layout";
     var count = 0;
+    Random rnd = new Random();
+    int random = rnd.Next(1, 10);
 }
 <style>
 
@@ -535,7 +537,7 @@
         <div class="card" style="width:auto; height:auto;background-color:#0C0B0D;border-radius:10px; padding:10px">
 
             <h2 style="text-align:center">
-                <a asp-controller="Video" asp-action="Random" class="" id="randomButton">
+                <a asp-controller="Video" asp-action="Random" asp-route-id="@random" class="" id="randomButton">
                     @* <i class="fa-solid fa-building"></i> *@
                     Random
                 </a>
