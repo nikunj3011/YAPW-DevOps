@@ -27,7 +27,7 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
 
     public async Task<IEnumerable<VideoDataModel>> GetLimited(int take, IEnumerable<VideoDataModel>? cacheVideos = null)
     {
-        if (cacheVideos == null)
+        if (cacheVideos == null || cacheVideos.Count() == 0)
         {
             var videos = await FindAsyncNoSelect(take: take, include: _videoIncludes, orderBy: p => p.OrderByDescending(p => p.VideoInfo.CreatedDate)).ConfigureAwait(false);
             var videosOp = new List<VideoDataModel>();
