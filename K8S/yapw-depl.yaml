@@ -5,14 +5,14 @@ metadata:
   labels:
     team: development
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: backend-yapw
   strategy:
     rollingUpdate:
       maxSurge: 100%
-      maxUnavailable: 50%
+      maxUnavailable: 100%
     type: RollingUpdate
 
   template:
