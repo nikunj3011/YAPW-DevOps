@@ -29,10 +29,10 @@ spec:
             path: /Video/take/1
             port: 8080
           timeoutSeconds: 5
-          initialDelaySeconds: 60
+          initialDelaySeconds: 10
           periodSeconds: 1800
         readinessProbe:
-          initialDelaySeconds: 10
+          initialDelaySeconds: 30
           httpGet:
             path: /Videos/take/1
             port: 80
