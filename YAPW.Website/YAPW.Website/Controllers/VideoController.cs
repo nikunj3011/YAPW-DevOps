@@ -436,7 +436,7 @@ public class VideoController : BaseController
     //[HttpGet]
     //[Route("Search")]
     [OutputCache(Duration = 7200)]
-    public async Task<IActionResult> Search(string name, string brand = "", string category = "", Order order = Order.Descending)
+    public async Task<IActionResult> Search(string name, string brand = "", string category = "", Order order = Order.Newest)
     {
         try
         {

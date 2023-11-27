@@ -70,13 +70,13 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
         var videosOp = new List<VideoDataModel>();
         if (cacheVideos == null)
         {
-            if (videoGetModel.Order == Order.Ascending)
+            if (videoGetModel.Order == Order.Oldest)
             {
                 videos = await FindAsyncNoSelect(take: (int)pageResult, skip: pageCountAndSkip.skip, filter: p => p.Name.ToLower().Contains(videoGetModel.Search)
                                                                                                      && p.BrandId.ToString().Contains(videoGetModel.BrandId == null ? "" : videoGetModel.BrandId.ToString())
                                                                                                      && p.VideoCategories.Any(l => l.CategoryId.ToString().Contains(videoGetModel.CategoryId == null ? "" : videoGetModel.CategoryId.ToString())), orderBy: p => p.OrderBy(p => p.VideoInfo.ReleaseDate), include: _videoIncludes).ConfigureAwait(false);
             }
-            else if (videoGetModel.Order == Order.Descending)
+            else if (videoGetModel.Order == Order.Newest)
             {
                 videos = await FindAsyncNoSelect(take: (int)pageResult, skip: pageCountAndSkip.skip, filter: p => p.Name.ToLower().Contains(videoGetModel.Search)
                                                                                                      && p.BrandId.ToString().Contains(videoGetModel.BrandId == null ? "" : videoGetModel.BrandId.ToString())
@@ -96,13 +96,13 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
         }
         else
         {
-            if (videoGetModel.Order == Order.Ascending)
+            if (videoGetModel.Order == Order.Oldest)
             {
                 videosOp = cacheVideos.Skip(pageCountAndSkip.skip).Take((int)pageResult).Where(p => p.Name.ToLower().Contains(videoGetModel.Search)
                                                                                 && p.BrandId.ToString().Contains(videoGetModel.BrandId == null ? "" : videoGetModel.BrandId.ToString())
                                                                                 && p.Categories.Any(l => l.Id.ToString().Contains(videoGetModel.CategoryId == null ? "" : videoGetModel.CategoryId.ToString()))).OrderBy(p => p.VideoInfo.ReleaseDate).ToList();
             }
-            else if (videoGetModel.Order == Order.Descending)
+            else if (videoGetModel.Order == Order.Newest)
             {
                 videosOp = cacheVideos.Skip(pageCountAndSkip.skip).Take((int)pageResult).Where(p => p.Name.ToLower().Contains(videoGetModel.Search)
                                                                                 && p.BrandId.ToString().Contains(videoGetModel.BrandId == null ? "" : videoGetModel.BrandId.ToString())
@@ -228,7 +228,7 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
     public async Task<VideoDataModel> VideoOfTheDay(IEnumerable<VideoDataModel>? cacheVideos = null)
     {
         var allowedBrands = new[] { "Antechinus", "Bunnywalker", "Collaboration Works", "Edge", "Lune Pictures", "MS Pictures", "Pink Pineapple", "T-Rex", "PoRO", "nur" };
-        if (cacheVideos == null)
+        if (cacheVideos == null || cacheVideos?.Count() == 0)
         {
             var videos = await FindRandomAsyncNoSelect(filter: v => allowedBrands.Contains(v.Brand.Name) && v.VideoInfo.ReleaseDate > DateTime.Parse("2012-01-01"),
                             take: 1, orderBy: p => p.OrderBy(p => p.Name), include: _videoIncludes).ConfigureAwait(false);
@@ -242,7 +242,7 @@ public class VideoRepository<TEntity, TContext> : NamedEntityRepository<TEntity,
         else
         {
             Random rand = new Random();
-            int skipper = rand.Next(0, cacheVideos.Count());
+            int skipper = rand.Next(0, cacheVideos.Where(v => allowedBrands.Contains(v.Brand.Name) && v.VideoInfo.ReleaseDate > DateTime.Parse("2012-01-01")).Count());
             return cacheVideos.Where(p => allowedBrands.Contains(p.Brand.Name) && p.VideoInfo.ReleaseDate > DateTime.Parse("2012-01-01"))
                 .OrderBy(p => Guid.NewGuid()).Skip(skipper).Take(1).FirstOrDefault();
         }

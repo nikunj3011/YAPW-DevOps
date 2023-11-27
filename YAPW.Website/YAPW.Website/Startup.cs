@@ -45,16 +45,17 @@ namespace Ditech.Portal.NET
             })
             .AddCookie();
 
-			//var appSettings = Configuration.GetSection("GlobalConfig").Get<AppSetting>();
-			//var currentEnvironmentSettings = appSettings.Environments.SingleOrDefault(e => string.Equals(e.Name, System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), StringComparison.OrdinalIgnoreCase));
-			//var connectionString = currentEnvironmentSettings?.SettingsData?.ConnectionString;
+            var appSettings = Configuration.GetSection("GlobalConfig").Get<AppSetting>();
+            var currentEnvironmentSettings = appSettings.Environments.SingleOrDefault(e => string.Equals(e.Name, System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), StringComparison.OrdinalIgnoreCase));
+            var connectionString = currentEnvironmentSettings?.SettingsData?.ConnectionString;
 
-			services.AddHttpClient("api", c =>
+            services.AddHttpClient("api", c =>
             {
-                c.BaseAddress = new Uri("http://52.249.212.96/");
-				//c.BaseAddress = new Uri("https://localhost:5001/");
+                //c.BaseAddress = new Uri("http://52.249.212.96/");
+                //c.BaseAddress = new Uri("https://localhost:5001/");
+                c.BaseAddress = new Uri(connectionString);
 
-				c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
+                c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
             }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
             {
                 ClientCertificateOptions = ClientCertificateOption.Manual,
