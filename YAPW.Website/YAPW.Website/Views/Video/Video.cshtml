@@ -13,6 +13,34 @@
 	<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Questrial">
     <style>
+		.banner {
+			top: 0;
+			left: 0;
+			width: 90%;
+			height: 90%;
+			position: absolute;
+		}
+
+			.banner::before {
+				content: "";
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background: url(@Model.VideoInfo.Poster) no-repeat center top;
+				background-size: cover;
+				overflow: hidden;
+				-webkit-filter: blur(15px);
+				-moz-filter: blur(15px);
+				-o-filter: blur(15px);
+				-ms-filter: blur(15px);
+				filter: blur(15px);
+				-webkit-transform: scale(1.1, 1.1);
+				-moz-transform: scale(1.1, 1.1);
+				-o-transform: scale(1.1, 1.1);
+				-ms-transform: scale(1.1, 1.1);
+				transform: scale(1.1, 1.1);
+			}
+
 		figure.snip1466 {
 			position: relative;
 			overflow: hidden;
@@ -1920,11 +1948,10 @@
 				<div class="col-lg-7 col-md-7 col-sm-12 col-12 setMinHeight" id="videoDiv">
 					@*/*background-size: 110% 135%;*/*@
 					@* <video src="@Model.VideoInfo.VideoUrl" class="videoCustom" poster="@Model.VideoInfo.Cover" id="blurred" data-setup='{"fluid": true}'></video> *@
-					<div style="padding:1%;">
+					<div style="padding:1%;" class="banner">
 						@* <video id="my-video" class="video-js" controls preload="auto" poster="@Model.VideoInfo.Poster" data-setup='{"fluid": true}' loop>
 							<source src="@Model.VideoInfo.VideoUrl" type='video/mp4'>
 						</video> *@
-
 
 						<video id="vid1" class="video-js vjs-fluid vjs-default-skin vjs-big-play-centered" controls poster="@Model.VideoInfo.Poster" playsinline
 							   data-setup='{
@@ -1949,7 +1976,12 @@
 				<div class="col-lg-3 col-md-3 col-sm-12 col-12 setMinHeight" style="padding:1%;">
 					<div class="row">
 						<div class="col-lg-12 col-md-12 col-sm-12 col-12" style="text-align:center;">
-							<h3 style="font-weight:800; opacity:0.8"><i>@Model.Brand.Name 's</i></h3>
+							<h3 style="font-weight:800; opacity:0.8"><i>
+									@* <a href="Search?brand=@Model.Brand.Name" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i></a>@Model.Brand.Name 's *@
+									<a style="color:#FFFFFF;" href="Search?brand=@Model.Brand.Name" class=" btnTag btn-1 hover-filled-slide-right">@Model.Brand.Name 's</a>
+								</i>
+							</h3>
+
 
 							<p style="font-size:30px;color:white; ">
 								@*font-family: 'Londrina Outline', cursive;/*max-height:120px; overflow-x:scroll;overflow-y:hidden*/*@
@@ -1957,7 +1989,20 @@
 							</p>
 						</div>
 						<div class="col-lg-12 col-md-12 col-sm-12 col-12">
-							<div style="text-align:right; font-size:30px; color:#EA2E2E"><i class="fa-solid fa-star"></i> 7.8 </div>
+							<div class="row">
+								<div class="col-lg-3 col-md-3 col-sm-3 col-3">
+									<a class="nav-link " id="upVote" style="text-align:left; font-size:30px; padding-top:30px; color:#EA2E2E"><i class="fa-regular fa-thumbs-up"></i></a>
+									@* <div style="text-align:left; font-size:30px; color:#EA2E2E"><i class="fa-regular fa-thumbs-up" id="upVote"></i> </div> *@
+								</div>
+								<div class="col-lg-3 col-md-3 col-sm-3 col-3">
+									<a class="nav-link " id="downVote" style="text-align:right; font-size:30px; padding-top:30px; color:#EA2E2E"><i class="fa-regular fa-thumbs-down"></i></a>
+									@* <a class="nav-link " style="text-align:left; font-size:30px; padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )"><i class="fa-regular fa-thumbs-up" id="upVote"></i></a> *@
+									@* <div style="text-align:right; font-size:30px; color:#EA2E2E"><i class="fa-regular fa-thumbs-down" id="downVote"></i></div> *@
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-6">
+									<div style="text-align:right; font-size:30px; color:#EA2E2E"><i class="fa-solid fa-star"></i> 7.8 </div>
+								</div>
+							</div>
 							<div><i class="fa-regular fa-calendar"></i> @Model.VideoInfo.ReleaseDate.Month @Model.VideoInfo.ReleaseDate.Year</div>
 							<div><i class="fa-regular fa-clock"></i> @Model.VideoInfo.VideoLength</div>
 							<div><i class="fa-regular fa-eye"></i> @Model.VideoInfo.Views</div>
@@ -1973,6 +2018,9 @@
 							<div id="description" style="opacity:0.9;max-height:250px; overflow:scroll;overflow-x: hidden;">
 								@Model.Description
 							</div>
+							<div><i class="fa-regular fa-thumbs-up" id="upVote"></i></div>
+							<div><i class="fa-regular fa-thumbs-down" id="downVote"></i></div>
+
 						</div>
 					</div>
 				</div>
@@ -2147,6 +2195,31 @@
 			}
 		});
 
+		$("#upVote").on("click", function () {
+			$.ajax({
+				method: "GET",
+				url: "UpdateVideoLikes?id={@ViewBag.Id}",
+				// data: { param1: value1, param2: value2 },
+				cache: false,
+				success: function (result) {
+				}
+			});
+			$("#upVote").hide(400);
+			$("#downVote").hide(400);
+		});
+
+		$("#downVote").on("click", function () {
+			$.ajax({
+				method: "GET",
+				url: "UpdateVideoDislikes?id={@ViewBag.Id}",
+				// data: { param1: value1, param2: value2 },
+				cache: false,
+				success: function (result) {
+				}
+			});
+			$("#upVote").hide(400);
+			$("#downVote").hide(400);
+		});
 		const tabs = document.querySelectorAll('[data-id]');
 		const contents = document.querySelectorAll('[data-content]');
 		let id = 0;

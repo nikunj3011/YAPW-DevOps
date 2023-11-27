@@ -152,12 +152,82 @@ namespace YAPW.Controllers.Internal
             return Ok(await _repository.VideoOfTheDay());
         }
 
-        /// <summary>
-        /// Post Type
-        /// </summary>
-        /// <param name="namedEntityDataModel"></param>
-        /// <returns></returns>
-        [HttpPut("updateViews")]
+		/// <summary>
+		/// Post Type
+		/// </summary>
+		/// <param name="namedEntityDataModel"></param>
+		/// <returns></returns>
+		[HttpPut("updateLikes")]
+		public async Task<ActionResult<MainDb.DbModels.Video>> PostLikes(Dictionary<string, int> videoViews, CancellationToken cancellationToken)
+		{
+			try
+			{
+				await _namedEntityServiceWorker.BeginTransaction();
+
+				foreach (var item in videoViews)
+				{
+					var videoId = item.Key.Replace("{", "");
+					videoId = videoId.Replace("}", "");
+					var dbVideoInfo = await _serviceWorker.VideoInfoRepository.FindSingleAsync(p => p.VideoUrl.LinkId.ToLower() == videoId.ToLower(), null);
+					Guard.Against.Null(dbVideoInfo);
+					dbVideoInfo.Likes = item.Value + dbVideoInfo.Likes;
+					_serviceWorker.VideoInfoRepository.Update(dbVideoInfo);
+				}
+				await _serviceWorker.SaveAsync();
+				await _namedEntityServiceWorker.CommitTransaction();
+
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				//catch exeption in logs or retry or send email to admin or metrics server, grafana etc
+				await _namedEntityServiceWorker.RollBackTransaction();
+
+				return BadRequest(ex.Message);
+			}
+		}
+
+		/// <summary>
+		/// Post Type
+		/// </summary>
+		/// <param name="namedEntityDataModel"></param>
+		/// <returns></returns>
+		[HttpPut("updateDislikes")]
+		public async Task<ActionResult<MainDb.DbModels.Video>> PostDislikes(Dictionary<string, int> videoViews, CancellationToken cancellationToken)
+		{
+			try
+			{
+				await _namedEntityServiceWorker.BeginTransaction();
+
+				foreach (var item in videoViews)
+				{
+					var videoId = item.Key.Replace("{", "");
+					videoId = videoId.Replace("}", "");
+					var dbVideoInfo = await _serviceWorker.VideoInfoRepository.FindSingleAsync(p => p.VideoUrl.LinkId.ToLower() == videoId.ToLower(), null);
+					Guard.Against.Null(dbVideoInfo);
+					dbVideoInfo.Dislikes = item.Value + dbVideoInfo.Dislikes;
+					_serviceWorker.VideoInfoRepository.Update(dbVideoInfo);
+				}
+				await _serviceWorker.SaveAsync();
+				await _namedEntityServiceWorker.CommitTransaction();
+
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				//catch exeption in logs or retry or send email to admin or metrics server, grafana etc
+				await _namedEntityServiceWorker.RollBackTransaction();
+
+				return BadRequest(ex.Message);
+			}
+		}
+
+		/// <summary>
+		/// Post Type
+		/// </summary>
+		/// <param name="namedEntityDataModel"></param>
+		/// <returns></returns>
+		[HttpPut("updateViews")]
         public async Task<ActionResult<MainDb.DbModels.Video>> Post(Dictionary<string, int> videoViews, CancellationToken cancellationToken)
         {
             try

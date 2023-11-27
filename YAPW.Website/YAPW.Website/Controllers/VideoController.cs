@@ -279,13 +279,115 @@ public class VideoController : BaseController
         }
     }
 
-    public async Task<IActionResult> UpdateVideoViews(string id)
+	public async Task<IActionResult> UpdateVideoLikes(string id)
+	{
+		//update likes, dislikes, views in api
+		//update when there is low user count
+		//use metrics servers to get data
+		//or get api metrics if low post to endpoint
+		var cacheKeyVideoLikesList = "videoLikesList";
+
+		if (!_memoryCache.TryGetValue(cacheKeyVideoLikesList, out Dictionary<string, int> cacheVideoLikesList))
+		{
+			cacheVideoLikesList = new Dictionary<string, int>();
+
+			//setting up cache options
+			var cacheExpiryOptions = new MemoryCacheEntryOptions
+			{
+				AbsoluteExpiration = DateTime.Now.AddMinutes(1),
+				Priority = CacheItemPriority.High,
+				SlidingExpiration = TimeSpan.FromMinutes(1)
+			}.RegisterPostEvictionCallback(async (key, value, reason, substate) =>
+			{
+				//before cache is removed update those values
+				try
+				{
+					//todo later add these calls directly through servicebroker and also do this for likes and dislikes
+					var updateViews = await ExecutePutServiceRequest<string, Dictionary<string, int>>($"Videos/updateLikes/", cacheVideoLikesList);
+					cacheVideoLikesList = new Dictionary<string, int>();
+				}
+				catch (Exception ex)
+				{
+					throw new Exception("lol " + ex.Message);
+				}
+			});
+			//setting cache entries
+
+			_memoryCache.Set(cacheKeyVideoLikesList, cacheVideoLikesList, cacheExpiryOptions);
+		}
+
+		if (!cacheVideoLikesList.ContainsKey(id))
+		{
+			cacheVideoLikesList.Add(id, 1);
+			videoLikesList.Add(id, 1);
+		}
+		else
+		{
+			var count = cacheVideoLikesList.GetValueOrDefault(id);
+			count++;
+			cacheVideoLikesList[id] = count;
+		}
+		return Ok();
+	}
+
+	public async Task<IActionResult> UpdateVideoDislikes(string id)
+	{
+		//update likes, dislikes, views in api
+		//update when there is low user count
+		//use metrics servers to get data
+		//or get api metrics if low post to endpoint
+		var cacheKeyVideoLikesList = "videoDislikesList";
+
+		if (!_memoryCache.TryGetValue(cacheKeyVideoLikesList, out Dictionary<string, int> cacheVideoLikesList))
+		{
+			cacheVideoLikesList = new Dictionary<string, int>();
+
+			//setting up cache options
+			var cacheExpiryOptions = new MemoryCacheEntryOptions
+			{
+				AbsoluteExpiration = DateTime.Now.AddMinutes(1),
+				Priority = CacheItemPriority.High,
+				SlidingExpiration = TimeSpan.FromMinutes(1)
+			}.RegisterPostEvictionCallback(async (key, value, reason, substate) =>
+			{
+				//before cache is removed update those values
+				try
+				{
+					//todo later add these calls directly through servicebroker and also do this for likes and dislikes
+					var updateViews = await ExecutePutServiceRequest<string, Dictionary<string, int>>($"Videos/updateDislikes/", cacheVideoLikesList);
+					cacheVideoLikesList = new Dictionary<string, int>();
+				}
+				catch (Exception ex)
+				{
+					throw new Exception("lol " + ex.Message);
+				}
+			});
+			//setting cache entries
+
+			_memoryCache.Set(cacheKeyVideoLikesList, cacheVideoLikesList, cacheExpiryOptions);
+		}
+
+		if (!cacheVideoLikesList.ContainsKey(id))
+		{
+			cacheVideoLikesList.Add(id, 1);
+			videoLikesList.Add(id, 1);
+		}
+		else
+		{
+			var count = cacheVideoLikesList.GetValueOrDefault(id);
+			count++;
+			cacheVideoLikesList[id] = count;
+		}
+		return Ok();
+	}
+
+	public async Task<IActionResult> UpdateVideoViews(string id)
     {
         //update likes, dislikes, views in api
         //update when there is low user count
         //use metrics servers to get data
         //or get api metrics if low post to endpoint
-        var cacheKeyVideoLikesList = "videoLikesList";
+        var cacheKeyVideoLikesList = "videoViewsList";
 
         if (!_memoryCache.TryGetValue(cacheKeyVideoLikesList, out Dictionary<string, int> cacheVideoLikesList))
         {
