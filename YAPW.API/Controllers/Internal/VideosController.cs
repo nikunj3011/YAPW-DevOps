@@ -73,37 +73,37 @@ namespace YAPW.Controllers.Internal
         public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> Get(int take)
         {
 			//return Ok(await _repository.GetLimited(take, await CacheData()));
-			return Ok(await _repository.GetLimited(take));
+			return Ok(await _repository.GetLimited(take, await CacheData()));
         }
 
         [HttpGet("random/{take}")]
         public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> GetRandom(int take)
         {
-            return Ok(await _repository.GetRandomLimited(take));
+            return Ok(await _repository.GetRandomLimited(take, await CacheData()));
         }
 
         [HttpGet("brand/{take}/{brandName}")]
         public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> GetRandomByBrand(string brandName, int take)
         {
-            return Ok(await _repository.GetRandomLimitedByBrand(brandName, take));
+            return Ok(await _repository.GetRandomLimitedByBrand(brandName, take, await CacheData()));
         }
 
         [HttpGet("newReleases/{take}")]
         public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> GetByReleaseDate(int take)
         {
-            return Ok(await _repository.GetLimitedByReleaseDate(take));
+            return Ok(await _repository.GetLimitedByReleaseDate(take, await CacheData()));
         }
 
         [HttpPost("search")]
         public async Task<ActionResult<IEnumerable<dynamic>>> SearchWithPagination(VideoGetModel videoGetModel)
         {
-            return Ok(await _repository.SearchWithPagination(videoGetModel));
+            return Ok(await _repository.SearchWithPagination(videoGetModel, await CacheData()));
         }
 
         [HttpGet("featured/byViews/{take}")]
         public async Task<ActionResult<IEnumerable<MainDb.DbModels.Video>>> GetByViews(int take)
         {
-            return Ok(await _repository.GetLimitedByViews(take));
+            return Ok(await _repository.GetLimitedByViews(take, await CacheData()));
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace YAPW.Controllers.Internal
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("Detailed/{linkName}")]
-        public async Task<VideoDataModel> GetByNameDetailed(string linkName) => await _repository.GetByNameDetailed(linkName);
+        public async Task<VideoDataModel> GetByNameDetailed(string linkName) => await _repository.GetByNameDetailed(linkName, await CacheData());
 
         /// <summary>
         /// Get Types by Name
@@ -138,7 +138,7 @@ namespace YAPW.Controllers.Internal
         [HttpGet("SearchByName/{name}")]
         public async Task<ActionResult<MainDb.DbModels.Video>> SearchByName(string name)
         {
-            return Ok(await _repository.SearchVideos(name));
+            return Ok(await _repository.SearchVideos(name, await CacheData()));
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace YAPW.Controllers.Internal
         [HttpGet("VideoOfTheDay")]
         public async Task<ActionResult<VideoDataModel>> VideoOfTheDay()
         {
-            return Ok(await _repository.VideoOfTheDay());
+            return Ok(await _repository.VideoOfTheDay(await CacheData()));
         }
 
 		/// <summary>
