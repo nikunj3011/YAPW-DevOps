@@ -149,7 +149,7 @@ namespace YAPW.Controllers.Internal
         [HttpGet("VideoOfTheDay")]
         public async Task<ActionResult<VideoDataModel>> VideoOfTheDay()
         {
-			return Ok(await _repository.VideoOfTheDay(await CacheData()));
+			return Ok(await _repository.VideoOfTheDay());
         }
 
 		/// <summary>
