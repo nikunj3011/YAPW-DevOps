@@ -7,9 +7,34 @@
     Guid? brand = ViewBag.Brand;
     Guid? category = ViewBag.Category;
 }
-<div class="row ">
+<style>
+    @@media screen and (max-width: 2160px) {
+        .Main {
+            padding: 5%;
+        }
+    }
+
+    @@media screen and (max-width: 1080px) {
+        .Main {
+            padding: 5%;
+        }
+    }
+
+    @@media screen and (max-width: 768px) {
+        .Main {
+            padding: 5%;
+        }
+    }
+    @@media screen and (max-width: 540px) {
+        .Main {
+            padding: 25% 5% 5% 5%;
+        }
+    }
+
+</style>
+<div class="row Main">
     <div class="col-lg-12 ">
-        <div class="card card-outline " style="padding:7%; background-color:black">
+        <div class="card card-outline " style="background-color:black">
             <h2 style="text-align:center">Search</h2>
             <div class="">
                 <form id="addReasonForm">

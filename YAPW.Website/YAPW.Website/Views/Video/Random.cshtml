@@ -7,7 +7,29 @@
     int random = rnd.Next(1, 10);
 }
 <style>
+    @@media screen and (max-width: 2160px) {
+        .Main {
+            padding: 5%;
+        }
+    }
 
+    @@media screen and (max-width: 1080px) {
+        .Main {
+            padding: 5%;
+        }
+    }
+
+    @@media screen and (max-width: 768px) {
+        .Main {
+            padding: 5%;
+        }
+    }
+
+    @@media screen and (max-width: 540px) {
+        .Main {
+            padding: 25% 5% 5% 5%;
+        }
+    }
     figure.snip1466 {
         position: relative;
         overflow: hidden;
@@ -532,7 +554,7 @@
         }
 
 </style>
-<div class="row " style="padding:7%;">
+<div class="row Main">
     <div class="col-lg-12 ">
         <div class="card" style="width:auto; height:auto;background-color:#0C0B0D;border-radius:10px; padding:10px">
 
@@ -547,7 +569,7 @@
                 {
                     @foreach (var item in Model)
                     {
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-12" style="text-align:center">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12" style="text-align:center">
                             <figure class="snip1466">
                                 <img src=@item.VideoInfo.Cover alt="sample52" />
                                 <a href="Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
@@ -557,6 +579,13 @@
                     }
                 }
             </div>
+
+            <h2 style="text-align:center">
+                <a asp-controller="Video" asp-action="Random" asp-route-id="@random" class="" id="randomButton">
+                    @* <i class="fa-solid fa-building"></i> *@
+                    Random
+                </a>
+            </h2>
         </div>
     </div>
 </div>

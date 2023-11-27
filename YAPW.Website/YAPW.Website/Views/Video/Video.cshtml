@@ -16,17 +16,17 @@
 		.banner {
 			top: 0;
 			left: 0;
-			width: 90%;
-			height: 90%;
+			width: 100%;
+			height: 100%;
 			position: absolute;
 		}
 
 			.banner::before {
 				content: "";
 				position: absolute;
-				width: 100%;
-				height: 100%;
-				background: url(@Model.VideoInfo.Poster) no-repeat center top;
+				width: 95%;
+				height: 80%;
+				background: url(@Model.VideoInfo.Poster) no-repeat right top;
 				background-size: cover;
 				overflow: hidden;
 				-webkit-filter: blur(15px);
@@ -502,7 +502,7 @@
 		}
 		@@media screen and (max-width: 540px) {
 			#videoInfoMain{
-				padding: 10% 5% 5% 5%;
+				padding: 25% 5% 5% 5%;
 			}
 			.wrapper2 .video-controls {
 				padding: 3px 10px 7px;
@@ -1940,7 +1940,7 @@
 		*/
 	</style>
 </head>
-<div class="row " id="videoInfoMain">
+<div class="row" id="videoInfoMain">
     <div class="col-lg-12 ">
 
         <div class="card" style="width:auto; height:auto;background-color:#0C0B0D;border-radius:10px; padding:10px">
@@ -2018,9 +2018,6 @@
 							<div id="description" style="opacity:0.9;max-height:250px; overflow:scroll;overflow-x: hidden;">
 								@Model.Description
 							</div>
-							<div><i class="fa-regular fa-thumbs-up" id="upVote"></i></div>
-							<div><i class="fa-regular fa-thumbs-down" id="downVote"></i></div>
-
 						</div>
 					</div>
 				</div>
