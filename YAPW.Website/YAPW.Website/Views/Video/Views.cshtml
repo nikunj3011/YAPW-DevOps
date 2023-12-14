@@ -1,0 +1,207 @@
+﻿@using YAPW.Models;
+@model List<ViewDataModel>
+@{
+    Layout = "_Layout";
+}
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Londrina+Outline&display=swap" rel="stylesheet">
+</head>
+<div class="row " id="videoMain" style="padding-top:50%">
+    <div class="col-lg-12 ">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12">
+                <div id="RevenueMonthReportOverlayContainer" class="RevenueMonthReportOverlayContainer">
+                    <div class="overlay">
+                        <br />
+                        <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+                    </div>
+                </div>
+                <div id="RevenueMonthReportChart">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    var RevenueMonthReportChartVar;
+    // async function GetDataRevenueMonthReportChart() {
+    //     let url = "MonthlyViews";
+    //     // console.log("error")
+    //     GenerateRevenueMonthReportChart();
+
+    //     $.get(url, function (data, textStatus, jqXHR) {
+    //         GenerateRevenueMonthReportChart(data);
+    //         console.log("working?")
+    //     }).fail(function (jqXHR, textStatus, error) {
+    //         console.log("error")
+    //     });
+    // }
+    $(document).ready(function () {
+        // $("#yearRegionMonthlyFilterItem").change(function () {
+        //     //console.log("in");
+        //     GetDataRevenueMonthReportChart();
+        // })
+    // @@Html.Raw(Json.Serialize(Model.Select(p=>p.Year)))
+        // GetDataRevenueMonthReportChart("@@Html.Raw(ViewBag.PreviousStopAddress)");
+        GetDataRevenueMonthReportChart();
+    });
+    async function GetDataRevenueMonthReportChart() {
+        console.log("a")
+        $("#RevenueMonthReportChart").html("");
+        var formatter = "$";
+        var options = {
+            series: [{
+                name: 'Views',
+                type: 'column',
+                data: @Html.Raw(Json.Serialize(Model.Select(p=>p.TotalViews)))
+            }
+            ],
+            chart: {
+                //type: 'line',
+                height: 350,
+                stacked: false,
+                horizontal: true,
+                events: {
+                    // click: async function (event, chartContext, config) {
+                    //     if (config.seriesIndex != -1 && config.dataPointIndex != -1) {
+                    //         let month = config.globals.categoryLabels[config.dataPointIndex];
+                    //         var monthNumber = new Date(Date.parse(month + " 1, 2023")).getMonth() + 1;
+                    //         //console.log(monthNumber);
+                    //         let year = $("#yearRegionMonthlyFilterItem").val();
+                    //         let url = "revenues/dashboard/RevenueMonthlyDetailsData?year=" + year + "&month=" + monthNumber;
+                    //         let targetModal = "#MonthlySalesRevenueDetailedChart";
+                    //         await TriggerModal("#mainBodyContent", targetModal, url, "1560px", "#343A40", "15px", '<span style="opacity:0.6;"><i class="fa-solid fa-clipboard"></i>&nbsp; Sales Details </span>', true, 9999, true, month + '-' + year);
+                    //         $("#MonthlySalesRevenueDetailedChart").iziModal('open');
+                    //     }
+                    // }
+                }
+            },
+            colors: ['#e07a5f', '#3d405b', '#2a9d8f', '#b5838d', '#808080', '#f2cc8f', '#457b9d',
+                '#4a4e69', '#c9ada7', '#83c5be', '#8d99ae'],
+            dataLabels: {
+                enabled: false,
+                offsetY: -15,
+                formatter: function (val, opts) {
+                    if (formatter == "$") {
+                        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(opts.w.config.series[opts.seriesIndex]);
+                    }
+                    return formatter + opts.w.config.series[opts.seriesIndex];
+                },
+                style: {
+                    fontSize: '10px',
+                    fontWeight: 'bold',
+                    colors: ['#333']
+                }
+            },
+            tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true,
+                reset: true | '<img src="/static/icons/reset.png" width="20">',
+                customIcons: []
+            },
+            export: {
+                csv: {
+                    filename: "RevenueMonthCSV",
+                    columnDelimiter: ',',
+                    headerCategory: 'Date',
+                    dateFormatter(timestamp) {
+                        return new Date(timestamp).toDateString()
+                    }
+                },
+                svg: {
+                    filename: "RevenueMonthSVG",
+                },
+                png: {
+                    filename: "RevenueMonthPNG",
+                }
+            },
+            stroke: {
+                width: [1, 1, 4]
+            },
+            xaxis: {
+                categories: @Html.Raw(Json.Serialize(Model.Select(p=>p.Name))),
+            },
+            yaxis: [
+                {
+                    seriesName: 'Net',
+                    axisTicks: {
+                        show: true,
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#000000'
+                    },
+                    title: {
+                        text: "Sales",
+                        style: {
+                            color: '#000000',
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                },
+                {
+                    seriesName: 'Net',
+                    show: false,
+                },
+                {
+                    seriesName: 'Net',
+                    show: false,
+                },
+                {
+                    seriesName: 'Cumulative net',
+                    opposite: true,
+                    axisTicks: {
+                        show: true,
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#b5838d'
+                    },
+                    title: {
+                        text: "Cumulative (net sales)",
+                        style: {
+                            color: '#b5838d',
+                        }
+                    }
+                },
+            ],
+            tooltip: {
+                enabled: true,
+                y: {
+                    formatter: function (val) {
+                        if (formatter == "$") {
+                            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+                        }
+                        return formatter + val;
+                    },
+                    title: {
+                        formatter: function (seriesName) {
+                            return ''
+                        }
+                    }
+                }
+            },
+            fill: {
+                type: 'solid',
+                opacity: [1, 0.85, 0.25, 1],
+            },
+            legend: {
+                horizontalAlign: 'left',
+                offsetX: 40
+            }
+        };
+        //console.log(chartSCIsLoaded);
+        $(".RevenueMonthReportOverlayContainer").hide();
+        var chart = new ApexCharts(document.querySelector("#RevenueMonthReportChart"), options);
+        chart.render();
+    }
+</script>

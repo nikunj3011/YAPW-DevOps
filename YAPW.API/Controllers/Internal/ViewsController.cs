@@ -61,6 +61,12 @@ namespace YAPW.Controllers.Internal
         [HttpGet("ByName/{name}")]
         public override async Task<ActionResult<MainDb.DbModels.View>> GetByName(string name) => await base.GetByName(name);
 
+        [HttpGet("monthly")]
+        public async Task<IEnumerable<MainDb.DbModels.View>> Monthly(string month, string year)
+        {
+            return await _serviceWorker.ViewRepository.FindAsync(p => p.Name.Contains(month + " " + year), orderBy: p => p.OrderBy(p => p.Name), null);
+        }
+
         /// <summary>
         /// Post View
         /// </summary>

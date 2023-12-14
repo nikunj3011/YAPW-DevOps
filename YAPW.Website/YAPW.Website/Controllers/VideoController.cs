@@ -279,7 +279,27 @@ public class VideoController : BaseController
         }
     }
 
-	public async Task<IActionResult> UpdateVideoLikes(string id)
+    [OutputCache(Duration = 86400, PolicyName = "VideosPolicy")]
+    public async Task<IActionResult> MonthlyViews()
+    {
+        try
+        {
+
+            var views = await ExecuteServiceRequest<List<ViewDataModel>>(HttpMethod.Get, $"Views/Monthly?month="+ DateTime.Now.ToString("MMMM")+"&year="+ DateTime.Now.Year.ToString());
+            return PartialView("Views", views);
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message.Contains("lol"))
+            {
+                //retry policy etc
+                return BadRequest("Error occured" + ex.Message);
+            }
+            return BadRequest("Error occured" + ex.Message);
+        }
+    }
+
+    public async Task<IActionResult> UpdateVideoLikes(string id)
 	{
 		//update likes, dislikes, views in api
 		//update when there is low user count
