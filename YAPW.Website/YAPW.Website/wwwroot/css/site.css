@@ -3,17 +3,42 @@ for details on configuring this project to bundle and minify static web assets. 
 
 body {
     /*font-family: Arial, Helvetica, sans-serif;*/
-    font-family: /*'Roboto',*/ 'Ysabeau SC', sans-serif;
+    font-family: /*'Roboto',*/,'Flow Circular', 'Ysabeau SC', sans-serif;
+}
+
+
+
+a {
+    color: #B3B3B3;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+}
+
+    a:after {
+        background: none repeat scroll 0 0 transparent;
+        bottom: 0;
+        content: "";
+        display: block;
+        height: 2px;
+        /* left: 50%; */
+        position: absolute;
+        background: #fff;
+        transition: width 0.3s ease 0s, left 0.3s ease 0s;
+        width: 0;
+        color: red;
+    }
+
+    a:hover:after {
+        width: 30%;
+        color: red
+    }
+.img {
+    border-radius: 10px;
 }
 
 .showIziModal, .drill {
     cursor: pointer;
-}
-a {
-    color: white;
-}
-a:hover {
-    color: #bb3e03;
 }
 .iziModalSubtitle {
     display: inline-block;
@@ -237,125 +262,6 @@ td.BadgeGroup i {
     cursor: pointer;
 }
 
-/*
-.baseBlock {
-    border-radius: 10px;
-    padding:5px;
-    overflow: hidden;
-    -moz-transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-    -o-transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-    color: #000;
-    border: 1px solid rgba(#fff, 0.1);
-    background: rgba(243,182,182,0.1);
-}
-
-    .baseBlock:hover {
-        -webkit-transform: translate(0, -8px);
-        -moz-transform: translate(0, -8px);
-        -ms-transform: translate(0, -8px);
-        -o-transform: translate(0, -8px);
-        transform: translate(0, -8px);
-        box-shadow: 0 40px 40px rgba(0, 0, 0, 0.2);
-        background: #FFFFFF;
-        transform: scale(1.02);
-    }
-
-    .cardHoverEffect:before {
-        content: "";
-        position: absolute;
-        z-index: -1;
-        top: -16px;
-        right: -16px;
-        background: #FAAD80;
-        height: 32px;
-        width: 32px;
-        border-radius: 32px;
-        transform: scale(1);
-        transform-origin: 50% 50%;
-        transition: transform 0.25s ease-out;
-    }
-
-    .cardHoverEffect:hover:before {
-        transform: scale(21);
-    }
-
-    .cardHoverEffect:hover div {
-        transition: all 0.3s ease-out;
-        color: rgb(255, 255, 255, 1);
-    }
-
-    //video index.html
-    @@media screen and (max-width: 2160px) {
-        #mainPBrandName {
-            font-size: 50px;
-        }
-
-        #videoMain {
-            padding: 5%
-        }
-    }
-
-    @@media screen and (max-width: 1080px) {
-        #mainPBrandName {
-            font-size: 50px;
-        }
-
-        #videoMain {
-            padding: 5%
-        }
-    }
-    @@media screen and (max-width: 768px) {
-        #mainPBrandName {
-            font-size: 25px;
-        }
-
-        #videoMain {
-            padding: 5%;
-        }
-    }
-
-    @@media screen and (max-width: 540px) {
-        #videoMain {
-            padding: 30% 5% 5% 5%;
-        }
-        #mainPBrandName {
-            font-size: 25px;
-        }
-    }
-.owl-theme img{width:100%;min-height:200px;}
-
-    .owl-carousel .owl-prev, .owl-carousel .owl-next {
-        position: absolute;
-        top: 30%;
-        transform: translateY(-50%);
-        background-color: #fff !important;
-        color: #000 !important;
-        font-size: 1.5em !important;
-        width: 40px;
-        height: 40px;
-        border-radius: 100% !important;
-        font-weight: bold;
-        padding: 10px !important;
-        text-align: center;
-        box-shadow: 0px 0px 5px 0px #fff;
-    }
-.owl-carousel .owl-prev:hover, .owl-carousel .owl-next:hover{box-shadow:0px 0px 0px 0px #000; background-color:red !important; color:#fff !important;}
-.owl-carousel .owl-prev{left:-30px;}
-.owl-carousel .owl-next{right:-30px;}
-.owl-theme .owl-dots .owl-dot.active span{background:red !important; width:25px; transition:0.2s ease-in-out;}
-.owl-theme .owl-dots .owl-dot:hover span{background:red !important; transition:0.2s ease-in-out;}
-
-    #descriptionMain {
-        font-size: 25px;
-    }
-
-
-
-    .backgroundImage {
-        background-size: 110% 115%;
-    }
-/* Responsive design custom css */
 @@media only screen and (max-width:480px) {
 
     .backgroundImage {
@@ -402,93 +308,12 @@ td.BadgeGroup i {
     width: 100vh;
 }
 
-/*main images styles*/
-figure.snip1466 {
-    position: relative;
-    overflow: hidden;
-    margin: 10px;
-    width: 100%;
-    color: #ffffff;
-    font-size: 16px;
-    background-color: #000000;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    text-align: center;
-    font-size: 70px;
-}
-
-    figure.snip1466 *,
-    figure.snip1466 *:before,
-    figure.snip1466 *:after {
-        -webkit-transition: all 0.4s ease;
-        transition: all 0.4s ease;
-    }
-
-    figure.snip1466 img {
-        max-width: 100%;
-        backface-visibility: hidden;
-        vertical-align: top;
-    }
-
-    figure.snip1466 i {
-        position: absolute;
-        line-height: 50px;
-        width: 50px;
-        text-align: center;
-        font-size: 28px;
-        z-index: 1;
-        bottom: 0;
-        right: 0;
-        -webkit-transform: translate(100%, 100%);
-        transform: translate(100%, 100%);
-    }
-
-        figure.snip1466 i:after {
-            position: absolute;
-            bottom: 3px;
-            right: 3px;
-            content: '';
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 0 75px 75px;
-            border-color: transparent transparent #34495e;
-            z-index: -1;
-        }
-
-    figure.snip1466 a {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 1;
-    }
-
-    figure.snip1466:hover img,
-    figure.snip1466.hover img {
-        zoom: 1;
-        filter: alpha(opacity=70);
-        -webkit-opacity: 0.7;
-        opacity: 0.7;
-        -webkit-transform: scale(1.2);
-        transform: scale(1.2);
-    }
-
-    figure.snip1466:hover i,
-    figure.snip1466.hover i {
-        -webkit-transform: translate(0, 0);
-        transform: translate(0, 0);
-    }
-
 .row {
     width: 100%;
     margin: 0 auto;
 }
-    */
-    /*video.cshtml*/
+
+    /*Model css*/
 figure.snip1466 {
     position: relative;
     overflow: hidden;
@@ -496,7 +321,7 @@ figure.snip1466 {
     width: 100%;
     color: #ffffff;
     font-size: 16px;
-    background-color: #000000;
+    background-color: #121212;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     -webkit-transform: translateZ(0);
@@ -512,11 +337,12 @@ figure.snip1466 *:after {
     transition: all 0.4s ease;
 }
 
-figure.snip1466 img {
-    max-width: 100%;
-    backface-visibility: hidden;
-    vertical-align: top;
-}
+    figure.snip1466 img {
+        max-width: 100%;
+        backface-visibility: hidden;
+        vertical-align: top;
+        border-radius: 10px;
+    }
 
 figure.snip1466 i {
     position: absolute;
@@ -538,35 +364,68 @@ figure.snip1466 i {
         content: '';
         width: 0;
         height: 0;
-        border-style: solid;
-        border-width: 0 0 75px 75px;
-        border-color: transparent transparent #34495e;
         z-index: -1;
     }
 
-figure.snip1466 a {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
+    figure.snip1466 a {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+    }
+a {
+    /*border: solid;*/
+    background-color: transparent;
+    color: #A04034;
 }
+    a:hover {
+        color: #A04034;
+    }
 
-figure.snip1466:hover img,
-figure.snip1466.hover img {
-    zoom: 1;
-    filter: alpha(opacity=70);
-    -webkit-opacity: 0.7;
-    opacity: 0.7;
-    -webkit-transform: scale(1.2);
-    transform: scale(1.2);
-}
+    figure.snip1466:hover img,
+    figure.snip1466.hover img {
+        zoom: 1;
+        filter: alpha(opacity=40);
+        -webkit-opacity: 0.55;
+        opacity: 0.55;
+        -webkit-transform: scale(0.97);
+        transform: scale(0.97);
+    }
 
 figure.snip1466:hover i,
 figure.snip1466.hover i {
     -webkit-transform: translate(0, 0);
     transform: translate(0, 0);
+}
+
+/*styles except main page command video page*/
+@media screen and (max-width: 2160px) {
+    .Main {
+        padding: 1%;
+        padding-top: 4%;
+    }
+}
+
+@media screen and (max-width: 1080px) {
+    .Main {
+        padding: 1%;
+        padding-top: 4%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .Main {
+        padding: 1%;
+        padding-top: 4%;
+    }
+}
+
+@media screen and (max-width: 540px) {
+    .Main {
+        padding: 20% 5% 5% 5%;
+    }
 }
 
 ul {

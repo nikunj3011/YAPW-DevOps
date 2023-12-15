@@ -22,7 +22,8 @@
         }
 
         #videoMain {
-            padding: 5%
+            padding: 1%;
+            padding-top:4%;
         }
     }
 
@@ -32,7 +33,8 @@
         }
 
         #videoMain {
-            padding: 5%
+            padding: 1%;
+            padding-top:4%;
         }
     }
     @@media screen and (max-width: 768px) {
@@ -41,13 +43,14 @@
         }
 
         #videoMain {
-            padding: 5%;
+            padding: 1%;
+            padding-top: 4%;
         }
     }
 
     @@media screen and (max-width: 540px) {
         #videoMain {
-            padding: 30% 5% 5% 5%;
+            padding: 20% 1% 1% 1%;
         }
         #mainPBrandName {
             font-size: 25px;
@@ -115,85 +118,7 @@
     }
 
     /*main images styles*/
-    figure.snip1466 {
-        position: relative;
-        overflow: hidden;
-        margin: 10px;
-        width: 100%;
-        color: #ffffff;
-        font-size: 16px;
-        background-color: #000000;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
-        text-align:center;
-        font-size:70px;
-    }
 
-        figure.snip1466 *,
-        figure.snip1466 *:before,
-        figure.snip1466 *:after {
-            -webkit-transition: all 0.4s ease;
-            transition: all 0.4s ease;
-        }
-
-        figure.snip1466 img {
-            max-width: 100%;
-            backface-visibility: hidden;
-            vertical-align: top;
-        }
-
-        figure.snip1466 i {
-            position: absolute;
-            line-height: 50px;
-            width: 50px;
-            text-align: center;
-            font-size: 28px;
-            z-index: 1;
-            bottom: 0;
-            right: 0;
-            -webkit-transform: translate(100%, 100%);
-            transform: translate(100%, 100%);
-        }
-
-            figure.snip1466 i:after {
-                position: absolute;
-                bottom: 3px;
-                right: 3px;
-                content: '';
-                width: 0;
-                height: 0;
-                border-style: solid;
-                border-width: 0 0 75px 75px;
-                border-color: transparent transparent #34495e;
-                z-index: -1;
-            }
-
-        figure.snip1466 a {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 1;
-        }
-
-        figure.snip1466:hover img,
-        figure.snip1466.hover img {
-            zoom: 1;
-            filter: alpha(opacity=70);
-            -webkit-opacity: 0.7;
-            opacity: 0.7;
-            -webkit-transform: scale(1.2);
-            transform: scale(1.2);
-        }
-
-        figure.snip1466:hover i,
-        figure.snip1466.hover i {
-            -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
-        }
     .row {
         width: 100%;
         margin: 0 auto;
@@ -202,30 +127,37 @@
 </style>
 <div class="row " id="videoMain">
     <div class="col-lg-12 ">
-        <div class="card card-outline " style="background-color:black">
+        @* <div class="card card-outline " style="background-color:#181818"> *@
+        <div class="card card-outline " style="background-color:#121212; padding:2%">
             <div class="tableOverlayContainer">
                 <div class="overlay tableOverlay" style="display:none">
                     <i class="fas fa-2x fa-sync-alt fa-spin"></i>
                 </div>
 
                 <div>
-                    <h2 id="greetings" style="text-align:left"></h2>
+                    <h2 id="greetings" style="text-align:left;font-size: 2rem;"></h2>
                 </div>
+                <br/>
                 <div>
                     @*Editors favourite video of the day*@
                     <h2 style="text-align:left">
                         <a asp-controller="Video" asp-action="VideoOfTheDay" class="">
                             @* <i class="fa-solid fa-building"></i> *@
-                            Peak of the day
+                            Peak of the day <i class="fa-solid fa-circle-arrow-right"></i>
                         </a>
                     </h2>
-                    <div class="card" style="width:auto; height:auto;background-color:#0C0B0D;border-radius:10px; padding:10px;color:white">
+                    <div class="" style="width:auto; height:auto; color:white">
                         <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-12 backgroundImage" style="background-image:linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.5) ),url('@videoOfTheDay.VideoInfo.Poster');background-repeat:no-repeat;">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-12 backgroundImage" style="border-radius:10px; background-image:linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.5) ),url('@videoOfTheDay.VideoInfo.Poster');background-repeat:no-repeat;">
                                 <div class="row">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-12" style="padding-top:3%;text-align:center;">
-                                        <h3 style="font-weight:800; opacity:0.8" id="mainH3BrandName"><i>@videoOfTheDay.Brand.Name 's</i></h3>
-
+                                    <div class="col-lg-5 col-md-5 col-sm-12" style="padding-top:3%;text-align:center;">
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-12" style="padding-top:3%;text-align:center;">
+                                        <h3 style="font-weight:800; opacity:0.8" id="mainH3BrandName"><a href="Video/Search?brand=@videoOfTheDay.Brand.Name" class="nav-link " style="padding-top:30px;"><i>@videoOfTheDay.Brand.Name 's</i></a></h3>
+                                    </div>
+                                    <div class="col-lg-5 col-md-5 col-sm-12" style="padding-top:3%;text-align:center;">
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-12" style="text-align:center;">
                                         <p id="mainPBrandName" style="color:white; ">
                                             @*font-family: 'Londrina Outline', cursive;/*max-height:120px; overflow-x:scroll;overflow-y:hidden*/*@
                                             <b>@videoOfTheDay.Name</b>
@@ -250,15 +182,13 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-2 col-md-2 col-sm-12 col-12">
-                                        <div style="text-align:right; color:#EA2E2E;border-width:50px;">
-                                            @*<i class="fa-solid fa-star"></i>*@
-                                            <figure class="snip1466">
-                                                <img src=@videoOfTheDay.VideoInfo.Cover alt="sample52" height="394" width="268" />
-                                                <a href="Video/Name?id=@videoOfTheDay.VideoInfo.VideoUrl" class="nav-link " style="padding-top:100px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7) )">
-                                                    <i class="fa-solid fa-circle-play"></i>
-                                                </a>
-                                            </figure>
-                                        </div>
+                                        @*<i class="fa-solid fa-star"></i>*@
+                                        <figure class="snip1466">
+                                            <img src=@videoOfTheDay.VideoInfo.Cover alt="sample52" height="394" width="268"  />
+                                            <a href="Video/Name?id=@videoOfTheDay.VideoInfo.VideoUrl" class="nav-link " style="padding-top:100px;">
+                                                <i class="fa-solid fa-circle-play"></i>
+                                            </a>
+                                        </figure>
                                     </div>
 
                                     <div class="col-lg-2 col-md-2 col-sm-12 col-12">
@@ -268,9 +198,17 @@
                         </div>
                     </div>
                 </div>
+                <br />
 
                 <div>
-                    <h2 style="text-align:left">Latest</h2>
+
+                    <h2 style="text-align:left">
+                        <a asp-controller="Video" asp-action="Search" class="">
+                            Latest <i class="fa-solid fa-circle-arrow-right"></i>
+                        </a>
+                    </h2>
+
+                    <h2 style="text-align:left"></h2>
                     @*Latest Releases*@
                     @if (Model?.Count > 0)
                     {
@@ -279,9 +217,10 @@
                             {
                                 <figure class="snip1466">
                                     <img src=@item.VideoInfo.Cover alt="sample52" />
-                                    <a href="Video/Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <a href="Video/Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px;">@*<i class="fa-solid fa-circle-play"></i>*@</a>
                                     <p style="font-size:large"> <span>@item.Name</span></p>
                                 </figure>
+
                             }
                         </div>
                     }
@@ -297,17 +236,22 @@
                         </div>
                     </div>
                 </div>
+                <br />
                 <div class="row ">
                     @*Trending*@
                     @if (videosTrending.Count > 0)
                     {
-                        <h2 style="text-align:left">Trending</h2>
+                        <h2 style="text-align:left">
+                            <a asp-controller="Video" asp-action="Search" class="">
+                                Trending <i class="fa-solid fa-circle-arrow-right"></i>
+                            </a>
+                        </h2>
                         <div id="sub-carousel1" class="owl-carousel owl-theme">
                             @foreach (var item in videosTrending)
                             {
                                 <figure class="snip1466">
                                     <img src=@item.VideoInfo.Cover alt="sample52" />
-                                    <a href="Video/Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <a href="Video/Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px;">@*<i class="fa-solid fa-circle-play"></i>*@</a>
                                     <p style="font-size:large"> <span>@item.Name</span></p>
                                 </figure>
                             }
@@ -329,6 +273,7 @@
                         </div>
                     </div>
                 </div>
+                <br />
                 <div class="row ">
                     @*Categories*@
                     @if (Model?.Count > 0)
@@ -336,7 +281,7 @@
                         <h2 style="text-align:center">
                             <a asp-controller="Video" asp-action="Categories" class="">
                                 @* <i class="fa-solid fa-building"></i> *@
-                                Categories
+                                Categories <i class="fa-solid fa-circle-arrow-right"></i>
                             </a>
                         </h2>
                         <div id="sub-carousel3" class="owl-carousel owl-theme">
@@ -344,7 +289,7 @@
                             {
                                 <figure class="snip1466">
                                     <img src=@item.PhotoLink alt="sample52" />
-                                    <a href="Video/Search?category=@item.Name" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <a href="Video/Search?category=@item.Name" class="nav-link " style="padding-top:30px;">@*<i class="fa-solid fa-circle-play"></i>*@</a>
                                     <p style="font-size:large"> <span>@item.Name</span></p>
                                 </figure>
                             }
@@ -367,6 +312,7 @@
                         </div>
                     </div>
                 </div>
+                <br />
                 <div class="row ">
                     @*Random*@
                     @if (Model?.Count > 0)
@@ -374,7 +320,7 @@
                         <h2 style="text-align:center">
                             <a asp-controller="Video" asp-action="Random" class="">
                                 @* <i class="fa-solid fa-building"></i> *@
-                                Random
+                                Random <i class="fa-solid fa-circle-arrow-right"></i>
                             </a>
                         </h2>
                         <div id="sub-carousel2" class="owl-carousel owl-theme">
@@ -382,7 +328,7 @@
                             {
                                 <figure class="snip1466">
                                     <img src=@item.VideoInfo.Cover alt="sample52" />
-                                    <a href="Video/Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <a href="Video/Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px;">@*<i class="fa-solid fa-circle-play"></i>*@</a>
                                     <p style="font-size:large"> <span>@item.Name</span></p>
                                 </figure>
                             }
@@ -405,13 +351,14 @@
                         </div>
                     </div>
                 </div>
+                <br />
                 <div class="row ">
                     @*Famous Brands*@
                     @if (Model?.Count > 0)
                     {
                         <h2 style="text-align:center">
                             <a asp-controller="Video" asp-action="Brands" class="">
-                                Brands
+                                Brands <i class="fa-solid fa-circle-arrow-right"></i>
                             </a>
                         </h2>
                         <div id="sub-carousel4" class="owl-carousel owl-theme">
@@ -419,7 +366,7 @@
                             {
                                 <figure class="snip1466">
                                     <img src=@item.PhotoLink alt="sample52" />
-                                    <a href="Video/Search?brand=@item.Name" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
+                                    <a href="Video/Search?brand=@item.Name" class="nav-link " style="padding-top:30px;">@*<i class="fa-solid fa-circle-play"></i>*@</a>
                                     <p style="font-size:large"> <span>@item.Name</span></p>
                                 </figure>
                             }

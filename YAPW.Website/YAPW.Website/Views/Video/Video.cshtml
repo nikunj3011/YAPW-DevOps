@@ -41,86 +41,6 @@
 				transform: scale(1.1, 1.1);
 			}
 
-		figure.snip1466 {
-			position: relative;
-			overflow: hidden;
-			margin: 10px;
-			width: 100%;
-			color: #ffffff;
-			font-size: 16px;
-			background-color: #000000;
-			-webkit-box-sizing: border-box;
-			box-sizing: border-box;
-			-webkit-transform: translateZ(0);
-			transform: translateZ(0);
-			text-align: center;
-			font-size: 70px;
-		}
-
-			figure.snip1466 *,
-			figure.snip1466 *:before,
-			figure.snip1466 *:after {
-				-webkit-transition: all 0.4s ease;
-				transition: all 0.4s ease;
-			}
-
-			figure.snip1466 img {
-				max-width: 100%;
-				backface-visibility: hidden;
-				vertical-align: top;
-			}
-
-			figure.snip1466 i {
-				position: absolute;
-				line-height: 50px;
-				width: 50px;
-				text-align: center;
-				font-size: 28px;
-				z-index: 1;
-				bottom: 0;
-				right: 0;
-				-webkit-transform: translate(100%, 100%);
-				transform: translate(100%, 100%);
-			}
-
-				figure.snip1466 i:after {
-					position: absolute;
-					bottom: 3px;
-					right: 3px;
-					content: '';
-					width: 0;
-					height: 0;
-					border-style: solid;
-					border-width: 0 0 75px 75px;
-					border-color: transparent transparent #34495e;
-					z-index: -1;
-				}
-
-			figure.snip1466 a {
-				position: absolute;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				z-index: 1;
-			}
-
-			figure.snip1466:hover img,
-			figure.snip1466.hover img {
-				zoom: 1;
-				filter: alpha(opacity=70);
-				-webkit-opacity: 0.7;
-				opacity: 0.7;
-				-webkit-transform: scale(1.2);
-				transform: scale(1.2);
-			}
-
-			figure.snip1466:hover i,
-			figure.snip1466.hover i {
-				-webkit-transform: translate(0, 0);
-				transform: translate(0, 0);
-			}
-
 		ul {
 			list-style: none;
 		}
@@ -478,7 +398,8 @@
 			}
 
 			#videoInfoMain {
-				padding: 5%;
+				padding: 1%;
+				padding-top: 4%;
 			}
 		}
 		@@media screen and (max-width: 1080px) {
@@ -487,7 +408,8 @@
 			}
 
 			#videoInfoMain {
-				padding: 5%;
+				padding: 1%;
+				padding-top: 4%;
 			}
 		}
 
@@ -497,12 +419,13 @@
 			}
 
 			#videoInfoMain {
-				padding: 5%;
+				padding: 1%;
+				padding-top: 4%;
 			}
 		}
 		@@media screen and (max-width: 540px) {
 			#videoInfoMain{
-				padding: 25% 5% 5% 5%;
+				padding: 20% 1% 1% 1%;
 			}
 			.wrapper2 .video-controls {
 				padding: 3px 10px 7px;
@@ -1943,7 +1866,7 @@
 <div class="row" id="videoInfoMain">
     <div class="col-lg-12 ">
 
-        <div class="card" style="width:auto; height:auto;background-color:#0C0B0D;border-radius:10px; padding:10px">
+        <div class="card" style="width:auto; height:auto;background-color:#101010;border-radius:10px; padding:10px">
             <div class="row">
 				<div class="col-lg-7 col-md-7 col-sm-12 col-12 setMinHeight" id="videoDiv">
 					@*/*background-size: 110% 135%;*/*@
@@ -2067,7 +1990,7 @@
                                 </div>
                                 @foreach (var item in VideosFeatured)
                                 {
-                                    <div class="col-lg-3 col-md-3 col-sm-12 col-12" style="text-align:center">
+                                    <div class="col-lg-3 col-md-3 col-sm-6 col-6" style="text-align:center">
                                         <figure class="snip1466">
                                             <img src=@item.VideoInfo.Cover alt="sample52" />
                                             <a href="Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
@@ -2084,7 +2007,7 @@
                                 </div>
 								@foreach (var item in VideosRecentlyAdded)
                                 {
-                                    <div class="col-lg-3 col-md-3 col-sm-12 col-12" style="text-align:center">
+                                    <div class="col-lg-3 col-md-3 col-sm-6 col-6" style="text-align:center">
                                         <figure class="snip1466">
                                             <img src=@item.VideoInfo.Cover alt="sample52" />
                                             <a href="Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
@@ -2101,7 +2024,7 @@
                                 </div>
                                 @foreach (var item in VideosRandom)
                                 {
-                                    <div class="col-lg-3 col-md-3 col-sm-12 col-12" style="text-align:center">
+                                    <div class="col-lg-3 col-md-3 col-sm-6 col-6" style="text-align:center">
                                         <figure class="snip1466">
                                             <img src=@item.VideoInfo.Cover alt="sample52" />
                                             <a href="Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>
@@ -2118,7 +2041,7 @@
                                 </div>
                                 @foreach (var item in VideosSameBrand)
                                 {
-                                    <div class="col-lg-3 col-md-3 col-sm-12 col-12" style="text-align:center">
+                                    <div class="col-lg-3 col-md-3 col-sm-6 col-12" style="text-align:center">
                                         <figure class="snip1466">
                                             <img src=@item.VideoInfo.Cover alt="sample52" />
                                             <a href="Name?id=@item.VideoInfo.VideoUrl" class="nav-link " style="padding-top:30px; background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) )">@*<i class="fa-solid fa-circle-play"></i>*@</a>

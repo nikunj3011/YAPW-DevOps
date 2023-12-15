@@ -7,41 +7,16 @@
     Guid? brand = ViewBag.Brand;
     Guid? category = ViewBag.Category;
 }
-<style>
-    @@media screen and (max-width: 2160px) {
-        .Main {
-            padding: 5%;
-        }
-    }
-
-    @@media screen and (max-width: 1080px) {
-        .Main {
-            padding: 5%;
-        }
-    }
-
-    @@media screen and (max-width: 768px) {
-        .Main {
-            padding: 5%;
-        }
-    }
-    @@media screen and (max-width: 540px) {
-        .Main {
-            padding: 25% 5% 5% 5%;
-        }
-    }
-
-</style>
 <div class="row Main">
     <div class="col-lg-12 ">
-        <div class="card card-outline " style="background-color:black">
+        <div class="card card-outline " style="background-color:#101010">
             <h2 style="text-align:center">Search</h2>
             <div class="">
                 <form id="addReasonForm">
                     <div id="errorMessage" class="text-danger" style="font-weight: bold; text-align: center;"></div>
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group row">
-                        <div class="col-lg-2 col-md-2 col-sm-6 col-6">
+                        <div class="col-lg-1 col-md-1 col-sm-6 col-6">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-12 col-12">
                             <span>
@@ -87,12 +62,13 @@
                             <span>
                                 <div class="card-tools">
                                     <div class="form-group">
-                                        <button id="btnSubmitReason" style="display:none;background-color:#17A2B8;color:white;" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Processing" class="btn btn-block"> Search</button>
+                                        <button id="btnSubmitReason" style="background-color:#A04034;color:white;" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Processing" class="btn btn-block"> Search</button>
                                     </div>
                                 </div>
                             </span>
                         </div>
-
+                        <div class="col-lg-1 col-md-1 col-sm-6 col-6">
+                        </div>
                     </div>
                 </form>
             </div>
@@ -116,9 +92,9 @@
         // document.getElementById('btnSubmitReason').addEventListener('click', () => {
         // })
 
-        $('#searchVideoMain').on('input', function (e) {
-            document.getElementById('btnSubmitReason').click()
-        });
+        // $('#searchVideoMain').on('input', function (e) {
+        //     document.getElementById('btnSubmitReason').click()
+        // });
 
         $('#selectBrand').on('input', function (e) {
             document.getElementById('btnSubmitReason').click()
@@ -127,11 +103,11 @@
         $('#selectCategory').on('input', function (e) {
             document.getElementById('btnSubmitReason').click()
         });
-        $(document).bind('keypress', function (e) {
-            if (e.which === 13) { // Return
-                $('.btnRefreshOrders').trigger('click');
-            }
-        });
+        // $(document).bind('keypress', function (e) {
+        //     if (e.which === 13) { // Return
+        //         $('.btnRefreshOrders').trigger('click');
+        //     }
+        // });
         PrepareAndPostFormWithoutRefreshNew('#addReasonForm', "#errorMessage", "#btnSubmitReason", "SearchVideo", '#addReasonModal', '', ".OrderListContainer", ".overlay", ".tableOverlayContainer");
         console.log("h")
 
